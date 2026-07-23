@@ -1,0 +1,16 @@
+{
+  "short_name": "Meow Scan",
+  "name": "Meow Scan - App",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/616/616430.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/miau-scan/",
+  "background_color": "#121212",
+  "theme_color": "#ff4081",
+  "display": "standalone"
+}
+
