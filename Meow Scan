@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meow Scan</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px 20px;
+    }
+    h1 {
+      color: #ff4081;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐾 Meow Scan 🐾</h1>
+  <p>Nosso app está em construção! Em breve novidades.</p>
+</body>
+</html>
