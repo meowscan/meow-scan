@@ -121,6 +121,21 @@
     ::-webkit-scrollbar-track { background: var(--bg-main); }
     ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
 
+    /* --- MENSAGEM OFFLINE FOFA --- */
+    .offline-banner {
+        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+        background: #FF6B6B; color: #ffffff; padding: 12px 25px; border-radius: 30px;
+        font-weight: 700; font-size: 0.95rem; z-index: 9999999;
+        box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+        display: flex; align-items: center; gap: 10px;
+        transition: opacity 0.4s, visibility 0.4s, transform 0.4s;
+        font-family: 'Syne', sans-serif;
+    }
+    .offline-banner.hidden {
+        opacity: 0; visibility: hidden; transform: translateX(-50%) translateY(-20px);
+    }
+    .offline-banner i { font-size: 1.2rem; }
+
     /* --- TELA DE CARREGAMENTO INICIAL --- */
     #global-loader {
         position: fixed;
@@ -181,18 +196,9 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.03);
     }
     
-    #meow-elite-app .logo { 
-        display: flex; align-items: center; text-decoration: none;
-    }
-    #meow-elite-app .logo img {
-        height: 50px;
-        width: auto;
-        object-fit: contain;
-        transition: var(--transition);
-    }
-    #meow-elite-app .logo img:hover {
-        transform: scale(1.05);
-    }
+    #meow-elite-app .logo { display: flex; align-items: center; text-decoration: none; }
+    #meow-elite-app .logo img { height: 50px; width: auto; object-fit: contain; transition: var(--transition); }
+    #meow-elite-app .logo img:hover { transform: scale(1.05); }
 
     .header-actions { display: flex; gap: 12px; align-items: center; position: relative; }
     .action-btn {
@@ -226,30 +232,14 @@
 
     /* --- BOTAO TELEGRAM --- */
     .telegram-float {
-        position: fixed;
-        bottom: 90px;
-        right: 20px;
-        background: linear-gradient(135deg, #0088cc, #00aaff);
-        color: #fff;
-        width: 55px;
-        height: 55px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 30px;
-        box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
-        z-index: 1000;
-        transition: var(--transition);
-        text-decoration: none;
+        position: fixed; bottom: 90px; right: 20px; background: linear-gradient(135deg, #0088cc, #00aaff);
+        color: #fff; width: 55px; height: 55px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; font-size: 30px;
+        box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4); z-index: 1000; transition: var(--transition); text-decoration: none;
     }
-    .telegram-float:hover {
-        transform: scale(1.1) translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 136, 204, 0.6);
-        color: #fff;
-    }
+    .telegram-float:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 8px 25px rgba(0, 136, 204, 0.6); color: #fff; }
 
-    /* --- PESQUISA PREMIUM CONSERTADA --- */
+    /* --- PESQUISA --- */
     #search-overlay {
         position: fixed; inset: 0; background: var(--bg-main); z-index: 9999;
         display: flex; flex-direction: column; align-items: center;
@@ -257,28 +247,20 @@
     }
     #search-overlay.active { opacity: 1; visibility: visible; }
     .search-container-box { max-width: 800px; width: 100%; display: flex; flex-direction: column; height: 100%; }
-    
     .search-input-wrapper {
-        display: flex; align-items: center; width: 100%; 
-        background: var(--card-bg); 
+        display: flex; align-items: center; width: 100%; background: var(--card-bg); 
         border: 2px solid var(--glass-border); border-radius: 30px;
         padding: 5px 25px; margin-bottom: 40px; transition: var(--transition);
         box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
-    .search-input-wrapper:focus-within { 
-        border-color: var(--accent-color); 
-        box-shadow: 0 0 25px var(--accent-glow);
-    }
+    .search-input-wrapper:focus-within { border-color: var(--accent-color); box-shadow: 0 0 25px var(--accent-glow); }
     .search-input-wrapper i.fa-magnifying-glass { color: var(--accent-color); font-size: 1.4rem; }
     .search-input-wrapper input {
         flex: 1; background: transparent; border: none; padding: 22px 20px;
         color: var(--text-main); font-size: 1.3rem; font-family: 'Inter', sans-serif; outline: none;
     }
     .search-input-wrapper input::placeholder { color: var(--text-dim); }
-    .close-search-icon { 
-        color: var(--text-dim); font-size: 1.8rem; cursor: pointer; 
-        padding: 10px; transition: var(--transition);
-    }
+    .close-search-icon { color: var(--text-dim); font-size: 1.8rem; cursor: pointer; padding: 10px; transition: var(--transition); }
     .close-search-icon:hover { color: var(--accent-color); transform: rotate(90deg); }
     .search-results-area { flex: 1; overflow-y: auto; width: 100%; padding-bottom: 50px; }
     .search-results-area::-webkit-scrollbar { display: none; }
@@ -294,9 +276,7 @@
         display: flex; align-items: flex-end; padding: 80px 5%;
     }
     #meow-elite-app .banner-slide.active { opacity: 1; z-index: 10; }
-    #meow-elite-app .banner-bg {
-        position: absolute; inset: 0; background-size: cover; background-position: center 15%; z-index: 1;
-    }
+    #meow-elite-app .banner-bg { position: absolute; inset: 0; background-size: cover; background-position: center 15%; z-index: 1; }
     #meow-elite-app .banner-gradient {
         position: absolute; inset: 0; z-index: 2;
         background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 70%, var(--bg-main) 100%);
@@ -327,7 +307,6 @@
 
     /* SEÇÕES E GRIDS */
     #meow-elite-app .section-container { padding: 0 5%; margin-top: 50px !important; margin-bottom: 40px !important; }
-    
     #meow-elite-app .secao-titulo { 
         font-family: 'Syne', sans-serif; font-size: 1.6rem; margin-bottom: 25px !important; 
         display: flex; align-items: center; gap: 12px; font-weight: 800; color: var(--text-main);
@@ -350,7 +329,6 @@
         content: ''; position: absolute; inset: 0;
         background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%); z-index: 2; pointer-events:none;
     }
-    
     #meow-elite-app .obra-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
     #meow-elite-app .obra-card:hover img { transform: scale(1.05); }
 
@@ -372,18 +350,14 @@
         line-height: 1.3; margin-bottom: 8px; transition: color 0.3s;
     }
     #meow-elite-app .obra-card:hover .obra-titulo { color: var(--accent-color); }
-    
     #meow-elite-app .link-capitulo { 
         display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px;
-        color: var(--text-dim); text-decoration: none; font-size: 0.85rem; font-weight: 600;
-        transition: var(--transition);
+        color: var(--text-dim); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: var(--transition);
     }
     #meow-elite-app .link-capitulo:hover { color: var(--accent-color); }
 
     /* --- TOP 10 --- */
-    #meow-elite-app .top10-wrapper { 
-        display: flex; gap: 20px; overflow-x: auto; padding: 20px 10px 40px 10px; scrollbar-width: none; 
-    }
+    #meow-elite-app .top10-wrapper { display: flex; gap: 20px; overflow-x: auto; padding: 20px 10px 40px 10px; scrollbar-width: none; }
     #meow-elite-app .top10-wrapper::-webkit-scrollbar { display: none; }
     #meow-elite-app .top10-item { position: relative; min-width: 140px; display: flex; flex-direction: column; }
     #meow-elite-app .top10-num { 
@@ -392,21 +366,11 @@
         color: transparent; -webkit-text-stroke: 2px var(--accent-color);
         z-index: 10; pointer-events: none; opacity: 0.8;
     }
-    #meow-elite-app .top10-card .obra-img-box { 
-        border-radius: var(--radius-md); 
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
-        background: var(--card-bg);
-    }
-    #meow-elite-app .top10-card .obra-img-box img {
-        object-fit: cover; 
-        width: 100%;
-        height: 100%;
-        background-color: var(--card-bg);
-    }
+    #meow-elite-app .top10-card .obra-img-box { border-radius: var(--radius-md); box-shadow: 0 8px 20px rgba(0,0,0,0.08); background: var(--card-bg); }
+    #meow-elite-app .top10-card .obra-img-box img { object-fit: cover; width: 100%; height: 100%; background-color: var(--card-bg); }
     #meow-elite-app .top10-titulo {
         font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--text-main); text-align: center;
-        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-        margin-top: 10px; padding: 0 5px;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 10px; padding: 0 5px;
     }
 
     /* --- MENU DE NOTIFICAÇÕES --- */
@@ -414,15 +378,12 @@
         position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
         background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
-        width: 90%; max-width: 400px; max-height: 60vh; overflow-y: auto;
-        padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        width: 90%; max-width: 400px; max-height: 60vh; overflow-y: auto; padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);
         z-index: 1999; opacity: 0; visibility: hidden; transition: var(--transition);
     }
     #notificacoes-panel.active { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
     #notificacoes-panel h3 { margin: 0 0 15px 0; font-family: 'Syne'; color: var(--text-main); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
-    .notif-item { 
-        display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px solid var(--glass-border); text-decoration: none; align-items: center; 
-    }
+    .notif-item { display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px solid var(--glass-border); text-decoration: none; align-items: center; }
     .notif-item:last-child { border-bottom: none; }
     .notif-capa { width: 45px; height: 60px; border-radius: 8px; object-fit: cover; }
     .notif-info { flex: 1; }
@@ -441,7 +402,6 @@
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     #meow-elite-app .bottom-nav.nav-hidden { transform: translate(-50%, 150%) !important; }
-    
     #meow-elite-app .nav-link {
         position: relative; padding: 10px 15px; border-radius: 30px; color: var(--text-dim); 
         text-decoration: none; font-size: 1.2rem; display: flex; align-items: center; transition: var(--transition);
@@ -451,8 +411,7 @@
     .badge-count {
         position: absolute; top: -2px; right: -2px; background: #FF6B6B; color: #fff;
         font-size: 0.6rem; font-weight: bold; width: 18px; height: 18px; 
-        display: flex; align-items: center; justify-content: center; border-radius: 50%;
-        border: 2px solid var(--card-bg);
+        display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid var(--card-bg);
     }
 
     /* RESPONSIVIDADE */
@@ -461,26 +420,26 @@
         #meow-elite-app .logo img { height: 40px; }
         .header-actions { gap: 8px; }
         .action-btn { width: 38px; height: 38px; font-size: 1rem; }
-        
         .telegram-float { bottom: 85px; right: 15px; width: 45px; height: 45px; font-size: 24px; }
-        
         #search-overlay { padding-top: 8vh; }
         .search-input-wrapper { margin-bottom: 30px; padding: 5px 15px; border-radius: 20px; }
         .search-input-wrapper input { font-size: 1.1rem; padding: 15px 10px; }
-        
         #meow-elite-app .banner-container { height: 55vh; min-height: 400px; margin-bottom: 20px; border-radius: 0 0 30px 30px;}
         #meow-elite-app .banner-content h1 { font-size: 1.8rem; }
-        
         #meow-elite-app .section-container { margin-top: 35px !important; margin-bottom: 25px !important; }
         #meow-elite-app .secao-titulo { font-size: 1.3rem; margin-bottom: 15px !important; }
         #meow-elite-app .grid-obras { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px 10px; }
-        
         #meow-elite-app .bottom-nav { width: 90%; justify-content: space-between; padding: 8px 10px; }
         #meow-elite-app .nav-link { font-size: 1.1rem; padding: 10px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- BANNERS DE OFFLINE -->
+  <div id="offline-msg" class="offline-banner hidden">
+      <i class="fa-solid fa-wifi"></i> 🥺 Você está offline! Mostrando apenas obras já acessadas.
+  </div>
 
   <!-- NOVA TELA DE CARREGAMENTO -->
   <div id="global-loader">
@@ -581,17 +540,23 @@
       function fecharTelaCarregamento() {
           var loader = document.getElementById('global-loader');
           if (loader && !sessionStorage.getItem('meow_loader_visto')) {
-              // Dá um pequeno tempo (800ms) para as imagens começarem a ser desenhadas na tela
               setTimeout(function() {
                   loader.classList.add('hidden');
-                  // Marca que a pessoa já viu o carregamento nesta sessão
                   sessionStorage.setItem('meow_loader_visto', 'true');
               }, 800);
           }
       }
 
-      // Prevenção: Se o Firebase demorar muito ou cair a internet, remove o loader no evento de carregamento da página
       window.addEventListener('load', fecharTelaCarregamento);
+
+      // --- SISTEMA DE OBRAS ACESSADAS (OFFLINE MAGIC) ---
+      function marcarComoAcessada(id) {
+          let acessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
+          if(!acessadas.includes(id)) {
+              acessadas.push(id);
+              localStorage.setItem('meow_obras_acessadas', JSON.stringify(acessadas));
+          }
+      }
 
       // SISTEMA DE TEMA CLARO E ESCURO
       function toggleTheme() {
@@ -737,17 +702,17 @@
           var urlObra = URL_BASE + encodeURIComponent(obra.id);
 
           card.innerHTML = `
-              <a href="${urlObra}" class="obra-link-principal">
+              <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                   <div class="obra-img-box">
                       ${badgeHtml}
                       <img src="${obra.capa || 'https://via.placeholder.com/300x420'}" alt="${obra.nome}" loading="lazy"/>
                   </div>
               </a>
               <div class="obra-info">
-                  <a href="${urlObra}" class="obra-link-principal">
+                  <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                       <div class="obra-titulo">${obra.nome || 'Sem título'}</div>
                   </a>
-                  <a href="${urlObra}" class="link-capitulo">
+                  <a href="${urlObra}" class="link-capitulo" onclick="marcarComoAcessada('${obra.id}')">
                       <i class="fa-solid fa-book-open"></i> ${obra.ultimoCapitulo}
                   </a>
               </div>
@@ -778,7 +743,7 @@
                   <div class="banner-content">
                       <span class="banner-tag">Destaque</span>
                       <h1>${obra.nome}</h1>
-                      <a href="${urlObra}" class="btn-main"><i class="fa-solid fa-play"></i> Ler Agora</a>
+                      <a href="${urlObra}" class="btn-main" onclick="marcarComoAcessada('${obra.id}')"><i class="fa-solid fa-play"></i> Ler Agora</a>
                   </div>
               `;
               container.appendChild(slide);
@@ -813,12 +778,12 @@
               item.innerHTML = `
                   <div class="top10-num">${index + 1}</div>
                   <div class="top10-card">
-                      <a href="${urlObra}" class="obra-link-principal">
+                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                           <div class="obra-img-box">
                               <img src="${obra.capa || ''}" alt="${obra.nome}" loading="lazy"/>
                           </div>
                       </a>
-                      <a href="${urlObra}" class="obra-link-principal">
+                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                           <div class="top10-titulo">${obra.nome}</div>
                       </a>
                   </div>
@@ -860,6 +825,7 @@
               var a = document.createElement('a');
               a.className = 'notif-item';
               a.href = urlObra;
+              a.onclick = () => marcarComoAcessada(obra.id);
               a.innerHTML = `
                   <img src="${obra.capa}" class="notif-capa" alt="${obra.nome}"/>
                   <div class="notif-info">
@@ -871,7 +837,7 @@
           });
       }
 
-      // PROCESSAR TODAS AS OBRAS DA BASE DE DADOS
+      // PROCESSAR TODAS AS OBRAS DA BASE DE DADOS E FILTRAR OFFLINE
       function processarEExibirObras(data) {
           if (!data) return;
 
@@ -943,21 +909,48 @@
               };
           });
 
+          // --------- LÓGICA MÁGICA DO OFFLINE ---------
+          let isOffline = !navigator.onLine;
+          let msgOffline = document.getElementById('offline-msg');
+          
+          if (isOffline) {
+              if (msgOffline) msgOffline.classList.remove('hidden');
+              // Filtra a lista para mostrar SOMENTE as obras que a pessoa já abriu/clicou (salvas no celular)
+              let obrasAcessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
+              lista = lista.filter(o => obrasAcessadas.includes(o.id));
+          } else {
+              if (msgOffline) msgOffline.classList.add('hidden');
+          }
+
           listaGlobalObras = lista;
 
           // 1. Banner Hero
           var recentesParaBanner = [...lista].sort((a,b) => b.timestamp - a.timestamp);
-          renderizarBannerHero(recentesParaBanner);
+          if (recentesParaBanner.length > 0) {
+              document.getElementById('banner-hero').style.display = 'block';
+              renderizarBannerHero(recentesParaBanner);
+          } else {
+              document.getElementById('banner-hero').style.display = 'none'; // Esconde se não tiver nada pra mostrar offline
+          }
 
           // 2. Top 10
-          renderizarTop10(lista);
+          var top10Container = document.getElementById('top10');
+          if (lista.length > 0) {
+              renderizarTop10(lista);
+          } else if (top10Container) {
+              top10Container.innerHTML = '<p style="color: var(--text-dim); padding: 10px;">Nenhuma obra salva para leitura offline. 🥺</p>';
+          }
 
           // 3. Lançamentos Recentes
           var gridUpdates = document.getElementById('lista-updates');
           if(gridUpdates) {
               gridUpdates.innerHTML = '';
               var recentes = [...lista].sort((a, b) => b.timestamp - a.timestamp).slice(0, 12);
-              recentes.forEach(o => gridUpdates.appendChild(criarCardObra(o)));
+              if (recentes.length === 0) {
+                  gridUpdates.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">Vazio no modo offline! 🥺</p>';
+              } else {
+                  recentes.forEach(o => gridUpdates.appendChild(criarCardObra(o)));
+              }
           }
 
           // 4. Obras Concluídas
@@ -969,7 +962,7 @@
                   return st.includes('completo') || st.includes('concluíd') || st.includes('concluid');
               });
               if(concluidas.length === 0) {
-                  gridConcluidas.innerHTML = '<p style="color: var(--text-dim);">Nenhuma obra concluída no momento.</p>';
+                  gridConcluidas.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">Nenhuma obra concluída salva offline.</p>';
               } else {
                   concluidas.forEach(o => gridConcluidas.appendChild(criarCardObra(o)));
               }
@@ -980,13 +973,16 @@
           if(gridTodas) {
               gridTodas.innerHTML = '';
               var todas = [...lista].sort((a,b) => (a.nome || '').localeCompare(b.nome || ''));
-              todas.forEach(o => gridTodas.appendChild(criarCardObra(o)));
+              if (todas.length === 0) {
+                  gridTodas.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">Você ainda não acessou nenhuma obra para ler offline. 🥺</p>';
+              } else {
+                  todas.forEach(o => gridTodas.appendChild(criarCardObra(o)));
+              }
           }
 
           // 6. Notificações
           processarNotificacoes(lista);
           
-          // REMOVE A TELA DE CARREGAMENTO AGORA QUE OS DADOS CHEGARAM
           fecharTelaCarregamento();
       }
 
@@ -1010,16 +1006,42 @@
           });
       }
 
+      // MONITOR DE INTERNET PARA ATUALIZAR A PÁGINA NA HORA
+      window.addEventListener('offline', function() {
+          let backup = localStorage.getItem('meow_backup_obras');
+          if (backup) {
+              processarEExibirObras(JSON.parse(backup));
+          }
+      });
+
+      window.addEventListener('online', function() {
+          // A Firebase normalmente reconecta sozinha, mas esconde a mensagem por segurança
+          let msgOffline = document.getElementById('offline-msg');
+          if (msgOffline) msgOffline.classList.add('hidden');
+      });
+
       // OUVINTE DO FIREBASE
       db.ref('obras').on('value', function(snapshot) {
           var data = snapshot.val();
           if(data) {
+              // Quando tem internet, salva as obras no celular para o modo offline!
+              localStorage.setItem('meow_backup_obras', JSON.stringify(data));
               processarEExibirObras(data);
           } else {
-              // Se não tiver dados no banco, fecha a tela de carregamento mesmo assim para não travar o usuário
               fecharTelaCarregamento();
           }
       });
+
+      // SE JÁ ENTRAR NO APLICATIVO SEM INTERNET, PUXA O BACKUP DIRETO
+      if (!navigator.onLine) {
+          let backup = localStorage.getItem('meow_backup_obras');
+          if (backup) {
+              processarEExibirObras(JSON.parse(backup));
+          } else {
+              fecharTelaCarregamento();
+          }
+      }
+
   </script>
 </body>
 </html>
