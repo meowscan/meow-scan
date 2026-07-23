@@ -25,6 +25,11 @@
       if (esconderMenuSempre) {
           document.write('<style>#main-header, #mobile-bottom-nav { display: none !important; pointer-events: none !important; opacity: 0 !important; visibility: hidden !important; } #meow-elite-app { padding-bottom: 0px !important; } .page-content-wrapper { margin-top: 30px !important; }</style>');
       }
+      
+      /* BLOQUEIO DA TELA DE CARREGAMENTO SE JÁ FOI VISTA */
+      if (sessionStorage.getItem('meow_loader_visto') === 'true') {
+          document.write('<style>#global-loader { display: none !important; }</style>');
+      }
   </script>
 
   <style>
@@ -115,6 +120,53 @@
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg-main); }
     ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+
+    /* --- TELA DE CARREGAMENTO INICIAL --- */
+    #global-loader {
+        position: fixed;
+        inset: 0;
+        background-color: var(--bg-main);
+        z-index: 999999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #global-loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+    .loader-logo {
+        width: 180px;
+        height: auto;
+        border-radius: 50%;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        animation: pulse-logo 2s infinite ease-in-out;
+    }
+    .loader-spinner {
+        width: 45px;
+        height: 45px;
+        border: 4px solid var(--glass-border);
+        border-top-color: var(--accent-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    .loader-text {
+        margin-top: 20px;
+        font-family: 'Syne', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: 1px;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes pulse-logo {
+        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        50% { transform: scale(1.05); box-shadow: 0 15px 40px var(--accent-glow); }
+        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    }
 
     /* --- HEADER INTELIGENTE --- */
     #meow-elite-app header { 
@@ -273,13 +325,6 @@
     }
     #meow-elite-app .btn-main:hover { transform: translateY(-4px); box-shadow: 0 10px 25px var(--accent-glow); }
 
-    /* ANIMACAO DE NOVO CAPITULO */
-    @keyframes pulse-novo {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-        50% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-
     /* SEÇÕES E GRIDS */
     #meow-elite-app .section-container { padding: 0 5%; margin-top: 50px !important; margin-bottom: 40px !important; }
     
@@ -437,6 +482,13 @@
 </head>
 <body>
 
+  <!-- NOVA TELA DE CARREGAMENTO -->
+  <div id="global-loader">
+      <img src="7668.png" alt="Meow Scan Loading" class="loader-logo">
+      <div class="loader-spinner"></div>
+      <div class="loader-text">Carregando o universo Meow...</div>
+  </div>
+
   <div id='meow-elite-app'>
       
       <div id='search-overlay'>
@@ -525,6 +577,22 @@
   <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js'></script>
 
   <script type='text/javascript'>
+      // LÓGICA DE REMOVER TELA DE CARREGAMENTO
+      function fecharTelaCarregamento() {
+          var loader = document.getElementById('global-loader');
+          if (loader && !sessionStorage.getItem('meow_loader_visto')) {
+              // Dá um pequeno tempo (800ms) para as imagens começarem a ser desenhadas na tela
+              setTimeout(function() {
+                  loader.classList.add('hidden');
+                  // Marca que a pessoa já viu o carregamento nesta sessão
+                  sessionStorage.setItem('meow_loader_visto', 'true');
+              }, 800);
+          }
+      }
+
+      // Prevenção: Se o Firebase demorar muito ou cair a internet, remove o loader no evento de carregamento da página
+      window.addEventListener('load', fecharTelaCarregamento);
+
       // SISTEMA DE TEMA CLARO E ESCURO
       function toggleTheme() {
           var currentTheme = localStorage.getItem('meow_theme') || 'light';
@@ -917,6 +985,9 @@
 
           // 6. Notificações
           processarNotificacoes(lista);
+          
+          // REMOVE A TELA DE CARREGAMENTO AGORA QUE OS DADOS CHEGARAM
+          fecharTelaCarregamento();
       }
 
       // CAMPO DE BUSCA AO VIVO
@@ -944,6 +1015,9 @@
           var data = snapshot.val();
           if(data) {
               processarEExibirObras(data);
+          } else {
+              // Se não tiver dados no banco, fecha a tela de carregamento mesmo assim para não travar o usuário
+              fecharTelaCarregamento();
           }
       });
   </script>
