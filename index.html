@@ -146,7 +146,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: opacity 0.8s ease, visibility 0.8s ease;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
     }
     #global-loader.hidden {
         opacity: 0;
@@ -197,7 +197,7 @@
     }
     
     #meow-elite-app .logo { display: flex; align-items: center; text-decoration: none; }
-    #meow-elite-app .logo img { height: 50px; width: auto; object-fit: contain; transition: var(--transition); }
+    #meow-elite-app .logo img { height: 50px; width: auto; object-fit: contain; transition: var(--transition); border-radius: 50%;}
     #meow-elite-app .logo img:hover { transform: scale(1.05); }
 
     .header-actions { display: flex; gap: 12px; align-items: center; position: relative; }
@@ -317,7 +317,7 @@
         display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px 15px; 
     }
 
-    /* CARDS DE OBRAS */
+    /* CARDS DE OBRAS E TAG NOVO */
     #meow-elite-app .obra-card { position: relative; transition: var(--transition); display: flex; flex-direction: column; }
     #meow-elite-app .obra-link-principal { text-decoration: none; display: block; }
     
@@ -338,6 +338,22 @@
         font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
+    
+    /* ETIQUETA NOVO MAGNÍFICA */
+    .badge-novo {
+        position: absolute; top: 8px; right: 8px; z-index: 5;
+        background: #EF4444; color: #fff;
+        padding: 4px 8px; border-radius: 8px; font-size: 0.65rem;
+        font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.5);
+        animation: pulse-novo 1.5s infinite ease-in-out;
+    }
+    @keyframes pulse-novo {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        50% { transform: scale(1.08); box-shadow: 0 0 10px 5px rgba(239, 68, 68, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
     .status-completo { background: var(--success); color: #fff; }
     .status-andamento { background: var(--accent-color); color: #fff; }
     .status-pausa { background: var(--warning); color: #fff; }
@@ -441,7 +457,7 @@
       <i class="fa-solid fa-wifi"></i> 🥺 Você está offline! Mostrando apenas obras já acessadas.
   </div>
 
-  <!-- NOVA TELA DE CARREGAMENTO COM IMAGEM CORRIGIDA -->
+  <!-- NOVA TELA DE CARREGAMENTO -->
   <div id="global-loader">
       <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png" alt="Meow Scan Loading" class="loader-logo">
       <div class="loader-spinner"></div>
@@ -465,7 +481,7 @@
 
       <header id='main-header'>
           <a class='logo' href='index.html'>
-              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6aC3chQ6doRxYFj6A_QjodQQOV8c9prAxUUcghfLANYhRLyebekvpQGr5yY7N8WyEEN-V4Dm7E9Z_Yt-296fKDPcsPS-l7OE0cxXIRL2U14fqEUWoNnVqsE9SW4vpNPb4vh7uSeO8A9Ml8wXHbxjKC5yQYOTGmHACMzveICcisVx59uMflIg8Gp2ggbcc/s320/3576.png'/>
+              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png'/>
           </a>
           
           <div class='header-actions'>
@@ -524,11 +540,11 @@
 
       <nav class='bottom-nav' id='mobile-bottom-nav'>
           <a class='nav-link active' href='index.html'><i class='fa-solid fa-house'></i></a>
-          <a class='nav-link' href='generos.html'><i class='fa-solid fa-list'></i></a>
-          <a class='nav-link' href='biblioteca.html'><i class='fa-solid fa-bookmark'></i></a>
+          <a class='nav-link' href='genero.html'><i class='fa-solid fa-list'></i></a>
+          <a class='nav-link' href='Biblioteca.html'><i class='fa-solid fa-bookmark'></i></a>
           <a class='nav-link' href='#' onclick='toggleNotificacoes(event)'><i class='fa-solid fa-bell'></i><span class='badge-count' id='badge-notif' style='display:none;'>0</span></a>
-          <a class='nav-link' href='parcerias.html'><i class='fa-solid fa-handshake'></i></a>
-          <a class='nav-link' href='perfil.html'><i class='fa-solid fa-user'></i></a>
+          <a class='nav-link' href='Parcerias.html'><i class='fa-solid fa-handshake'></i></a>
+          <a class='nav-link' href='Perfil.html'><i class='fa-solid fa-user'></i></a>
       </nav>
   </div>
 
@@ -543,47 +559,18 @@
               setTimeout(function() {
                   loader.classList.add('hidden');
                   sessionStorage.setItem('meow_loader_visto', 'true');
-              }, 800);
+              }, 400); // Mais rápido!
+          } else if (loader) {
+              loader.classList.add('hidden');
           }
       }
 
-      window.addEventListener('load', fecharTelaCarregamento);
-
-      // --- SISTEMA MÁGICO DE CACHE DE IMAGEM PARA OFFLINE ---
-      function salvarCapaOffline(id, urlCapa) {
-          if (!urlCapa || urlCapa.startsWith('data:')) return;
-          var img = new Image();
-          img.crossOrigin = 'Anonymous'; // Permite converter a imagem
-          img.onload = function() {
-              var canvas = document.createElement('canvas');
-              canvas.width = img.width;
-              canvas.height = img.height;
-              var ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0);
-              try {
-                  var dataURL = canvas.toDataURL('image/jpeg', 0.6); // Comprime um pouquinho
-                  localStorage.setItem('meow_capa_' + id, dataURL); // Salva na memória do celular!
-              } catch(e) {
-                  // Se a memória encher, apaga as velhas
-                  if(e.name === 'QuotaExceededError') {
-                      for(let key in localStorage) {
-                          if(key.startsWith('meow_capa_')) localStorage.removeItem(key);
-                      }
-                  }
-              }
-          };
-          img.src = urlCapa;
-      }
-
       // --- SISTEMA DE OBRAS ACESSADAS (OFFLINE MAGIC) ---
-      function marcarComoAcessada(id, urlCapa) {
+      function marcarComoAcessada(id) {
           let acessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
           if(!acessadas.includes(id)) {
               acessadas.push(id);
               localStorage.setItem('meow_obras_acessadas', JSON.stringify(acessadas));
-          }
-          if (urlCapa) {
-              salvarCapaOffline(id, urlCapa); // Salva a foto pra não demorar 50 anos depois
           }
       }
 
@@ -729,27 +716,30 @@
           
           var badgeHtml = getStatusBadge(obra.status);
           var urlObra = URL_BASE + encodeURIComponent(obra.id);
-          
-          // Magia Offline: Pega a foto ultra rápida da memória se não tiver net
-          var isOffline = !navigator.onLine;
-          var capaParaExibir = obra.capa || 'https://via.placeholder.com/300x420?text=Capa';
-          if (isOffline) {
-              var capaSalva = localStorage.getItem('meow_capa_' + obra.id);
-              if (capaSalva) capaParaExibir = capaSalva;
+
+          // VERIFICA SE A OBRA É "NOVA" (Atualizada nos últimos 3 dias - 259200000 ms)
+          var htmlNovo = "";
+          if (obra.timestamp) {
+              var diferencaTempo = Date.now() - obra.timestamp;
+              // Se foi atualizado em menos de 3 dias, mostra a etiqueta NOVO
+              if (diferencaTempo >= 0 && diferencaTempo <= 259200000) {
+                  htmlNovo = `<span class="badge-novo">NOVO</span>`;
+              }
           }
 
           card.innerHTML = `
-              <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
+              <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                   <div class="obra-img-box">
                       ${badgeHtml}
-                      <img src="${capaParaExibir}" alt="${obra.nome}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/300x420?text=Capa'"/>
+                      ${htmlNovo}
+                      <img src="${obra.capa || 'https://via.placeholder.com/300x420'}" alt="${obra.nome}" loading="lazy"/>
                   </div>
               </a>
               <div class="obra-info">
-                  <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
+                  <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                       <div class="obra-titulo">${obra.nome || 'Sem título'}</div>
                   </a>
-                  <a href="${urlObra}" class="link-capitulo" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
+                  <a href="${urlObra}" class="link-capitulo" onclick="marcarComoAcessada('${obra.id}')">
                       <i class="fa-solid fa-book-open"></i> ${obra.ultimoCapitulo}
                   </a>
               </div>
@@ -773,21 +763,14 @@
               var slide = document.createElement('div');
               slide.className = `banner-slide ${idx === 0 ? 'active' : ''}`;
               var urlObra = URL_BASE + encodeURIComponent(obra.id);
-              
-              var isOffline = !navigator.onLine;
-              var capaParaExibir = obra.capa;
-              if (isOffline) {
-                  var capaSalva = localStorage.getItem('meow_capa_' + obra.id);
-                  if (capaSalva) capaParaExibir = capaSalva;
-              }
 
               slide.innerHTML = `
-                  <div class="banner-bg" style="background-image: url('${capaParaExibir}');"></div>
+                  <div class="banner-bg" style="background-image: url('${obra.capa}');"></div>
                   <div class="banner-gradient"></div>
                   <div class="banner-content">
                       <span class="banner-tag">Destaque</span>
                       <h1>${obra.nome}</h1>
-                      <a href="${urlObra}" class="btn-main" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')"><i class="fa-solid fa-play"></i> Ler Agora</a>
+                      <a href="${urlObra}" class="btn-main" onclick="marcarComoAcessada('${obra.id}')"><i class="fa-solid fa-play"></i> Ler Agora</a>
                   </div>
               `;
               container.appendChild(slide);
@@ -818,23 +801,16 @@
               var item = document.createElement('div');
               item.className = 'top10-item';
               var urlObra = URL_BASE + encodeURIComponent(obra.id);
-              
-              var isOffline = !navigator.onLine;
-              var capaParaExibir = obra.capa || '';
-              if (isOffline) {
-                  var capaSalva = localStorage.getItem('meow_capa_' + obra.id);
-                  if (capaSalva) capaParaExibir = capaSalva;
-              }
 
               item.innerHTML = `
                   <div class="top10-num">${index + 1}</div>
                   <div class="top10-card">
-                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
+                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                           <div class="obra-img-box">
-                              <img src="${capaParaExibir}" alt="${obra.nome}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/300x420?text=Capa'"/>
+                              <img src="${obra.capa || ''}" alt="${obra.nome}" loading="lazy"/>
                           </div>
                       </a>
-                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
+                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                           <div class="top10-titulo">${obra.nome}</div>
                       </a>
                   </div>
@@ -876,17 +852,9 @@
               var a = document.createElement('a');
               a.className = 'notif-item';
               a.href = urlObra;
-              a.onclick = () => marcarComoAcessada(obra.id, obra.capa);
-              
-              var isOffline = !navigator.onLine;
-              var capaParaExibir = obra.capa || '';
-              if (isOffline) {
-                  var capaSalva = localStorage.getItem('meow_capa_' + obra.id);
-                  if (capaSalva) capaParaExibir = capaSalva;
-              }
-
+              a.onclick = () => marcarComoAcessada(obra.id);
               a.innerHTML = `
-                  <img src="${capaParaExibir}" class="notif-capa" alt="${obra.nome}" loading="lazy" decoding="async"/>
+                  <img src="${obra.capa}" class="notif-capa" alt="${obra.nome}"/>
                   <div class="notif-info">
                       <div class="notif-titulo">${obra.nome}</div>
                       <div class="notif-desc"><i class="fa-solid fa-bell"></i> Novo capítulo: ${obra.ultimoCapitulo}</div>
@@ -1078,11 +1046,21 @@
           if (msgOffline) msgOffline.classList.add('hidden');
       });
 
-      // OUVINTE DO FIREBASE
+      // --- SISTEMA DE CARREGAMENTO TURBO (CACHE) ---
+      // Executa assim que a tela abre, evitando esperar o banco de dados online!
+      document.addEventListener("DOMContentLoaded", function() {
+          let backup = localStorage.getItem('meow_backup_obras');
+          if (backup) {
+              processarEExibirObras(JSON.parse(backup));
+              fecharTelaCarregamento();
+          }
+      });
+
+      // OUVINTE DO FIREBASE (ATUALIZA NO FUNDO INVISIVELMENTE)
       db.ref('obras').on('value', function(snapshot) {
           var data = snapshot.val();
           if(data) {
-              // Quando tem internet, salva as obras no celular para o modo offline!
+              // Salva os dados mais recentes na memória para carregar ultra rápido na próxima vez
               localStorage.setItem('meow_backup_obras', JSON.stringify(data));
               processarEExibirObras(data);
           } else {
