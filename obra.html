@@ -434,8 +434,6 @@
 
   const urlParams = new URLSearchParams(window.location.search);
   const obraId = urlParams.get('obra'); 
-  const NOME_PAGINA_LEITURA = "lersuasobrasaquinameowscan";
-  const BASE_URL = "https://meowscan7.blogspot.com";
 
   let currentUser = null;
   let currentObra = null;
@@ -688,7 +686,7 @@
 
               html += `
               <div class="chapter-item-wrapper ${extraClass}" ${isHiddenStyle}>
-                <a href="${BASE_URL}/p/${NOME_PAGINA_LEITURA}.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link">
+                <a href="Capitulo.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link">
                   <img src="${currentObra.capaUrl}" alt="Thumbnail" class="chap-thumbnail" loading="lazy">
                   <div class="chap-text-content">
                     <span class="chap-id-string">${labelTipo} ${c.numero || '?'} | ${new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR')}</span>
@@ -751,7 +749,7 @@
 
                   html += `
                   <div class="chapter-item-wrapper ${extraClass}" style="margin-bottom: 12px;" ${isHiddenStyle}>
-                    <a href="${BASE_URL}/p/${NOME_PAGINA_LEITURA}.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link">
+                    <a href="Capitulo.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link">
                       <img src="${currentObra.capaUrl}" class="chap-thumbnail" loading="lazy">
                       <div class="chap-text-content">
                         <span class="chap-id-string">${labelTipo} ${c.numero || '?'} | ${new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR')}</span>
@@ -833,36 +831,24 @@
     let progressoAtual = progressoObj[obraId];
     
     const sortedForNew = globalAllKeys.sort((a, b) => (globalCapsObj[b].dataPostagem || 0) - (globalCapsObj[a].dataPostagem || 0));
+    
+    // ATUALIZADO: Usando apenas o arquivo Capitulo.html
     let btnPrincipalTexto = "Começar a Ler do Cap 1";
-    let linkLer = globalAllKeys.length > 0 ? `${BASE_URL}/p/${NOME_PAGINA_LEITURA}.html?obra=${obraId}&cap=${sortedForNew[sortedForNew.length-1]}` : "#"; 
+    let linkLer = globalAllKeys.length > 0 ? `Capitulo.html?obra=${obraId}&cap=${sortedForNew[sortedForNew.length-1]}` : "#"; 
 
     if (progressoAtual && progressoAtual.lendo && globalCapsObj[progressoAtual.lendo]) {
         let capName = globalCapsObj[progressoAtual.lendo].numero || '?';
         btnPrincipalTexto = `Continuar Lendo Cap ${capName}`;
-        linkLer = `${BASE_URL}/p/${NOME_PAGINA_LEITURA}.html?obra=${obraId}&cap=${progressoAtual.lendo}`;
+        linkLer = `Capitulo.html?obra=${obraId}&cap=${progressoAtual.lendo}`;
     }
     
-    const hostRaw = String(obra.hospedagem || ""); 
-    const host = hostRaw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-    let linkVoltar = "https://meowscan7.blogspot.com/?m=1"; 
-    
-    if (host.includes("marryhowll")) linkVoltar = "https://meowscan7.blogspot.com/p/marryhowll.html?m=1";
-    else if (host.includes("nove musas")) linkVoltar = "https://meowscan7.blogspot.com/p/as-nove-musas_8.html?m=1";
-    else if (host.includes("astral")) linkVoltar = "https://meowscan7.blogspot.com/p/astral-scan.html?m=1";
-    else if (host.includes("onni")) linkVoltar = "https://meowscan7.blogspot.com/p/onni-scan.html";
-    else if (host.includes("mansao")) linkVoltar = "https://meowscan7.blogspot.com/p/mansao-dos-yaois-traducoes.html?m=1";
-    else if (host.includes("tuli")) linkVoltar = "https://meowscan7.blogspot.com/p/tuli-scan_26.html";
-    else if (host.includes("erosyne") || host.includes("yato")) linkVoltar = "https://meowscan7.blogspot.com/p/yatogami-scan.html?m=1";
-    else if (host.includes("desire")) linkVoltar = "https://meowscan7.blogspot.com/p/desire-bls.html?m=1";
-    else if (host.includes("peach") || host.includes("pie")) linkVoltar = "https://meowscan7.blogspot.com/p/peach-pie.html?m=1";
-
-    let isMeow = host === "" || host.includes("meow") || (host.includes("scan") && 
-    !host.includes("astral") && !host.includes("onni") && !host.includes("tuli") && !host.includes("yato"));
-    const textoVoltar = isMeow ? "Voltar" : `Voltar para ${obra.hospedagem || 'Início'}`;
+    // ATUALIZADO: Agora sempre volta para a sua página inicial do GitHub Pages
+    let linkVoltar = "index.html"; 
+    const textoVoltar = "Voltar para Início";
 
     document.getElementById('nav-voltar-container').innerHTML = `<a href="${linkVoltar}" class="btn-back-home"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> ${textoVoltar}</a>`;
 
-    hospedagemHtml = isMeow ? `<span class="badge-meow">Scan: MEOW Scan</span>` : `<a href="${linkVoltar}" class="badge-host">🏠 Hospedado por: ${obra.hospedagem}</a>`;
+    hospedagemHtml = `<span class="badge-meow">Scan: MEOW Scan</span>`;
 
     const ehAdultoEstrito = obra.classificacao === '+18' || obra.adulto === true || stringGeneros.includes('+18') || stringGeneros.includes('smut');
     const ehSensivelAviso = stringGeneros.includes('maduro') || stringGeneros.includes('sensível') || stringGeneros.includes('sensivel');
