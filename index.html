@@ -441,9 +441,9 @@
       <i class="fa-solid fa-wifi"></i> 🥺 Você está offline! Mostrando apenas obras já acessadas.
   </div>
 
-  <!-- NOVA TELA DE CARREGAMENTO -->
+  <!-- NOVA TELA DE CARREGAMENTO COM IMAGEM CORRIGIDA -->
   <div id="global-loader">
-      <img src="7668.png" alt="Meow Scan Loading" class="loader-logo">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png" alt="Meow Scan Loading" class="loader-logo">
       <div class="loader-spinner"></div>
       <div class="loader-text">Carregando o universo Meow...</div>
   </div>
@@ -549,12 +549,41 @@
 
       window.addEventListener('load', fecharTelaCarregamento);
 
+      // --- SISTEMA MÁGICO DE CACHE DE IMAGEM PARA OFFLINE ---
+      function salvarCapaOffline(id, urlCapa) {
+          if (!urlCapa || urlCapa.startsWith('data:')) return;
+          var img = new Image();
+          img.crossOrigin = 'Anonymous'; // Permite converter a imagem
+          img.onload = function() {
+              var canvas = document.createElement('canvas');
+              canvas.width = img.width;
+              canvas.height = img.height;
+              var ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0);
+              try {
+                  var dataURL = canvas.toDataURL('image/jpeg', 0.6); // Comprime um pouquinho
+                  localStorage.setItem('meow_capa_' + id, dataURL); // Salva na memória do celular!
+              } catch(e) {
+                  // Se a memória encher, apaga as velhas
+                  if(e.name === 'QuotaExceededError') {
+                      for(let key in localStorage) {
+                          if(key.startsWith('meow_capa_')) localStorage.removeItem(key);
+                      }
+                  }
+              }
+          };
+          img.src = urlCapa;
+      }
+
       // --- SISTEMA DE OBRAS ACESSADAS (OFFLINE MAGIC) ---
-      function marcarComoAcessada(id) {
+      function marcarComoAcessada(id, urlCapa) {
           let acessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
           if(!acessadas.includes(id)) {
               acessadas.push(id);
               localStorage.setItem('meow_obras_acessadas', JSON.stringify(acessadas));
+          }
+          if (urlCapa) {
+              salvarCapaOffline(id, urlCapa); // Salva a foto pra não demorar 50 anos depois
           }
       }
 
@@ -700,19 +729,27 @@
           
           var badgeHtml = getStatusBadge(obra.status);
           var urlObra = URL_BASE + encodeURIComponent(obra.id);
+          
+          // Magia Offline: Pega a foto ultra rápida da memória se não tiver net
+          var isOffline = !navigator.onLine;
+          var capaParaExibir = obra.capa || 'https://via.placeholder.com/300x420?text=Capa';
+          if (isOffline) {
+              var capaSalva = localStorage.getItem('meow_capa_' + obra.id);
+              if (capaSalva) capaParaExibir = capaSalva;
+          }
 
           card.innerHTML = `
-              <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
+              <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
                   <div class="obra-img-box">
                       ${badgeHtml}
-                      <img src="${obra.capa || 'https://via.placeholder.com/300x420'}" alt="${obra.nome}" loading="lazy"/>
+                      <img src="${capaParaExibir}" alt="${obra.nome}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/300x420?text=Capa'"/>
                   </div>
               </a>
               <div class="obra-info">
-                  <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
+                  <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
                       <div class="obra-titulo">${obra.nome || 'Sem título'}</div>
                   </a>
-                  <a href="${urlObra}" class="link-capitulo" onclick="marcarComoAcessada('${obra.id}')">
+                  <a href="${urlObra}" class="link-capitulo" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
                       <i class="fa-solid fa-book-open"></i> ${obra.ultimoCapitulo}
                   </a>
               </div>
@@ -736,14 +773,21 @@
               var slide = document.createElement('div');
               slide.className = `banner-slide ${idx === 0 ? 'active' : ''}`;
               var urlObra = URL_BASE + encodeURIComponent(obra.id);
+              
+              var isOffline = !navigator.onLine;
+              var capaParaExibir = obra.capa;
+              if (isOffline) {
+                  var capaSalva = localStorage.getItem('meow_capa_' + obra.id);
+                  if (capaSalva) capaParaExibir = capaSalva;
+              }
 
               slide.innerHTML = `
-                  <div class="banner-bg" style="background-image: url('${obra.capa}');"></div>
+                  <div class="banner-bg" style="background-image: url('${capaParaExibir}');"></div>
                   <div class="banner-gradient"></div>
                   <div class="banner-content">
                       <span class="banner-tag">Destaque</span>
                       <h1>${obra.nome}</h1>
-                      <a href="${urlObra}" class="btn-main" onclick="marcarComoAcessada('${obra.id}')"><i class="fa-solid fa-play"></i> Ler Agora</a>
+                      <a href="${urlObra}" class="btn-main" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')"><i class="fa-solid fa-play"></i> Ler Agora</a>
                   </div>
               `;
               container.appendChild(slide);
@@ -774,16 +818,23 @@
               var item = document.createElement('div');
               item.className = 'top10-item';
               var urlObra = URL_BASE + encodeURIComponent(obra.id);
+              
+              var isOffline = !navigator.onLine;
+              var capaParaExibir = obra.capa || '';
+              if (isOffline) {
+                  var capaSalva = localStorage.getItem('meow_capa_' + obra.id);
+                  if (capaSalva) capaParaExibir = capaSalva;
+              }
 
               item.innerHTML = `
                   <div class="top10-num">${index + 1}</div>
                   <div class="top10-card">
-                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
+                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
                           <div class="obra-img-box">
-                              <img src="${obra.capa || ''}" alt="${obra.nome}" loading="lazy"/>
+                              <img src="${capaParaExibir}" alt="${obra.nome}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/300x420?text=Capa'"/>
                           </div>
                       </a>
-                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
+                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}', '${obra.capa || ''}')">
                           <div class="top10-titulo">${obra.nome}</div>
                       </a>
                   </div>
@@ -825,9 +876,17 @@
               var a = document.createElement('a');
               a.className = 'notif-item';
               a.href = urlObra;
-              a.onclick = () => marcarComoAcessada(obra.id);
+              a.onclick = () => marcarComoAcessada(obra.id, obra.capa);
+              
+              var isOffline = !navigator.onLine;
+              var capaParaExibir = obra.capa || '';
+              if (isOffline) {
+                  var capaSalva = localStorage.getItem('meow_capa_' + obra.id);
+                  if (capaSalva) capaParaExibir = capaSalva;
+              }
+
               a.innerHTML = `
-                  <img src="${obra.capa}" class="notif-capa" alt="${obra.nome}"/>
+                  <img src="${capaParaExibir}" class="notif-capa" alt="${obra.nome}" loading="lazy" decoding="async"/>
                   <div class="notif-info">
                       <div class="notif-titulo">${obra.nome}</div>
                       <div class="notif-desc"><i class="fa-solid fa-bell"></i> Novo capítulo: ${obra.ultimoCapitulo}</div>
@@ -930,7 +989,7 @@
               document.getElementById('banner-hero').style.display = 'block';
               renderizarBannerHero(recentesParaBanner);
           } else {
-              document.getElementById('banner-hero').style.display = 'none'; // Esconde se não tiver nada pra mostrar offline
+              document.getElementById('banner-hero').style.display = 'none';
           }
 
           // 2. Top 10
@@ -1015,7 +1074,6 @@
       });
 
       window.addEventListener('online', function() {
-          // A Firebase normalmente reconecta sozinha, mas esconde a mensagem por segurança
           let msgOffline = document.getElementById('offline-msg');
           if (msgOffline) msgOffline.classList.add('hidden');
       });
