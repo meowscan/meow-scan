@@ -1,41 +1,66 @@
-const CACHE_NAME = 'meow-scan-v1';
-const urlsToCache = [
-  '/miau-scan/',
-  '/miau-scan/index.html',
-  '/miau-scan/manifest.json'
-];
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meow Scan</title>
+  
+  <!-- Configurações para PWA -->
+  <link rel="manifest" href="/miau-scan/manifest.json">
+  <meta name="theme-color" content="#ff4081">
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+  
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px 20px;
+    }
+    h1 { color: #ff4081; }
+    .status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #1e1e1e;
+      display: inline-block;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐾 Meow Scan 🐾</h1>
+  <p>Nosso app está em construção! Em breve novidades.</p>
+  
+  <div class="status" id="status">Verificando conexão...</div>
 
-// Instala o Service Worker e salva os arquivos no cache
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
-    })
-  );
-  self.skipWaiting();
-});
+  <script>
+    // Registro do Service Worker para funcionar offline e ser instalável
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/miau-scan/sw.js')
+          .then((reg) => console.log('Service Worker registrado com sucesso!'))
+          .catch((err) => console.log('Erro no Service Worker:', err));
+      });
+    }
 
-// Ativa o Service Worker e limpa caches antigos
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
-  );
-  self.clients.claim();
-});
+    // Indicador simples de status de rede
+    function updateOnlineStatus() {
+      const statusEl = document.getElementById('status');
+      if (navigator.onLine) {
+        statusEl.textContent = '🟢 Online - Conectado à rede';
+        statusEl.style.color = '#4caf50';
+      } else {
+        statusEl.textContent = '🔴 Offline - Rodando do cache local';
+        statusEl.style.color = '#ff5252';
+      }
+    }
 
-// Intercepta as requisições: se estiver sem internet, pega do cache
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
-  );
-});
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+  </script>
+</body>
+</html>
