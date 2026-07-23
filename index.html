@@ -1,15 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<?xml version="1.0" encoding="UTF-8" ?>
+<html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true' b:templateUrl='indie.xml' b:templateVersion='1.3.0' expr:dir='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-  <title>Meow Scan</title>
+  <meta content='width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1' name='viewport'/>
+  <title><data:blog.pageTitle/></title>
   
-  <!-- Fontes e Ícones -->
-  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap' rel='stylesheet'>
-  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'>
+  <b:skin><![CDATA[
+    /* Tag obrigatoria para o Blogger */
+  ]]></b:skin>
+
+  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Syne:wght@600;700;800&amp;display=swap' rel='stylesheet'/>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'/>
 
   <script type='text/javascript'>
+  //<![CDATA[
       /* SISTEMA DE BLOQUEIO DE MENU E CABEÇALHO DIRETO NO CARREGAMENTO */
       var urlAtual = window.location.href.toLowerCase();
       var paginasSemMenu = [
@@ -17,7 +20,7 @@
           'lersuasobrasaquinameowscan', 'marryhowll', 
           'mansao-dos-yaois-traducoes', 'yatogami-scan', 
           'tuli-scan', 'as-nove-musas', 'paginainicialdameowscan',
-          'desire-bls', 'root-bg-start', 'strawberry'
+          'desire-bls', 'root-bg-start', 'strawberry', 'obra'
       ];
       
       var esconderMenuSempre = paginasSemMenu.some(p => urlAtual.includes(p.toLowerCase()));
@@ -25,82 +28,26 @@
       if (esconderMenuSempre) {
           document.write('<style>#main-header, #mobile-bottom-nav { display: none !important; pointer-events: none !important; opacity: 0 !important; visibility: hidden !important; } #meow-elite-app { padding-bottom: 0px !important; } .page-content-wrapper { margin-top: 30px !important; }</style>');
       }
-      
-      /* BLOQUEIO DA TELA DE CARREGAMENTO SE JÁ FOI VISTA */
-      if (sessionStorage.getItem('meow_loader_visto') === 'true') {
-          document.write('<style>#global-loader { display: none !important; }</style>');
-      }
+  //]]>
   </script>
 
   <style>
     :root {
-        /* MODO CLARO PADRÃO (ROSA) */
-        --accent-gradient: linear-gradient(135deg, #FFB6C1, #FFC0CB);
-        --accent-color: #FF9EAB; 
-        --accent-glow: rgba(255, 158, 171, 0.3);
-        --bg-main: #FFF8F9; 
-        --glass-bg: rgba(255, 255, 255, 0.85);
-        --glass-border: rgba(255, 158, 171, 0.2);
-        --text-main: #5C4A4D; 
-        --text-dim: #9E8A8D;
-        --card-bg: #FFFFFF;
+        /* ESTÉTICA PREMIUM PRETO E VERMELHO VINHO */
+        --accent-gradient: linear-gradient(135deg, #800020, #4A0414);
+        --accent-color: #800020; 
+        --accent-glow: rgba(128, 0, 32, 0.3);
+        --bg-main: #0a0a0a; 
+        --glass-bg: rgba(10, 10, 10, 0.85);
+        --glass-border: rgba(128, 0, 32, 0.3);
+        --text-main: #EAE0E1; 
+        --text-dim: #A89B9D;
+        --card-bg: #151515;
         --success: #34D399;
         --warning: #FBBF24;
         --radius-lg: 24px;
         --radius-md: 16px;
         --transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    /* MODO ESCURO PADRÃO (ROSA) */
-    body[data-theme="dark"] { 
-        --accent-gradient: linear-gradient(135deg, #FF7B93, #FF9EAB); 
-        --accent-color: #FF7B93; 
-        --accent-glow: rgba(255, 123, 147, 0.15); 
-        --bg-main: #1A1617; 
-        --glass-bg: rgba(30, 25, 26, 0.9);
-        --glass-border: rgba(255, 255, 255, 0.05);
-        --text-main: #EAE0E1; 
-        --text-dim: #A89B9D; 
-        --card-bg: #252021;
-    }
-
-    /* --- NOVAS CORES (TEMA AZUL) --- */
-    body[data-color="blue"] {
-        --accent-gradient: linear-gradient(135deg, #60A5FA, #93C5FD);
-        --accent-color: #3B82F6;
-        --accent-glow: rgba(59, 130, 246, 0.3);
-        --glass-border: rgba(59, 130, 246, 0.2);
-    }
-    body[data-theme="dark"][data-color="blue"] {
-        --accent-gradient: linear-gradient(135deg, #2563EB, #3B82F6);
-        --accent-color: #60A5FA;
-        --accent-glow: rgba(96, 165, 250, 0.15);
-    }
-
-    /* --- NOVAS CORES (TEMA VERMELHO) --- */
-    body[data-color="red"] {
-        --accent-gradient: linear-gradient(135deg, #F87171, #FCA5A5);
-        --accent-color: #EF4444;
-        --accent-glow: rgba(239, 68, 68, 0.3);
-        --glass-border: rgba(239, 68, 68, 0.2);
-    }
-    body[data-theme="dark"][data-color="red"] {
-        --accent-gradient: linear-gradient(135deg, #DC2626, #EF4444);
-        --accent-color: #F87171;
-        --accent-glow: rgba(248, 113, 113, 0.15);
-    }
-
-    /* --- NOVAS CORES (TEMA ROXO) --- */
-    body[data-color="purple"] {
-        --accent-gradient: linear-gradient(135deg, #A78BFA, #C4B5FD);
-        --accent-color: #8B5CF6;
-        --accent-glow: rgba(139, 92, 246, 0.3);
-        --glass-border: rgba(139, 92, 246, 0.2);
-    }
-    body[data-theme="dark"][data-color="purple"] {
-        --accent-gradient: linear-gradient(135deg, #7C3AED, #8B5CF6);
-        --accent-color: #A78BFA;
-        --accent-glow: rgba(167, 139, 250, 0.15);
     }
 
     body { 
@@ -121,68 +68,6 @@
     ::-webkit-scrollbar-track { background: var(--bg-main); }
     ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
 
-    /* --- MENSAGEM OFFLINE FOFA --- */
-    .offline-banner {
-        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-        background: #FF6B6B; color: #ffffff; padding: 12px 25px; border-radius: 30px;
-        font-weight: 700; font-size: 0.95rem; z-index: 9999999;
-        box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
-        display: flex; align-items: center; gap: 10px;
-        transition: opacity 0.4s, visibility 0.4s, transform 0.4s;
-        font-family: 'Syne', sans-serif;
-    }
-    .offline-banner.hidden {
-        opacity: 0; visibility: hidden; transform: translateX(-50%) translateY(-20px);
-    }
-    .offline-banner i { font-size: 1.2rem; }
-
-    /* --- TELA DE CARREGAMENTO INICIAL --- */
-    #global-loader {
-        position: fixed;
-        inset: 0;
-        background-color: var(--bg-main);
-        z-index: 999999;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
-    #global-loader.hidden {
-        opacity: 0;
-        visibility: hidden;
-    }
-    .loader-logo {
-        width: 180px;
-        height: auto;
-        border-radius: 50%;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        animation: pulse-logo 2s infinite ease-in-out;
-    }
-    .loader-spinner {
-        width: 45px;
-        height: 45px;
-        border: 4px solid var(--glass-border);
-        border-top-color: var(--accent-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-    .loader-text {
-        margin-top: 20px;
-        font-family: 'Syne', sans-serif;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--text-main);
-        letter-spacing: 1px;
-    }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    @keyframes pulse-logo {
-        0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        50% { transform: scale(1.05); box-shadow: 0 15px 40px var(--accent-glow); }
-        100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-    }
-
     /* --- HEADER INTELIGENTE --- */
     #meow-elite-app header { 
         position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
@@ -193,11 +78,21 @@
     #meow-elite-app header.scrolled {
         background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         border-bottom: 1px solid var(--glass-border); padding: 12px 5%;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
     
-    #meow-elite-app .logo { display: flex; align-items: center; text-decoration: none; }
-    #meow-elite-app .logo img { height: 50px; width: auto; object-fit: contain; transition: var(--transition); }
+    /* LOGO HORIZONTAL PRIORIZADO */
+    #meow-elite-app .logo { 
+        display: flex; align-items: center; text-decoration: none; width: 100%; max-width: 200px;
+    }
+    #meow-elite-app .logo img {
+        height: auto;
+        width: 100%;
+        max-height: 50px;
+        object-fit: contain;
+        object-position: left;
+        transition: var(--transition);
+    }
     #meow-elite-app .logo img:hover { transform: scale(1.05); }
 
     .header-actions { display: flex; gap: 12px; align-items: center; position: relative; }
@@ -206,40 +101,35 @@
         color: var(--text-main); width: 44px; height: 44px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         cursor: pointer; transition: var(--transition); font-size: 1.1rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     .action-btn:hover { background: var(--accent-color); color: #fff; transform: scale(1.08); }
 
-    /* --- MENU DE CORES --- */
-    .color-picker-dropdown { position: relative; display: inline-block; }
-    .color-menu {
-        position: absolute; top: 60px; right: -20px; background: var(--card-bg);
-        border: 1px solid var(--glass-border); border-radius: var(--radius-md);
-        padding: 15px; display: flex; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        opacity: 0; visibility: hidden; transform: translateY(-10px); transition: var(--transition);
-        z-index: 1001;
-    }
-    .color-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-    .color-dot {
-        width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid var(--glass-border);
-        transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .color-dot:hover { transform: scale(1.15); }
-    .color-dot.pink { background: #FF9EAB; }
-    .color-dot.blue { background: #3B82F6; }
-    .color-dot.red { background: #EF4444; }
-    .color-dot.purple { background: #8B5CF6; }
-
     /* --- BOTAO TELEGRAM --- */
     .telegram-float {
-        position: fixed; bottom: 90px; right: 20px; background: linear-gradient(135deg, #0088cc, #00aaff);
-        color: #fff; width: 55px; height: 55px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; font-size: 30px;
-        box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4); z-index: 1000; transition: var(--transition); text-decoration: none;
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        background: linear-gradient(135deg, #0088cc, #00aaff);
+        color: #fff;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+        z-index: 1000;
+        transition: var(--transition);
+        text-decoration: none;
     }
-    .telegram-float:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 8px 25px rgba(0, 136, 204, 0.6); color: #fff; }
+    .telegram-float:hover {
+        transform: scale(1.1) translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 136, 204, 0.6);
+    }
 
-    /* --- PESQUISA --- */
+    /* --- PESQUISA PREMIUM CONSERTADA --- */
     #search-overlay {
         position: fixed; inset: 0; background: var(--bg-main); z-index: 9999;
         display: flex; flex-direction: column; align-items: center;
@@ -247,20 +137,28 @@
     }
     #search-overlay.active { opacity: 1; visibility: visible; }
     .search-container-box { max-width: 800px; width: 100%; display: flex; flex-direction: column; height: 100%; }
+    
     .search-input-wrapper {
-        display: flex; align-items: center; width: 100%; background: var(--card-bg); 
+        display: flex; align-items: center; width: 100%; 
+        background: var(--card-bg); 
         border: 2px solid var(--glass-border); border-radius: 30px;
         padding: 5px 25px; margin-bottom: 40px; transition: var(--transition);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    .search-input-wrapper:focus-within { border-color: var(--accent-color); box-shadow: 0 0 25px var(--accent-glow); }
+    .search-input-wrapper:focus-within { 
+        border-color: var(--accent-color); 
+        box-shadow: 0 0 25px var(--accent-glow);
+    }
     .search-input-wrapper i.fa-magnifying-glass { color: var(--accent-color); font-size: 1.4rem; }
     .search-input-wrapper input {
         flex: 1; background: transparent; border: none; padding: 22px 20px;
         color: var(--text-main); font-size: 1.3rem; font-family: 'Inter', sans-serif; outline: none;
     }
     .search-input-wrapper input::placeholder { color: var(--text-dim); }
-    .close-search-icon { color: var(--text-dim); font-size: 1.8rem; cursor: pointer; padding: 10px; transition: var(--transition); }
+    .close-search-icon { 
+        color: var(--text-dim); font-size: 1.8rem; cursor: pointer; 
+        padding: 10px; transition: var(--transition);
+    }
     .close-search-icon:hover { color: var(--accent-color); transform: rotate(90deg); }
     .search-results-area { flex: 1; overflow-y: auto; width: 100%; padding-bottom: 50px; }
     .search-results-area::-webkit-scrollbar { display: none; }
@@ -269,17 +167,19 @@
     #meow-elite-app .banner-container { 
         position: relative; height: 70vh; min-height: 480px; width: 100%; 
         overflow: hidden; border-radius: 0 0 40px 40px; margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     #meow-elite-app .banner-slide { 
         position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out;
         display: flex; align-items: flex-end; padding: 80px 5%;
     }
     #meow-elite-app .banner-slide.active { opacity: 1; z-index: 10; }
-    #meow-elite-app .banner-bg { position: absolute; inset: 0; background-size: cover; background-position: center 15%; z-index: 1; }
+    #meow-elite-app .banner-bg {
+        position: absolute; inset: 0; background-size: cover; background-position: center 15%; z-index: 1;
+    }
     #meow-elite-app .banner-gradient {
         position: absolute; inset: 0; z-index: 2;
-        background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 70%, var(--bg-main) 100%);
+        background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%);
     }
     #meow-elite-app .banner-content { 
         position: relative; z-index: 20; max-width: 800px;
@@ -295,7 +195,7 @@
     #meow-elite-app .banner-content h1 { 
         font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 6vw, 4rem); 
         font-weight: 800; margin: 0 0 20px 0; line-height: 1.1; color: #fff; 
-        text-shadow: 2px 2px 15px rgba(0,0,0,0.5);
+        text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
     }
     #meow-elite-app .btn-main {
         padding: 14px 30px; background: var(--accent-gradient); color: #fff;
@@ -305,103 +205,63 @@
     }
     #meow-elite-app .btn-main:hover { transform: translateY(-4px); box-shadow: 0 10px 25px var(--accent-glow); }
 
-    /* SEÇÕES E GRIDS */
+    /* SEÇÕES E LISTA VERTICAL DE OBRAS */
     #meow-elite-app .section-container { padding: 0 5%; margin-top: 50px !important; margin-bottom: 40px !important; }
+    
     #meow-elite-app .secao-titulo { 
         font-family: 'Syne', sans-serif; font-size: 1.6rem; margin-bottom: 25px !important; 
         display: flex; align-items: center; gap: 12px; font-weight: 800; color: var(--text-main);
     }
     #meow-elite-app .secao-titulo i { color: var(--accent-color); font-size: 1.4rem; }
 
+    /* SUBSTITUÍDO O GRID ANTIGO PELA LISTA VERTICAL */
     #meow-elite-app .grid-obras { 
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px 15px; 
+        display: flex; flex-direction: column; gap: 15px; 
     }
 
-    /* CARDS DE OBRAS */
-    #meow-elite-app .obra-card { position: relative; transition: var(--transition); display: flex; flex-direction: column; }
-    #meow-elite-app .obra-link-principal { text-decoration: none; display: block; }
+    #meow-elite-app .obra-card { 
+        position: relative; transition: var(--transition); display: flex; flex-direction: row; align-items: center; gap: 15px;
+        background: var(--card-bg); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--glass-border);
+    }
+    #meow-elite-app .obra-card:hover { transform: translateX(8px); border-color: var(--accent-color); }
+    
+    #meow-elite-app .obra-link-principal { text-decoration: none; display: flex; flex-direction: row; width: 100%; align-items: center; gap: 15px; }
     
     #meow-elite-app .obra-img-box {
-        position: relative; aspect-ratio: 1 / 1.45; border-radius: var(--radius-md);
-        overflow: hidden; background: var(--card-bg); box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+        position: relative; width: 90px; min-width: 90px; aspect-ratio: 1 / 1.45; border-radius: 10px;
+        overflow: hidden; background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
-    #meow-elite-app .obra-img-box::after {
-        content: ''; position: absolute; inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%); z-index: 2; pointer-events:none;
-    }
+    
     #meow-elite-app .obra-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
     #meow-elite-app .obra-card:hover img { transform: scale(1.05); }
 
-    .status-badge {
-        position: absolute; top: 8px; left: 8px; z-index: 5;
-        padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; 
-        font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .status-completo { background: var(--success); color: #fff; }
-    .status-andamento { background: var(--accent-color); color: #fff; }
-    .status-pausa { background: var(--warning); color: #fff; }
-    .status-futura { background: #8B5CF6; color: #fff; }
-
-    /* ESTILO PARA A TAG NOVO */
-    .badge-novo {
-        background: #EF4444; color: #fff; font-size: 0.6rem; padding: 2px 6px; 
-        border-radius: 4px; font-weight: 800; text-transform: uppercase;
-        animation: pulse-novo 2s infinite; display: inline-block; margin-left: 5px;
-        vertical-align: middle;
-    }
-    @keyframes pulse-novo {
-        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-        70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-
-    #meow-elite-app .obra-info { padding: 12px 4px 0; }
+    #meow-elite-app .obra-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
     #meow-elite-app .obra-titulo { 
-        font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text-main);
+        font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-main);
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         line-height: 1.3; margin-bottom: 8px; transition: color 0.3s;
     }
     #meow-elite-app .obra-card:hover .obra-titulo { color: var(--accent-color); }
+    
     #meow-elite-app .link-capitulo { 
         display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px;
-        color: var(--text-dim); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: var(--transition);
+        color: var(--accent-color); text-decoration: none; font-size: 0.9rem; font-weight: 600;
+        background: rgba(128,0,32, 0.1); padding: 6px 12px; border-radius: 8px; width: max-content;
+        transition: var(--transition);
     }
-    #meow-elite-app .link-capitulo:hover { color: var(--accent-color); }
+    #meow-elite-app .link-capitulo:hover { background: var(--accent-color); color: #fff; }
 
-    /* --- TOP 10 --- */
-    #meow-elite-app .top10-wrapper { display: flex; gap: 20px; overflow-x: auto; padding: 20px 10px 40px 10px; scrollbar-width: none; }
-    #meow-elite-app .top10-wrapper::-webkit-scrollbar { display: none; }
-    #meow-elite-app .top10-item { position: relative; min-width: 140px; display: flex; flex-direction: column; }
-    #meow-elite-app .top10-num { 
-        position: absolute; top: -20px; left: -10px;
-        font-family: 'Syne', sans-serif; font-size: 50px; font-weight: 800; 
-        color: transparent; -webkit-text-stroke: 2px var(--accent-color);
-        z-index: 10; pointer-events: none; opacity: 0.8;
-    }
-    #meow-elite-app .top10-card .obra-img-box { border-radius: var(--radius-md); box-shadow: 0 8px 20px rgba(0,0,0,0.08); background: var(--card-bg); }
-    #meow-elite-app .top10-card .obra-img-box img { object-fit: cover; width: 100%; height: 100%; background-color: var(--card-bg); }
-    #meow-elite-app .top10-titulo {
-        font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--text-main); text-align: center;
-        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 10px; padding: 0 5px;
-    }
-
-    /* --- MENU DE NOTIFICAÇÕES --- */
+    /* --- MENU DE NOTIFICAÇÕES (SEM FAKES) --- */
     #notificacoes-panel {
         position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
         background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
-        width: 90%; max-width: 400px; max-height: 60vh; overflow-y: auto; padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        width: 90%; max-width: 400px; max-height: 60vh; overflow-y: auto;
+        padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         z-index: 1999; opacity: 0; visibility: hidden; transition: var(--transition);
     }
     #notificacoes-panel.active { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
     #notificacoes-panel h3 { margin: 0 0 15px 0; font-family: 'Syne'; color: var(--text-main); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
-    .notif-item { display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px solid var(--glass-border); text-decoration: none; align-items: center; }
-    .notif-item:last-child { border-bottom: none; }
-    .notif-capa { width: 45px; height: 60px; border-radius: 8px; object-fit: cover; }
-    .notif-info { flex: 1; }
-    .notif-titulo { color: var(--text-main); font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
-    .notif-desc { color: var(--accent-color); font-size: 0.8rem; font-weight: 600; }
 
     /* RODAPÉ E NAVBAR INF. */
     .creditos-rodape { text-align: center; padding: 40px 20px; margin-top: 60px; font-size: 0.9rem; color: var(--text-dim); }
@@ -411,224 +271,144 @@
         position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
         background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         border: 1px solid var(--glass-border); padding: 8px 15px; border-radius: 40px;
-        display: flex; gap: 15px; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        display: flex; gap: 15px; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     #meow-elite-app .bottom-nav.nav-hidden { transform: translate(-50%, 150%) !important; }
+    
     #meow-elite-app .nav-link {
         position: relative; padding: 10px 15px; border-radius: 30px; color: var(--text-dim); 
         text-decoration: none; font-size: 1.2rem; display: flex; align-items: center; transition: var(--transition);
     }
     #meow-elite-app .nav-link:hover, #meow-elite-app .nav-link.active { color: #fff; background: var(--accent-color); }
     
+    /* O Badge real agora só é gerado no JS quando há notificações verdadeiras */
     .badge-count {
-        position: absolute; top: -2px; right: -2px; background: #FF6B6B; color: #fff;
-        font-size: 0.6rem; font-weight: bold; width: 18px; height: 18px; 
-        display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid var(--card-bg);
+        position: absolute; top: -2px; right: -2px; background: var(--accent-color); color: #fff;
+        font-size: 0.65rem; font-weight: bold; width: 20px; height: 20px; 
+        display: flex; align-items: center; justify-content: center; border-radius: 50%;
+        border: 2px solid var(--bg-main);
     }
 
     /* RESPONSIVIDADE */
     @media (max-width: 768px) {
         #meow-elite-app header { padding: 15px 4%; }
-        #meow-elite-app .logo img { height: 40px; }
+        #meow-elite-app .logo img { max-height: 40px; }
         .header-actions { gap: 8px; }
         .action-btn { width: 38px; height: 38px; font-size: 1rem; }
+        
         .telegram-float { bottom: 85px; right: 15px; width: 45px; height: 45px; font-size: 24px; }
+        
         #search-overlay { padding-top: 8vh; }
         .search-input-wrapper { margin-bottom: 30px; padding: 5px 15px; border-radius: 20px; }
         .search-input-wrapper input { font-size: 1.1rem; padding: 15px 10px; }
+        
         #meow-elite-app .banner-container { height: 55vh; min-height: 400px; margin-bottom: 20px; border-radius: 0 0 30px 30px;}
         #meow-elite-app .banner-content h1 { font-size: 1.8rem; }
+        
         #meow-elite-app .section-container { margin-top: 35px !important; margin-bottom: 25px !important; }
         #meow-elite-app .secao-titulo { font-size: 1.3rem; margin-bottom: 15px !important; }
-        #meow-elite-app .grid-obras { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px 10px; }
+        
+        .page-content-wrapper { padding: 20px 5%; margin-top: 80px; border-radius: 0; border: none; background: transparent; box-shadow: none;}
         #meow-elite-app .bottom-nav { width: 90%; justify-content: space-between; padding: 8px 10px; }
         #meow-elite-app .nav-link { font-size: 1.1rem; padding: 10px; }
     }
   </style>
+  
+  <b:if cond='not data:view.isHomepage'>
+      <script>document.documentElement.className += ' is-post';</script>
+  </b:if>
 </head>
-<body>
-
-  <!-- BANNERS DE OFFLINE -->
-  <div id="offline-msg" class="offline-banner hidden">
-      <i class="fa-solid fa-wifi"></i> 🥺 Você está offline! Mostrando apenas obras já acessadas.
-  </div>
-
-  <!-- NOVA TELA DE CARREGAMENTO -->
-  <div id="global-loader">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png" alt="Meow Scan Loading" class="loader-logo">
-      <div class="loader-spinner"></div>
-      <div class="loader-text">Carregando o universo Meow...</div>
-  </div>
+<body expr:class='data:view.isHomepage ? "is-homepage" : "is-post"'>
 
   <div id='meow-elite-app'>
       
       <div id='search-overlay'>
           <div class='search-container-box'>
               <div class='search-input-wrapper'>
-                  <i class='fa-solid fa-magnifying-glass'></i>
+                  <i class='fa-solid fa-magnifying-glass'/>
                   <input autocomplete='off' id='search-input' placeholder='Encontre sua próxima leitura...' type='text'/>
-                  <i class='fa-solid fa-xmark close-search-icon' onclick='fecharPesquisa()'></i>
+                  <i class='fa-solid fa-xmark close-search-icon' onclick='fecharPesquisa()'/>
               </div>
               <div class='search-results-area'>
-                  <div class='grid-obras' id='search-results-grid'></div>
+                  <div class='grid-obras' id='search-results-grid'/>
               </div>
           </div>
       </div>
 
       <header id='main-header'>
-          <a class='logo' href='index.html'>
-              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png'/>
+          <a class='logo' href='/'>
+              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6aC3chQ6doRxYFj6A_QjodQQOV8c9prAxUUcghfLANYhRLyebekvpQGr5yY7N8WyEEN-V4Dm7E9Z_Yt-296fKDPcsPS-l7OE0cxXIRL2U14fqEUWoNnVqsE9SW4vpNPb4vh7uSeO8A9Ml8wXHbxjKC5yQYOTGmHACMzveICcisVx59uMflIg8Gp2ggbcc/s320/3576.png'/>
           </a>
           
           <div class='header-actions'>
-              <div class='color-picker-dropdown'>
-                  <button class='action-btn' onclick='toggleColorMenu()'><i class='fa-solid fa-palette'></i></button>
-                  <div class='color-menu' id='color-menu'>
-                      <div class='color-dot pink' onclick="setColor('pink')" title='Rosa'></div>
-                      <div class='color-dot blue' onclick="setColor('blue')" title='Azul'></div>
-                      <div class='color-dot red' onclick="setColor('red')" title='Vermelho'></div>
-                      <div class='color-dot purple' onclick="setColor('purple')" title='Roxo'></div>
-                  </div>
-              </div>
-
-              <button class='action-btn' onclick='toggleTheme()'><i class='fa-solid fa-moon' id='theme-icon'></i></button>
-              <button class='action-btn search-btn' onclick='abrirPesquisa()'><i class='fa-solid fa-magnifying-glass'></i></button>
+              <button class='action-btn search-btn' onclick='abrirPesquisa()'><i class='fa-solid fa-magnifying-glass'/></button>
           </div>
       </header>
 
-      <!-- SEÇÕES DA PÁGINA INICIAL -->
-      <div class='banner-container' id='banner-hero'></div>
+      <b:if cond='data:view.isHomepage'>
+          <div class='banner-container' id='banner-hero'/>
 
-      <div class='section-container'>
-          <h2 class='secao-titulo'><i class='fa-solid fa-fire'></i> Top 10</h2>
-          <div class='top10-wrapper' id='top10'></div>
-      </div>
+          <div class='section-container'>
+              <h2 class='secao-titulo'><i class='fa-solid fa-bolt'/> Lançamentos Recentes</h2>
+              <div class='grid-obras' id='lista-updates'/>
+          </div>
 
-      <div class='section-container'>
-          <h2 class='secao-titulo'><i class='fa-solid fa-bolt'></i> Lançamentos Recentes</h2>
-          <div class='grid-obras' id='lista-updates'></div>
-      </div>
+          <div class='section-container'>
+              <h2 class='secao-titulo'><i class='fa-solid fa-book-open'/> Obras</h2>
+              <div class='grid-obras' id='lista-todas'/>
+          </div>
+          
+          <a class='telegram-float' href='https://t.me/Meowscann1' target='_blank' title='Nosso Canal no Telegram'>
+              <i class='fa-brands fa-telegram'/>
+          </a>
+      </b:if>
 
-      <div class='section-container'>
-          <h2 class='secao-titulo'><i class='fa-solid fa-check-circle'></i> Obras Concluídas</h2>
-          <div class='grid-obras' id='lista-concluidas'></div>
-      </div>
-
-      <div class='section-container'>
-          <h2 class='secao-titulo'><i class='fa-solid fa-book-open'></i> Obras</h2>
-          <div class='grid-obras' id='lista-todas'></div>
-      </div>
-      
-      <a class='telegram-float' href='https://t.me/Meowscann1' target='_blank' title='Nosso Canal no Telegram'>
-          <i class='fa-brands fa-telegram'></i>
-      </a>
+      <b:if cond='not data:view.isHomepage'>
+          <div class='page-content-wrapper'>
+              <b:section class='main' id='main' showaddelement='yes'>
+                <b:widget id='Blog1' locked='true' title='Postagens no blog' type='Blog' version='1'>
+                  <b:includable id='main'>
+                        <b:loop values='data:posts' var='post'>
+                            <h1 class='post-title'><data:post.title/></h1>
+                            <div class='post-body'><data:post.body/></div>
+                        </b:loop>
+                    </b:includable>
+                </b:widget>
+              </b:section>
+          </div>
+      </b:if>
 
       <div class='creditos-rodape'>
           Desenvolvido com carinho por <span>Sirla</span>
       </div>
 
       <div id='notificacoes-panel'>
-          <h3><i class='fa-solid fa-bell'></i> Suas Atualizações</h3>
+          <h3><i class='fa-solid fa-bell'/> Suas Atualizações</h3>
           <div id='lista-notificacoes'>
               <p style='color: var(--text-dim); text-align: center; font-size: 0.9rem;'>Tudo lido por enquanto!</p>
           </div>
       </div>
 
-      <!-- NAVBAR CORRIGIDA AQUI -->
       <nav class='bottom-nav' id='mobile-bottom-nav'>
-          <a class='nav-link active' href='index.html'><i class='fa-solid fa-house'></i></a>
-          <a class='nav-link' href='gênero.html'><i class='fa-solid fa-list'></i></a>
-          <a class='nav-link' href='Biblioteca.html'><i class='fa-solid fa-bookmark'></i></a>
-          <a class='nav-link' href='#' onclick='toggleNotificacoes(event)'><i class='fa-solid fa-bell'></i><span class='badge-count' id='badge-notif' style='display:none;'>0</span></a>
-          <a class='nav-link' href='Parcerias.html'><i class='fa-solid fa-handshake'></i></a>
-          <a class='nav-link' href='Perfil.html'><i class='fa-solid fa-user'></i></a>
+          <a class='nav-link active' href='/'><i class='fa-solid fa-house'/></a>
+          <a class='nav-link' href='https://meowscan7.blogspot.com/p/generos.html?m=1'><i class='fa-solid fa-list'/></a>
+          <a class='nav-link' href='https://meowscan7.blogspot.com/p/biblioteca_02070148545.html?m=1'><i class='fa-solid fa-bookmark'/></a>
+          <a class='nav-link' href='#' onclick='toggleNotificacoes(event)'><i class='fa-solid fa-bell'/><span class='badge-count' id='badge-notif' style='display:none;'>0</span></a>
+          <a class='nav-link' href='https://meowscan7.blogspot.com/p/meow-scan-hospedagem-body-font-family.html?m=1'><i class='fa-solid fa-handshake'/></a>
+          <a class='nav-link' href='https://meowscan7.blogspot.com/p/perfil.html?m=1'><i class='fa-solid fa-user'/></a>
       </nav>
   </div>
 
-  <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js'/>
+  <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js'/>
 
-  <script type='text/javascript'>
-      // LÓGICA DE REMOVER TELA DE CARREGAMENTO
-      function fecharTelaCarregamento() {
-          var loader = document.getElementById('global-loader');
-          if (loader && !sessionStorage.getItem('meow_loader_visto')) {
-              setTimeout(function() {
-                  loader.classList.add('hidden');
-                  sessionStorage.setItem('meow_loader_visto', 'true');
-              }, 800);
-          }
-      }
-
-      window.addEventListener('load', fecharTelaCarregamento);
-
-      // --- SISTEMA DE OBRAS ACESSADAS (OFFLINE MAGIC) ---
-      function marcarComoAcessada(id) {
-          let acessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
-          if(!acessadas.includes(id)) {
-              acessadas.push(id);
-              localStorage.setItem('meow_obras_acessadas', JSON.stringify(acessadas));
-          }
-      }
-
-      // SISTEMA DE TEMA CLARO E ESCURO
-      function toggleTheme() {
-          var currentTheme = localStorage.getItem('meow_theme') || 'light';
-          var newTheme = currentTheme === 'light' ? 'dark' : 'light';
-          setTheme(newTheme);
-      }
-
-      function setTheme(theme) {
-          var icon = document.getElementById('theme-icon');
-          if(theme === 'dark') { 
-              document.body.setAttribute('data-theme', 'dark'); 
-              if(icon) { icon.className = 'fa-solid fa-sun'; }
-          } else { 
-              document.body.removeAttribute('data-theme'); 
-              if(icon) { icon.className = 'fa-solid fa-moon'; }
-          }
-          localStorage.setItem('meow_theme', theme);
-      }
-
-      var savedTheme = localStorage.getItem('meow_theme');
-      if(savedTheme) { setTheme(savedTheme); }
-
-      // SISTEMA DE PALETA DE CORES 
-      function toggleColorMenu() {
-          var menu = document.getElementById('color-menu');
-          if(menu) menu.classList.toggle('active');
-      }
-
-      function setColor(color) {
-          document.body.setAttribute('data-color', color);
-          localStorage.setItem('meow_color', color);
-          var menu = document.getElementById('color-menu');
-          if(menu) menu.classList.remove('active');
-      }
-
-      var savedColor = localStorage.getItem('meow_color');
-      if(savedColor) { document.body.setAttribute('data-color', savedColor); }
-
+ <script type='text/javascript'>
+  //<![CDATA[
       function toggleNotificacoes(e) {
           e.preventDefault();
           var panel = document.getElementById('notificacoes-panel');
           if(panel) panel.classList.toggle('active');
-      }
-
-      // PESQUISA
-      function abrirPesquisa() {
-          var overlay = document.getElementById('search-overlay');
-          if(overlay) {
-              overlay.classList.add('active');
-              var input = document.getElementById('search-input');
-              if(input) input.focus();
-          }
-      }
-
-      function fecharPesquisa() {
-          var overlay = document.getElementById('search-overlay');
-          if(overlay) overlay.classList.remove('active');
       }
 
       // LÓGICA DE SCROLL
@@ -640,7 +420,6 @@
           var header = document.getElementById('main-header');
           var bottomNav = document.getElementById('mobile-bottom-nav');
           var panelNotif = document.getElementById('notificacoes-panel');
-          var colorMenu = document.getElementById('color-menu');
           
           if(header) {
               if (st > 20) { header.classList.add('scrolled'); } 
@@ -651,7 +430,6 @@
               if(header) { header.style.transform = 'translateY(-100%)'; }
               if(bottomNav) bottomNav.classList.add('nav-hidden');
               if(panelNotif) panelNotif.classList.remove('active');
-              if(colorMenu) colorMenu.classList.remove('active');
           } else {
               if(header) { header.style.transform = 'translateY(0)'; }
               if(bottomNav) bottomNav.classList.remove('nav-hidden');
@@ -659,419 +437,41 @@
           lastScrollTop = st <= 0 ? 0 : st;
       });
 
-      // INTEGRAÇÃO COM FIREBASE (COM SUAS NOVAS CREDENCIAIS!)
-      var firebaseConfig = { 
-          apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M", 
-          authDomain: "meow-scan-ffff0.firebaseapp.com",
-          databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com", 
-          projectId: "meow-scan-ffff0",
-          storageBucket: "meow-scan-ffff0.firebasestorage.app",
-          messagingSenderId: "76129834936",
-          appId: "1:76129834936:web:36df84ea0fb31ecc69e14d",
-          measurementId: "G-8VRH28ZBTF"
-      };
-      
+      // INTEGRAÇÃO COM FIREBASE
+      var firebaseConfig = { apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo", databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com", projectId: "meow-scan-ffff0" };
       if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
       var db = firebase.database();
       
-      var URL_BASE = "obra.html?obra=";
-      var URL_LEITURA = "lersuasobrasaquinameowscan.html?obra=";
-      var listaGlobalObras = [];
+      var URL_BASE = "https://meowscan7.blogspot.com/p/obra.html?obra=";
+      var URL_LEITURA = "https://meowscan7.blogspot.com/p/lersuasobrasaquinameowscan.html?obra=";
 
-      function getStatusBadge(statusRaw) {
-          var status = statusRaw || "Sem Status";
-          var sLower = status.toLowerCase();
-          var cssClass = "status-andamento";
-          if (sLower.includes('completo') || sLower.includes('concluíd') || sLower.includes('concluid')) cssClass = "status-completo";
-          else if (sLower.includes('pausa')) cssClass = "status-pausa";
-          else if (sLower.includes('futura') || sLower.includes('breve')) cssClass = "status-futura";
-          return `<span class="status-badge ${cssClass}">${status}</span>`;
-      }
-
-      function formatarNomeCapitulo(capRaw) {
-          if (!capRaw || capRaw === "Em breve") return "Em breve";
-          return capRaw.toString().replace(/_/g, " ");
-      }
-
-      function parseTimestamp(rawTime) {
-          if (!rawTime) return 0;
-          if (typeof rawTime === 'number') return rawTime;
-          if (typeof rawTime === 'string') {
-              if (!isNaN(rawTime)) return parseInt(rawTime);
-              if (rawTime.includes('/')) {
-                  var partes = rawTime.split(/[/\s:-]+/); 
-                  if (partes.length >= 3) {
-                      var dia = parseInt(partes[0]);
-                      var mes = parseInt(partes[1]) - 1;
-                      var ano = parseInt(partes[2]);
-                      if (ano < 100) ano += 2000;
-                      var hora = partes[3] ? parseInt(partes[3]) : 0;
-                      var min = partes[4] ? parseInt(partes[4]) : 0;
-                      var d = new Date(ano, mes, dia, hora, min);
-                      if (!isNaN(d.getTime())) return d.getTime();
-                  }
-              }
-              var dt = new Date(rawTime).getTime();
-              return isNaN(dt) ? 0 : dt;
-          }
-          return 0;
-      }
-
-      // GERADOR DE CARDS (COM A TAG NOVO INCLUÍDA AQUI)
-      function criarCardObra(obra) {
-          var card = document.createElement('div');
-          card.className = 'obra-card';
-          
-          var badgeHtml = getStatusBadge(obra.status);
-          var urlObra = URL_BASE + encodeURIComponent(obra.id);
-          
-          // Sistema inteligente de notificação "NOVO" para obras recém-atualizadas (últimos 5 dias)
-          var badgeNovo = "";
-          if (obra.timestamp) {
-              var diasPassados = (Date.now() - obra.timestamp) / (1000 * 60 * 60 * 24);
-              if (diasPassados <= 5 && diasPassados >= 0) {
-                  badgeNovo = '<span class="badge-novo">NOVO</span>';
-              }
-          }
-
-          card.innerHTML = `
-              <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
-                  <div class="obra-img-box">
-                      ${badgeHtml}
-                      <img src="${obra.capa || 'https://via.placeholder.com/300x420'}" alt="${obra.nome}" loading="lazy"/>
-                  </div>
-              </a>
-              <div class="obra-info">
-                  <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
-                      <div class="obra-titulo">${obra.nome || 'Sem título'}</div>
-                  </a>
-                  <a href="${urlObra}" class="link-capitulo" onclick="marcarComoAcessada('${obra.id}')">
-                      <i class="fa-solid fa-book-open"></i> ${obra.ultimoCapitulo} ${badgeNovo}
-                  </a>
-              </div>
-          `;
-          return card;
-      }
-
-      // BANNER SLIDE HERO
-      var slideTimer = null;
-      var slideIndexAtual = 0;
-
-      function renderizarBannerHero(obras) {
-          var container = document.getElementById('banner-hero');
-          if (!container) return;
-          container.innerHTML = '';
-          if (!obras || obras.length === 0) return;
-
-          var destaques = obras.slice(0, 5);
-
-          destaques.forEach((obra, idx) => {
-              var slide = document.createElement('div');
-              slide.className = `banner-slide ${idx === 0 ? 'active' : ''}`;
-              var urlObra = URL_BASE + encodeURIComponent(obra.id);
-
-              slide.innerHTML = `
-                  <div class="banner-bg" style="background-image: url('${obra.capa}');"></div>
-                  <div class="banner-gradient"></div>
-                  <div class="banner-content">
-                      <span class="banner-tag">Destaque</span>
-                      <h1>${obra.nome}</h1>
-                      <a href="${urlObra}" class="btn-main" onclick="marcarComoAcessada('${obra.id}')"><i class="fa-solid fa-play"></i> Ler Agora</a>
-                  </div>
-              `;
-              container.appendChild(slide);
-          });
-
-          if (destaques.length > 1) {
-              if(slideTimer) clearInterval(slideTimer);
-              slideTimer = setInterval(() => {
-                  var slides = container.querySelectorAll('.banner-slide');
-                  if (slides.length > 0) {
-                      slides[slideIndexAtual].classList.remove('active');
-                      slideIndexAtual = (slideIndexAtual + 1) % slides.length;
-                      slides[slideIndexAtual].classList.add('active');
-                  }
-              }, 5000);
-          }
-      }
-
-      // RENDERIZAR TOP 10
-      function renderizarTop10(obras) {
-          var top10Container = document.getElementById('top10');
-          if (!top10Container) return;
-          top10Container.innerHTML = '';
-
-          var sortedByViews = [...obras].sort((a, b) => b.views - a.views).slice(0, 10);
-
-          sortedByViews.forEach((obra, index) => {
-              var item = document.createElement('div');
-              item.className = 'top10-item';
-              var urlObra = URL_BASE + encodeURIComponent(obra.id);
-
-              item.innerHTML = `
-                  <div class="top10-num">${index + 1}</div>
-                  <div class="top10-card">
-                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
-                          <div class="obra-img-box">
-                              <img src="${obra.capa || ''}" alt="${obra.nome}" loading="lazy"/>
-                          </div>
-                      </a>
-                      <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
-                          <div class="top10-titulo">${obra.nome}</div>
-                      </a>
-                  </div>
-              `;
-              top10Container.appendChild(item);
-          });
-      }
-
-      // NOTIFICAÇÕES DE FAVORITOS
-      function processarNotificacoes(lista) {
-          var notifContainer = document.getElementById('lista-notificacoes');
+      // Buscar Notificações Reais do Firebase (Badge só aparece se houver dados reais)
+      db.ref('notificacoes_reais').on('value', function(snapshot) {
           var badge = document.getElementById('badge-notif');
-          if(!notifContainer) return;
-
-          var favs = [];
-          try { favs = JSON.parse(localStorage.getItem('meow_favoritos')) || []; } catch(e){}
-
-          if(favs.length === 0) {
-              notifContainer.innerHTML = "<p style='color: var(--text-dim); text-align: center; font-size: 0.9rem;'>Sua biblioteca de favoritos está vazia!</p>";
-              if(badge) badge.style.display = 'none';
-              return;
-          }
-
-          var notificaveis = lista.filter(o => favs.includes(o.id));
-          if(notificaveis.length === 0) {
-              notifContainer.innerHTML = "<p style='color: var(--text-dim); text-align: center; font-size: 0.9rem;'>Nenhuma atualização nos seus favoritos!</p>";
-              if(badge) badge.style.display = 'none';
-              return;
-          }
-
-          if(badge) {
-              badge.innerText = notificaveis.length;
+          var listaNotif = document.getElementById('lista-notificacoes');
+          
+          if (snapshot.exists() && snapshot.hasChildren()) {
+              var total = snapshot.numChildren();
               badge.style.display = 'flex';
-          }
-
-          notifContainer.innerHTML = '';
-          notificaveis.forEach(obra => {
-              var urlObra = URL_BASE + encodeURIComponent(obra.id);
-              var a = document.createElement('a');
-              a.className = 'notif-item';
-              a.href = urlObra;
-              a.onclick = () => marcarComoAcessada(obra.id);
-              a.innerHTML = `
-                  <img src="${obra.capa}" class="notif-capa" alt="${obra.nome}"/>
-                  <div class="notif-info">
-                      <div class="notif-titulo">${obra.nome}</div>
-                      <div class="notif-desc"><i class="fa-solid fa-bell"></i> Novo capítulo: ${obra.ultimoCapitulo}</div>
-                  </div>
-              `;
-              notifContainer.appendChild(a);
-          });
-      }
-
-      // PROCESSAR TODAS AS OBRAS DA BASE DE DADOS E FILTRAR OFFLINE
-      function processarEExibirObras(data) {
-          if (!data) return;
-
-          var lista = Object.keys(data).map(function(id) {
-              var obra = data[id];
-              
-              var capCru = "Em breve";
-              var exibirCapitulo = "Em breve";
-              
-              if (obra.capitulos) {
-                  var chaves = Object.keys(obra.capitulos); 
-                  if (chaves.length > 0) {
-                      chaves.sort(function(a, b) {
-                          var numA = parseFloat(obra.capitulos[a].numero !== undefined ? obra.capitulos[a].numero : a.replace(/[^0-9,.]/g, '').replace(',','.'));
-                          var numB = parseFloat(obra.capitulos[b].numero !== undefined ? obra.capitulos[b].numero : b.replace(/[^0-9,.]/g, '').replace(',','.'));
-                          if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
-                          return a.localeCompare(b);
-                      });
-                      
-                      var ultimaChave = chaves[chaves.length - 1]; 
-                      var ultimoCapObj = obra.capitulos[ultimaChave];
-                      
-                      capCru = ultimaChave;
-                      
-                      if (ultimoCapObj && ultimoCapObj.nomeCap && ultimoCapObj.nomeCap.trim() !== "") {
-                          exibirCapitulo = ultimoCapObj.nomeCap;
-                      } else {
-                          exibirCapitulo = formatarNomeCapitulo(ultimaChave);
-                      }
-                  }
-              } else {
-                  var capSalvo = obra.ultimoCapitulo || obra.capitulo || obra.ultimo_capitulo || obra.cap || obra.Capitulo || obra.chapter || obra.ultimoCap || null;
-                  if (capSalvo !== null && capSalvo !== undefined && capSalvo !== "") {
-                      capCru = capSalvo;
-                      exibirCapitulo = formatarNomeCapitulo(capCru);
-                  }
-              }
-
-              var viewsReal = 0;
-              if (obra.stats && obra.stats.total_cliques_ler) viewsReal = parseInt(obra.stats.total_cliques_ler) || 0;
-              else if (obra.stats && obra.stats.visualizacoes) viewsReal = parseInt(obra.stats.visualizacoes) || 0;
-              else viewsReal = parseInt(obra.views || obra.Views) || 0;
-
-              var timestampReal = parseTimestamp(obra.timestamp || obra.dataAtualizacao || obra.data_atualizacao);
-              var maiorTimestampCap = 0;
-              
-              if (obra.capitulos) {
-                  var chavesCaps = Object.keys(obra.capitulos);
-                  chavesCaps.forEach(function(k) {
-                      var cap = obra.capitulos[k];
-                      var cTime = parseTimestamp(cap.timestamp || cap.data || cap.dataAtualizacao);
-                      if (cTime > maiorTimestampCap) maiorTimestampCap = cTime;
-                  });
-              }
-              
-              if (maiorTimestampCap > timestampReal) {
-                  timestampReal = maiorTimestampCap;
-              }
-
-              return {
-                  id: id, 
-                  capa: obra.capaUrl || obra.capa, 
-                  nome: obra.nome || obra.titulo || 'Sem título',
-                  views: viewsReal, 
-                  ultimoCapitulo: exibirCapitulo,
-                  ultimoCapituloRaw: capCru,
-                  timestamp: timestampReal,
-                  status: obra.status || "Sem Status"
-              };
-          });
-
-          // --------- LÓGICA MÁGICA DO OFFLINE ---------
-          let isOffline = !navigator.onLine;
-          let msgOffline = document.getElementById('offline-msg');
-          
-          if (isOffline) {
-              if (msgOffline) msgOffline.classList.remove('hidden');
-              // Filtra a lista para mostrar SOMENTE as obras que a pessoa já abriu/clicou (salvas no celular)
-              let obrasAcessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
-              lista = lista.filter(o => obrasAcessadas.includes(o.id));
+              badge.innerText = total;
+              listaNotif.innerHTML = '<p style="color: var(--accent-color); text-align: center; font-size: 0.9rem;">Você tem ' + total + ' novas atualizações!</p>';
           } else {
-              if (msgOffline) msgOffline.classList.add('hidden');
-          }
-
-          listaGlobalObras = lista;
-
-          // 1. Banner Hero
-          var recentesParaBanner = [...lista].sort((a,b) => b.timestamp - a.timestamp);
-          if (recentesParaBanner.length > 0) {
-              document.getElementById('banner-hero').style.display = 'block';
-              renderizarBannerHero(recentesParaBanner);
-          } else {
-              document.getElementById('banner-hero').style.display = 'none'; 
-          }
-
-          // 2. Top 10
-          var top10Container = document.getElementById('top10');
-          if (lista.length > 0) {
-              renderizarTop10(lista);
-          } else if (top10Container) {
-              top10Container.innerHTML = '<p style="color: var(--text-dim); padding: 10px;">Nenhuma obra salva para leitura offline. 🥺</p>';
-          }
-
-          // 3. Lançamentos Recentes
-          var gridUpdates = document.getElementById('lista-updates');
-          if(gridUpdates) {
-              gridUpdates.innerHTML = '';
-              var recentes = [...lista].sort((a, b) => b.timestamp - a.timestamp).slice(0, 12);
-              if (recentes.length === 0) {
-                  gridUpdates.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">Vazio no modo offline! 🥺</p>';
-              } else {
-                  recentes.forEach(o => gridUpdates.appendChild(criarCardObra(o)));
-              }
-          }
-
-          // 4. Obras Concluídas
-          var gridConcluidas = document.getElementById('lista-concluidas');
-          if(gridConcluidas) {
-              gridConcluidas.innerHTML = '';
-              var concluidas = lista.filter(o => {
-                  var st = (o.status || '').toLowerCase();
-                  return st.includes('completo') || st.includes('concluíd') || st.includes('concluid');
-              });
-              if(concluidas.length === 0) {
-                  gridConcluidas.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">Nenhuma obra concluída salva offline.</p>';
-              } else {
-                  concluidas.forEach(o => gridConcluidas.appendChild(criarCardObra(o)));
-              }
-          }
-
-          // 5. Todas as Obras
-          var gridTodas = document.getElementById('lista-todas');
-          if(gridTodas) {
-              gridTodas.innerHTML = '';
-              var todas = [...lista].sort((a,b) => (a.nome || '').localeCompare(b.nome || ''));
-              if (todas.length === 0) {
-                  gridTodas.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">Você ainda não acessou nenhuma obra para ler offline. 🥺</p>';
-              } else {
-                  todas.forEach(o => gridTodas.appendChild(criarCardObra(o)));
-              }
-          }
-
-          // 6. Notificações
-          processarNotificacoes(lista);
-          
-          fecharTelaCarregamento();
-      }
-
-      // CAMPO DE BUSCA AO VIVO
-      var inputSearch = document.getElementById('search-input');
-      if(inputSearch) {
-          inputSearch.addEventListener('input', function(e) {
-              var term = e.target.value.toLowerCase().trim();
-              var container = document.getElementById('search-results-grid');
-              if (!container) return;
-              container.innerHTML = '';
-              
-              if (term.length < 2) return;
-
-              var filtrados = listaGlobalObras.filter(o => (o.nome && o.nome.toLowerCase().includes(term)));
-              if(filtrados.length === 0) {
-                  container.innerHTML = '<p style="color: var(--text-dim); text-align: center; grid-column: 1/-1;">Nenhuma obra encontrada.</p>';
-              } else {
-                  filtrados.forEach(o => container.appendChild(criarCardObra(o)));
-              }
-          });
-      }
-
-      // MONITOR DE INTERNET PARA ATUALIZAR A PÁGINA NA HORA
-      window.addEventListener('offline', function() {
-          let backup = localStorage.getItem('meow_backup_obras');
-          if (backup) {
-              processarEExibirObras(JSON.parse(backup));
+              badge.style.display = 'none';
+              listaNotif.innerHTML = '<p style="color: var(--text-dim); text-align: center; font-size: 0.9rem;">Tudo lido por enquanto!</p>';
           }
       });
 
-      window.addEventListener('online', function() {
-          let msgOffline = document.getElementById('offline-msg');
-          if (msgOffline) msgOffline.classList.add('hidden');
-      });
-
-      // OUVINTE DO FIREBASE
-      db.ref('obras').on('value', function(snapshot) {
-          var data = snapshot.val();
-          if(data) {
-              localStorage.setItem('meow_backup_obras', JSON.stringify(data));
-              processarEExibirObras(data);
-          } else {
-              fecharTelaCarregamento();
-          }
-      });
-
-      // SE JÁ ENTRAR NO APLICATIVO SEM INTERNET, PUXA O BACKUP DIRETO
-      if (!navigator.onLine) {
-          let backup = localStorage.getItem('meow_backup_obras');
-          if (backup) {
-              processarEExibirObras(JSON.parse(backup));
-          } else {
-              fecharTelaCarregamento();
-          }
+      // Funções do Menu de Pesquisa
+      function abrirPesquisa() {
+          var overlay = document.getElementById('search-overlay');
+          if(overlay) overlay.classList.add('active');
       }
+      
+      function fecharPesquisa() {
+          var overlay = document.getElementById('search-overlay');
+          if(overlay) overlay.classList.remove('active');
+      }
+  //]]>
   </script>
 </body>
 </html>
