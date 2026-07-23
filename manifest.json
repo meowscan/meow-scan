@@ -1,16 +1,24 @@
 {
-  "short_name": "Meow Scan",
-  "name": "Meow Scan - App",
+  "name": "Meow Scan",
+  "short_name": "MeowScan",
+  "description": "Leitor de obras da Meow Scan",
+  "start_url": "/miau-scan/index.html",
+  "scope": "/miau-scan/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/616/616430.png",
+      "src": "/miau-scan/icone-192.png",
+      "sizes": "192x192",
       "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/miau-scan/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "start_url": "/miau-scan/",
-  "background_color": "#121212",
-  "theme_color": "#ff4081",
-  "display": "standalone"
+  ]
 }
-
