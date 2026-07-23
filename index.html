@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -24,6 +24,11 @@
 
       if (esconderMenuSempre) {
           document.write('<style>#main-header, #mobile-bottom-nav { display: none !important; pointer-events: none !important; opacity: 0 !important; visibility: hidden !important; } #meow-elite-app { padding-bottom: 0px !important; } .page-content-wrapper { margin-top: 30px !important; }</style>');
+      }
+      
+      /* BLOQUEIO DA TELA DE CARREGAMENTO SE JÁ FOI VISTA */
+      if (sessionStorage.getItem('meow_loader_visto') === 'true') {
+          document.write('<style>#global-loader { display: none !important; }</style>');
       }
   </script>
 
@@ -131,7 +136,7 @@
     }
     .offline-banner i { font-size: 1.2rem; }
 
-    /* --- TELA DE CARREGAMENTO INICIAL (TURBO) --- */
+    /* --- TELA DE CARREGAMENTO INICIAL --- */
     #global-loader {
         position: fixed;
         inset: 0;
@@ -141,12 +146,11 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: opacity 0.4s ease, visibility 0.4s ease;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
     }
     #global-loader.hidden {
         opacity: 0;
         visibility: hidden;
-        pointer-events: none;
     }
     .loader-logo {
         width: 180px;
@@ -193,7 +197,7 @@
     }
     
     #meow-elite-app .logo { display: flex; align-items: center; text-decoration: none; }
-    #meow-elite-app .logo img { height: 50px; width: auto; object-fit: contain; transition: var(--transition); border-radius: 50%;}
+    #meow-elite-app .logo img { height: 50px; width: auto; object-fit: contain; transition: var(--transition); }
     #meow-elite-app .logo img:hover { transform: scale(1.05); }
 
     .header-actions { display: flex; gap: 12px; align-items: center; position: relative; }
@@ -313,7 +317,7 @@
         display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px 15px; 
     }
 
-    /* CARDS DE OBRAS E TAG NOVO */
+    /* CARDS DE OBRAS */
     #meow-elite-app .obra-card { position: relative; transition: var(--transition); display: flex; flex-direction: column; }
     #meow-elite-app .obra-link-principal { text-decoration: none; display: block; }
     
@@ -334,22 +338,6 @@
         font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    
-    /* ETIQUETA NOVO */
-    .badge-novo {
-        position: absolute; top: 8px; right: 8px; z-index: 5;
-        background: #EF4444; color: #fff;
-        padding: 4px 8px; border-radius: 8px; font-size: 0.65rem;
-        font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
-        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.5);
-        animation: pulse-novo 1.5s infinite ease-in-out;
-    }
-    @keyframes pulse-novo {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-        50% { transform: scale(1.08); box-shadow: 0 0 10px 5px rgba(239, 68, 68, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-
     .status-completo { background: var(--success); color: #fff; }
     .status-andamento { background: var(--accent-color); color: #fff; }
     .status-pausa { background: var(--warning); color: #fff; }
@@ -453,9 +441,9 @@
       <i class="fa-solid fa-wifi"></i> 🥺 Você está offline! Mostrando apenas obras já acessadas.
   </div>
 
-  <!-- TELA DE CARREGAMENTO TURBO (GARANTIDO QUE SOME) -->
+  <!-- NOVA TELA DE CARREGAMENTO -->
   <div id="global-loader">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png" alt="Meow Scan Loading" class="loader-logo">
+      <img src="7668.png" alt="Meow Scan Loading" class="loader-logo">
       <div class="loader-spinner"></div>
       <div class="loader-text">Carregando o universo Meow...</div>
   </div>
@@ -477,7 +465,7 @@
 
       <header id='main-header'>
           <a class='logo' href='index.html'>
-              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png'/>
+              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6aC3chQ6doRxYFj6A_QjodQQOV8c9prAxUUcghfLANYhRLyebekvpQGr5yY7N8WyEEN-V4Dm7E9Z_Yt-296fKDPcsPS-l7OE0cxXIRL2U14fqEUWoNnVqsE9SW4vpNPb4vh7uSeO8A9Ml8wXHbxjKC5yQYOTGmHACMzveICcisVx59uMflIg8Gp2ggbcc/s320/3576.png'/>
           </a>
           
           <div class='header-actions'>
@@ -536,11 +524,11 @@
 
       <nav class='bottom-nav' id='mobile-bottom-nav'>
           <a class='nav-link active' href='index.html'><i class='fa-solid fa-house'></i></a>
-          <a class='nav-link' href='genero.html'><i class='fa-solid fa-list'></i></a>
-          <a class='nav-link' href='Biblioteca.html'><i class='fa-solid fa-bookmark'></i></a>
+          <a class='nav-link' href='generos.html'><i class='fa-solid fa-list'></i></a>
+          <a class='nav-link' href='biblioteca.html'><i class='fa-solid fa-bookmark'></i></a>
           <a class='nav-link' href='#' onclick='toggleNotificacoes(event)'><i class='fa-solid fa-bell'></i><span class='badge-count' id='badge-notif' style='display:none;'>0</span></a>
-          <a class='nav-link' href='Parcerias.html'><i class='fa-solid fa-handshake'></i></a>
-          <a class='nav-link' href='Perfil.html'><i class='fa-solid fa-user'></i></a>
+          <a class='nav-link' href='parcerias.html'><i class='fa-solid fa-handshake'></i></a>
+          <a class='nav-link' href='perfil.html'><i class='fa-solid fa-user'></i></a>
       </nav>
   </div>
 
@@ -548,19 +536,18 @@
   <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js'></script>
 
   <script type='text/javascript'>
-      // TRAVA DE SEGURANÇA: A TELA DE CARREGAMENTO SOME NO MÁXIMO EM 0.5 SEGUNDOS
-      var loaderJaFechado = false;
+      // LÓGICA DE REMOVER TELA DE CARREGAMENTO
       function fecharTelaCarregamento() {
-          if (loaderJaFechado) return;
           var loader = document.getElementById('global-loader');
-          if (loader) {
-              loader.classList.add('hidden');
-              loaderJaFechado = true;
+          if (loader && !sessionStorage.getItem('meow_loader_visto')) {
+              setTimeout(function() {
+                  loader.classList.add('hidden');
+                  sessionStorage.setItem('meow_loader_visto', 'true');
+              }, 800);
           }
       }
 
-      // Garante que se o Firebase demorar, a tela some sozinha após 500ms
-      setTimeout(fecharTelaCarregamento, 500);
+      window.addEventListener('load', fecharTelaCarregamento);
 
       // --- SISTEMA DE OBRAS ACESSADAS (OFFLINE MAGIC) ---
       function marcarComoAcessada(id) {
@@ -714,19 +701,10 @@
           var badgeHtml = getStatusBadge(obra.status);
           var urlObra = URL_BASE + encodeURIComponent(obra.id);
 
-          var htmlNovo = "";
-          if (obra.timestamp) {
-              var diferencaTempo = Date.now() - obra.timestamp;
-              if (diferencaTempo >= 0 && diferencaTempo <= 259200000) {
-                  htmlNovo = `<span class="badge-novo">NOVO</span>`;
-              }
-          }
-
           card.innerHTML = `
               <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                   <div class="obra-img-box">
                       ${badgeHtml}
-                      ${htmlNovo}
                       <img src="${obra.capa || 'https://via.placeholder.com/300x420'}" alt="${obra.nome}" loading="lazy"/>
                   </div>
               </a>
@@ -859,7 +837,7 @@
           });
       }
 
-      // PROCESSAR TODAS AS OBRAS
+      // PROCESSAR TODAS AS OBRAS DA BASE DE DADOS E FILTRAR OFFLINE
       function processarEExibirObras(data) {
           if (!data) return;
 
@@ -931,11 +909,13 @@
               };
           });
 
+          // --------- LÓGICA MÁGICA DO OFFLINE ---------
           let isOffline = !navigator.onLine;
           let msgOffline = document.getElementById('offline-msg');
           
           if (isOffline) {
               if (msgOffline) msgOffline.classList.remove('hidden');
+              // Filtra a lista para mostrar SOMENTE as obras que a pessoa já abriu/clicou (salvas no celular)
               let obrasAcessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
               lista = lista.filter(o => obrasAcessadas.includes(o.id));
           } else {
@@ -944,14 +924,16 @@
 
           listaGlobalObras = lista;
 
+          // 1. Banner Hero
           var recentesParaBanner = [...lista].sort((a,b) => b.timestamp - a.timestamp);
           if (recentesParaBanner.length > 0) {
               document.getElementById('banner-hero').style.display = 'block';
               renderizarBannerHero(recentesParaBanner);
           } else {
-              document.getElementById('banner-hero').style.display = 'none';
+              document.getElementById('banner-hero').style.display = 'none'; // Esconde se não tiver nada pra mostrar offline
           }
 
+          // 2. Top 10
           var top10Container = document.getElementById('top10');
           if (lista.length > 0) {
               renderizarTop10(lista);
@@ -959,6 +941,7 @@
               top10Container.innerHTML = '<p style="color: var(--text-dim); padding: 10px;">Nenhuma obra salva para leitura offline. 🥺</p>';
           }
 
+          // 3. Lançamentos Recentes
           var gridUpdates = document.getElementById('lista-updates');
           if(gridUpdates) {
               gridUpdates.innerHTML = '';
@@ -970,6 +953,7 @@
               }
           }
 
+          // 4. Obras Concluídas
           var gridConcluidas = document.getElementById('lista-concluidas');
           if(gridConcluidas) {
               gridConcluidas.innerHTML = '';
@@ -984,6 +968,7 @@
               }
           }
 
+          // 5. Todas as Obras
           var gridTodas = document.getElementById('lista-todas');
           if(gridTodas) {
               gridTodas.innerHTML = '';
@@ -995,10 +980,13 @@
               }
           }
 
+          // 6. Notificações
           processarNotificacoes(lista);
+          
           fecharTelaCarregamento();
       }
 
+      // CAMPO DE BUSCA AO VIVO
       var inputSearch = document.getElementById('search-input');
       if(inputSearch) {
           inputSearch.addEventListener('input', function(e) {
@@ -1018,6 +1006,7 @@
           });
       }
 
+      // MONITOR DE INTERNET PARA ATUALIZAR A PÁGINA NA HORA
       window.addEventListener('offline', function() {
           let backup = localStorage.getItem('meow_backup_obras');
           if (backup) {
@@ -1026,32 +1015,24 @@
       });
 
       window.addEventListener('online', function() {
+          // A Firebase normalmente reconecta sozinha, mas esconde a mensagem por segurança
           let msgOffline = document.getElementById('offline-msg');
           if (msgOffline) msgOffline.classList.add('hidden');
       });
 
-      // CARREGAMENTO IMEDIATO VIA CACHE
-      document.addEventListener("DOMContentLoaded", function() {
-          let backup = localStorage.getItem('meow_backup_obras');
-          if (backup) {
-              processarEExibirObras(JSON.parse(backup));
-          }
-      });
-
-      // BUSCA DO FIREBASE NO FUNDO
+      // OUVINTE DO FIREBASE
       db.ref('obras').on('value', function(snapshot) {
           var data = snapshot.val();
           if(data) {
+              // Quando tem internet, salva as obras no celular para o modo offline!
               localStorage.setItem('meow_backup_obras', JSON.stringify(data));
               processarEExibirObras(data);
           } else {
               fecharTelaCarregamento();
           }
-      }, function(error) {
-          // Se der qualquer erro no Firebase, fecha a tela de carregamento na hora para não travar
-          fecharTelaCarregamento();
       });
 
+      // SE JÁ ENTRAR NO APLICATIVO SEM INTERNET, PUXA O BACKUP DIRETO
       if (!navigator.onLine) {
           let backup = localStorage.getItem('meow_backup_obras');
           if (backup) {
@@ -1060,6 +1041,7 @@
               fecharTelaCarregamento();
           }
       }
+
   </script>
 </body>
 </html>
