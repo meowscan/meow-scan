@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Detalhes da Obra - Meow Scan</title>
+<link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap' rel='stylesheet'/>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600&family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+<style>
+  /* ========================================================= */
+  /* VARIÁVEIS GERAIS (PÁGINA DA OBRA) */
+  /* ========================================================= */
+  :root {
+    --accent-gradient: linear-gradient(135deg, #f472b6, #ff69b4);
+    --accent-color: #f472b6;
+    --accent-glow: rgba(244, 114, 182, 0.5);
+    
+    --bg-main: #0a0a0f; 
+    --glass-bg: rgba(20, 20, 25, 0.7);
+    --glass-border: rgba(244, 114, 182, 0.15); 
+    --glass-highlight: rgba(255, 255, 255, 0.2);
+    
+    --text-main: #F8F9FA;
+    --text-secondary: #ADB5BD;
+    
+    --danger: #FF003C; 
+    --warning: #FFB703;
+    --success: #00F5D4;
+    
+    --radius-xl: 32px;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --radius-chap-img: 8px;
+
+    --chapter-img-width: 65px;
+    --chapter-img-height: 48px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; max-width: 100vw; overflow-x: hidden; scroll-behavior: smooth; }
+
+  body { 
+    background-color: var(--bg-main); 
+    color: var(--text-main); 
+    font-family: 'Outfit', sans-serif; 
+    position: relative;
+    background-image: 
+        radial-gradient(circle at 15% 15%, rgba(244, 114, 182, 0.1) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(255, 105, 180, 0.08) 0%, transparent 45%);
+    background-attachment: fixed;
+    line-height: 1.6;
+  }
+
+  /* --- AVISO FLUTUANTE DE CONTEÚDO ADULTO (+18) / SENSÍVEL --- */
+  .aviso-18-flutuante {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(50px);
+    background: rgba(20, 20, 30, 0.95);
+    border: 2px solid var(--danger);
+    box-shadow: 0 10px 40px rgba(255, 0, 60, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    color: var(--text-main);
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .aviso-18-flutuante.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .aviso-18-texto {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .aviso-18-icone {
+    font-size: 22px;
+    color: var(--danger);
+    text-shadow: 0 0 15px rgba(255, 0, 60, 0.8);
+  }
+  .btn-fechar-aviso {
+    background: rgba(255, 0, 60, 0.2);
+    border: 1px solid rgba(255, 0, 60, 0.5);
+    color: var(--danger);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+  .btn-fechar-aviso:hover {
+    background: var(--danger);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.6);
+    transform: scale(1.1);
+  }
+
+  /* BADGES DE CLASSIFICAÇÃO */
+  .badge-sensivel {
+    background: rgba(255, 183, 3, 0.15); color: var(--warning); border: 2px solid var(--warning);
+    font-size: 12px; font-weight: 900; padding: 6px 16px; border-radius: 8px; text-transform: uppercase;
+    letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 0 15px rgba(255, 183, 3, 0.3);
+  }
+  .badge-adulto {
+    background: rgba(255, 0, 60, 0.15); color: var(--danger); border: 2px solid var(--danger);
+    font-size: 12px; font-weight: 900; padding: 6px 16px; border-radius: 8px; text-transform: uppercase;
+    letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+    animation: pulse-danger 2s infinite;
+  }
+  
+  @keyframes pulse-danger {
+    0% { box-shadow: 0 0 10px rgba(255, 0, 60, 0.4); }
+    50% { box-shadow: 0 0 25px rgba(255, 0, 60, 0.7); }
+    100% { box-shadow: 0 0 10px rgba(255, 0, 60, 0.4); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .premium-glass {
+    background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border-radius: var(--radius-lg); animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .hero-bg-wrapper {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    overflow: hidden; z-index: -1; pointer-events: none;
+  }
+  
+  .hero-bg { 
+    width: 100%; height: 100%; background-size: cover; background-position: center 20%; 
+    filter: blur(65px) saturate(1.3) brightness(0.25); transform: scale(1.1); opacity: 0.9;
+    transition: background-image 0.5s ease-in-out;
+  }
+
+  .top-nav { padding: 30px 5%; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.5s ease-out; }
+  .btn-back-home { 
+    display: inline-flex; align-items: center; gap: 8px; background: rgba(244, 114, 182, 0.1); 
+    color: var(--text-main); text-decoration: none; padding: 10px 22px; 
+    border-radius: 50px; font-size: 13px; font-weight: 600; text-transform: uppercase; 
+    border: 1px solid var(--glass-border); backdrop-filter: blur(10px); transition: all 0.3s ease; 
+    letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .btn-back-home:hover { background: rgba(244, 114, 182, 0.25); border-color: var(--accent-color); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(244, 114, 182, 0.3); }
+
+  #main-obra { max-width: 1100px; margin: 0 auto; padding: 0 5% 50px; }
+
+  .header-top { text-align: center; margin-bottom: 50px; padding-top: 20px; animation: fadeIn 0.6s ease-out; }
+  .obra-titulo { 
+    font-size: clamp(36px, 6vw, 62px); font-weight: 900; margin: 0; line-height: 1.1; 
+    text-transform: uppercase; letter-spacing: -0.5px;
+    background: linear-gradient(to bottom right, #FFFFFF, #fbcfe8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: 0 15px 40px rgba(0,0,0,0.5); word-break: break-word;
+  }
+  
+  .stats-bar {
+    display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px 30px; 
+    margin-top: 25px; background: rgba(0,0,0,0.5); padding: 12px 30px; border-radius: 50px;
+    backdrop-filter: blur(10px); border: 1px solid var(--glass-border); box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  }
+  .stats-bar span { font-size: 14px; color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  
+  .obra-content { display: grid; grid-template-columns: 340px 1fr; gap: 50px; align-items: start; margin-bottom: 60px; }
+  
+  .left-column-sticky { position: sticky; top: 30px; display: flex; flex-direction: column; gap: 30px; z-index: 10; }
+  .right-column-content { display: flex; flex-direction: column; gap: 40px; }
+  
+  .capa-box { position: relative; animation: float-capa 6s ease-in-out infinite, fadeIn 0.8s ease-out; }
+  @keyframes float-capa { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+  .capa-box img { width: 100%; height: auto; aspect-ratio: 2/3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 45px var(--accent-glow); border: 1px solid rgba(255,255,255,0.15); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease; }
+  .capa-box:hover img { transform: scale(1.05) translateY(-5px); box-shadow: 0 35px 70px rgba(0,0,0,0.8), 0 0 70px var(--accent-glow); }
+
+  .info-panel { padding: 45px; display: flex; flex-direction: column; justify-content: space-between; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 25px; margin-bottom: 35px; padding-bottom: 35px; border-bottom: 1px solid var(--glass-border); }
+  .info-item label { display: block; color: var(--text-secondary); font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1.5px; }
+  .info-item span, .info-item a { font-weight: 600; font-size: 16px; color: var(--text-main); text-decoration: none; display: block; }
+  .info-item a { transition: 0.3s; color: var(--accent-color); }
+  .info-item a:hover { text-shadow: 0 0 15px var(--accent-glow); color: #fff; }
+
+  /* ESTILO DE STATUS DA OBRA */
+  .status-completo {
+      background: rgba(0, 245, 212, 0.15); color: var(--success) !important; padding: 6px 12px; border-radius: 6px; 
+      font-weight: 800 !important; text-transform: uppercase; border: 1px solid rgba(0, 245, 212, 0.4); 
+      font-size: 13px !important; display: inline-block !important; letter-spacing: 1px;
+      box-shadow: 0 0 10px rgba(0, 245, 212, 0.2);
+  }
+  .status-andamento {
+      background: rgba(255, 183, 3, 0.15); color: var(--warning) !important; padding: 6px 12px; border-radius: 6px; 
+      font-weight: 800 !important; text-transform: uppercase; border: 1px solid rgba(255, 183, 3, 0.4); 
+      font-size: 13px !important; display: inline-block !important; letter-spacing: 1px;
+      box-shadow: 0 0 10px rgba(255, 183, 3, 0.2);
+  }
+
+  .badge-meow { background: rgba(244, 114, 182, 0.1); border: 1px solid var(--accent-color); color: var(--accent-color) !important; padding: 4px 12px; border-radius: 50px; font-size: 11px !important; font-weight: 800 !important; text-transform: uppercase; letter-spacing: 1px; display: inline-block !important; }
+
+  .sinopse-box h3 { color: var(--text-main); font-weight: 800; text-transform: uppercase; font-size: 18px; margin: 0 0 15px 0; display: flex; align-items: center; gap: 12px; letter-spacing: 1px; }
+  .sinopse-box h3::before { content: ''; display: block; width: 4px; height: 20px; background: var(--accent-gradient); border-radius: 4px; box-shadow: 0 0 10px var(--accent-color); }
+  .sinopse-text { font-size: 15px; line-height: 1.8; color: #E0E0E0; font-weight: 300; text-align: justify; }
+
+  .actions-flex { display: flex; flex-direction: column; gap: 20px; margin-top: 45px; }
+  .btn-hero { padding: 18px; border-radius: var(--radius-sm); font-weight: 800; border: none; font-size: 14px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); text-decoration: none; color: white; letter-spacing: 1px; width: 100%; }
+  .btn-ler-big { background: var(--accent-gradient); box-shadow: 0 10px 30px rgba(244, 114, 182, 0.4); }
+  .btn-ler-big:hover { box-shadow: 0 15px 45px rgba(244, 114, 182, 0.6); transform: translateY(-3px); }
+
+  .secondary-actions-flex { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+  .btn-secondary { background: rgba(244, 114, 182, 0.05); border: 1px solid var(--glass-border); color: var(--text-main); font-weight: 700; transition: all 0.3s ease; }
+  .btn-secondary:hover { background: rgba(244, 114, 182, 0.15); border-color: var(--accent-color); transform: translateY(-3px); }
+  .btn-secondary.saved { background: rgba(244, 114, 182, 0.15); border-color: var(--accent-color); color: #fff; box-shadow: inset 0 0 20px rgba(244, 114, 182, 0.2), 0 5px 15px rgba(244, 114, 182, 0.3); }
+  .btn-secondary.subscribed { background: rgba(0, 245, 212, 0.15); border-color: var(--success); color: var(--success); box-shadow: inset 0 0 20px rgba(0, 245, 212, 0.2), 0 5px 15px rgba(0, 245, 212, 0.2); }
+
+  .section-header-glitch { font-size: 26px; font-weight: 900; margin-bottom: 20px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+  .total-caps { font-size: 13px; background: rgba(244, 114, 182, 0.1); color: var(--accent-color); padding: 8px 18px; border-radius: 50px; font-weight: 800; border: 1px solid var(--glass-border); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+  
+  .sort-group { display: flex; gap: 8px; }
+  .sort-btn { background: rgba(244, 114, 182, 0.05); border: 1px solid var(--glass-border); color: var(--text-secondary); width: 44px; height: 44px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+  .sort-btn:hover, .sort-btn.active { background: var(--accent-gradient); color: #fff; border-color: transparent; box-shadow: 0 5px 15px var(--accent-glow); }
+
+  .search-container { width: 100%; margin-bottom: 25px; }
+  .search-caps { width: 100%; background: rgba(10, 10, 15, 0.8); border: 1px solid var(--glass-border); color: #fff; padding: 16px 20px; border-radius: var(--radius-sm); outline: none; font-family: inherit; font-size: 15px; transition: 0.3s; }
+  .search-caps:focus { border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); background: rgba(15, 15, 20, 0.9); }
+
+  /* ========================================================= */
+  /* DESIGN PREMIUM DE SELETOR DE VOLUMES / TEMPORADAS        */
+  /* ========================================================= */
+  .season-group { 
+      margin-bottom: 15px; 
+      background: rgba(20, 20, 25, 0.6); 
+      border-radius: var(--radius-md); 
+      border: 1px solid rgba(244, 114, 182, 0.15); 
+      overflow: hidden; 
+  }
+  
+  .season-header { 
+    padding: 18px 20px; 
+    cursor: pointer; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    transition: all 0.3s ease; 
+    background: rgba(10, 10, 15, 0.8);
+  }
+  .season-header:hover { 
+    background: rgba(244, 114, 182, 0.05); 
+  }
+
+  .season-header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+  }
+
+  .season-badge {
+      background: rgba(244, 114, 182, 0.15); 
+      color: var(--accent-color); 
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid rgba(244, 114, 182, 0.3);
+  }
+
+  .season-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+  }
+
+  .season-header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 600;
+  }
+  
+  .season-chapters { 
+    display: none; 
+    padding: 20px; 
+    flex-direction: column; 
+    gap: 12px; 
+    background: rgba(5, 5, 10, 0.4);
+    border-top: 1px solid rgba(244, 114, 182, 0.1);
+  }
+
+  .btn-ver-mais { width: 100%; background: rgba(244, 114, 182, 0.05); color: var(--text-secondary); border: 1px dashed var(--glass-border); padding: 14px; text-align: center; border-radius: var(--radius-md); cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; margin-top: 5px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .btn-ver-mais:hover { background: rgba(244, 114, 182, 0.15); border-color: var(--accent-color); color: #fff; }
+
+  /* Wrapper do capítulo e estilos do botão de baixar (100% offline) */
+  .chapter-item-wrapper {
+      display: flex; align-items: center; justify-content: space-between; gap: 15px; background: rgba(20, 20, 25, 0.8); border: 1px solid var(--glass-border); padding: 12px 16px; border-radius: var(--radius-md); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .chapter-item-wrapper:hover {
+      background: rgba(244, 114, 182, 0.08); border-color: var(--accent-color); transform: translateX(6px); box-shadow: -5px 5px 20px rgba(244, 114, 182, 0.15);
+  }
+  .chapter-item-wrapper.lido-style {
+      background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.05); opacity: 0.75;
+  }
+
+  .chapter-link {
+      display: flex; align-items: center; gap: 20px; flex: 1; text-decoration: none; color: white; min-width: 0; cursor: pointer;
+  }
+
+  .btn-download-cap {
+      background: rgba(0, 245, 212, 0.1); color: var(--success); border: 1px solid rgba(0, 245, 212, 0.4); padding: 8px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.3s; letter-spacing: 0.5px;
+  }
+  .btn-download-cap:hover {
+      background: var(--success); color: #000; box-shadow: 0 0 15px rgba(0, 245, 212, 0.4); border-color: var(--success);
+  }
+  
+  .chap-thumbnail { width: var(--chapter-img-width); height: var(--chapter-img-height); border-radius: var(--radius-chap-img); object-fit: cover; border: 1px solid var(--glass-border); transition: 0.3s; }
+
+  .chap-text-content { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+  .chap-id-string { font-size: 11px; color: var(--accent-color); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+  
+  .chap-title-wrapper { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .chap-main-title { font-weight: 800; font-size: 16px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  
+  .chap-meta-secondary { font-size: 13px; color: var(--text-secondary); font-weight: 500; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 2px; }
+  .chap-stat-item { display: flex; align-items: center; gap: 5px; }
+
+  .badge-lido { background: rgba(0, 245, 212, 0.15); color: var(--success); border: 1px solid var(--success); font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .badge-lendo { background: rgba(255, 183, 3, 0.15); color: var(--warning); border: 1px solid var(--warning); font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 0 10px rgba(255, 183, 3, 0.3); }
+
+  .tag-novo { background: var(--danger); color: #fff; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; animation: pulse-red 1.5s infinite; }
+  .badge-fim { font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+  .loading-container { display: flex; justify-content: center; align-items: center; height: 50vh; flex-direction: column; gap: 25px; }
+  .loader-spinner { width: 50px; height: 50px; border: 4px solid rgba(244, 114, 182, 0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 900px) {
+    .obra-content { grid-template-columns: 1fr; gap: 40px; }
+    .left-column-sticky { position: static; } 
+    .header-top { margin-bottom: 40px; }
+    .capa-box { width: 75%; max-width: 300px; margin: 0 auto; }
+    .info-panel { padding: 40px 30px; }
+    .info-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+  }
+  @media (max-width: 600px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .chapter-item-wrapper { flex-direction: column; align-items: stretch; gap: 15px; padding: 15px; }
+    .chapter-link { flex-direction: row; align-items: flex-start; }
+    .btn-download-cap { width: 100%; justify-content: center; padding: 12px; }
+    .chap-thumbnail { width: 80px; height: 60px; }
+    .section-header-glitch { flex-direction: column; align-items: stretch; gap: 20px; }
+    .sort-group { width: 100%; justify-content: space-between; }
+    .sort-btn { flex: 1; }
+    .secondary-actions-flex { grid-template-columns: 1fr; }
+    .season-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .season-header-right { width: 100%; justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+<div id="aviso-18" class="aviso-18-flutuante">
+    <div class="aviso-18-texto">
+        <span class="aviso-18-icone">🔞</span> Aviso: Conteúdo Maduro / Sensível
+    </div>
+    <button class="btn-fechar-aviso" onclick="aceitarConteudoAdulto()" title="Não mostrar novamente">✖</button>
+</div>
+
+<div id="obra-container">
+  <div class="hero-bg-wrapper">
+      <div class="hero-bg" id="hero-blur"></div>
+  </div>
+  
+  <div class="top-nav">
+    <span id="nav-voltar-container"></span>
+  </div>
+
+  <div id="main-obra">
+    <div class="loading-container">
+        <div class="loader-spinner"></div>
+        <div style="font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-size: 13px; color: var(--text-main); text-shadow: 0 0 10px rgba(255,255,255,0.2);">Carregando Magia...</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+  // ==========================================
+  // CONFIGURAÇÃO FIREBASE ÚNICA
+  // ==========================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo",
+    authDomain: "meow-scan-ffff0.firebaseapp.com",
+    projectId: "meow-scan-ffff0",
+    databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com",
+    storageBucket: "meow-scan-ffff0.firebasestorage.app",
+    messagingSenderId: "76129834936",
+    appId: "1:76129834936:web:9927218dee30b1f069e14d"
+  };
+
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const auth = firebase.auth();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const obraId = urlParams.get('obra'); 
+
+  let currentUser = null;
+  let currentObra = null;
+  let globalSeasons = [];
+  let globalSpecialKeys = [];
+  let globalCapsObj = {};
+  let globalAllKeys = [];
+  let isAscending = false; 
+  let currentSearchTerm = '';
+
+  function verificarConteudoAdulto(obra) {
+      if (!obraId) return;
+      const generos = String(obra.generos || '').toLowerCase();
+      
+      const isAdulto = obra.classificacao === '+18' || 
+                       obra.adulto === true || 
+                       generos.includes('+18') || 
+                       generos.includes('smut') ||
+                       generos.includes('maduro') ||
+                       generos.includes('sensível') ||
+                       generos.includes('sensivel');
+      
+      if (isAdulto) {
+          const consentimento = localStorage.getItem('adult_consent_aviso');
+          if (!consentimento) {
+              document.getElementById('aviso-18').classList.add('active');
+          }
+      }
+  }
+
+  window.aceitarConteudoAdulto = function() {
+      localStorage.setItem('adult_consent_aviso', 'true');
+      document.getElementById('aviso-18').classList.remove('active');
+  }
+
+  function registrarVisualizacaoObra() {
+      if (!obraId) return;
+      let viewsSessao = JSON.parse(sessionStorage.getItem('meow_views_sessao') || '{}');
+      if (!viewsSessao[obraId]) {
+          db.ref(`obras/${obraId}/stats/visualizacoes`).transaction(c => (c || 0) + 1);
+          viewsSessao[obraId] = true;
+          sessionStorage.setItem('meow_views_sessao', JSON.stringify(viewsSessao));
+      }
+  }
+
+  function registrarLeitura(capKey) {
+    if(!obraId) return;
+    db.ref(`obras/${obraId}/stats/total_cliques_ler`).transaction(c => (c||0)+1);
+    db.ref(`obras/${obraId}/capitulos/${capKey}/cliques`).transaction(c => (c||0)+1);
+
+    let progresso = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
+    if (!progresso[obraId]) progresso[obraId] = { lidos: [], lendo: null };
+    
+    let lendoAnterior = progresso[obraId].lendo;
+    if (lendoAnterior && lendoAnterior !== capKey && !progresso[obraId].lidos.includes(lendoAnterior)) {
+        progresso[obraId].lidos.push(lendoAnterior);
+    }
+    progresso[obraId].lendo = capKey;
+    progresso[obraId].lidos = progresso[obraId].lidos.filter(id => id !== capKey);
+    localStorage.setItem('progresso_leitura', JSON.stringify(progresso));
+  }
+
+  function toggleBiblioteca(id) {
+    const btn = document.getElementById('btn-save-library');
+    const nome = btn.getAttribute('data-nome');
+    const capaUrl = btn.getAttribute('data-capa');
+    let listaBib = JSON.parse(localStorage.getItem('meow_priv') || '[]');
+    const index = listaBib.findIndex(item => item.id === id);
+
+    if (index > -1) {
+      listaBib.splice(index, 1);
+      alert("Removido da biblioteca.");
+      btn.classList.remove('saved');
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Salvar`;
+    } else {
+      listaBib.push({ id: id, nome: nome, capa: capaUrl, dataSalvo: Date.now() });
+      alert("Salvo na sua biblioteca!");
+      btn.classList.add('saved');
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Salvo`;
+    }
+    localStorage.setItem('meow_priv', JSON.stringify(listaBib));
+  }
+
+  function toggleNotificacao(id) {
+    const btn = document.getElementById('btn-notif');
+    const nome = btn.getAttribute('data-nome');
+    let subs = JSON.parse(localStorage.getItem('meow_notifs') || '[]');
+    const index = subs.findIndex(item => item.id === id);
+    if (index > -1) {
+      subs.splice(index, 1);
+      alert(`Notificações desativadas para "${nome}".`);
+    } else {
+      const capa = document.querySelector('.capa-box img') ? document.querySelector('.capa-box img').src : '';
+      subs.push({ id, nome, capa });
+      alert(`✅ "${nome}" adicionada!\nAgora aparece no painel do sino 🔔`);
+    }
+    localStorage.setItem('meow_notifs', JSON.stringify(subs));
+    location.reload();
+  }
+
+  window.compartilharObra = function() {
+    const shareData = {
+        title: document.title,
+        text: 'Dá uma olhada nessa obra incrível no Meow Scan!',
+        url: window.location.href
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData).catch(err => console.log('Erro ao compartilhar:', err));
+    } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('✨ Link copiado para a área de transferência! Envie para seus amigos.');
+        }).catch(err => {
+            console.error('Falha ao copiar:', err);
+            alert('Falha ao copiar o link, copie manualmente: ' + window.location.href);
+        });
+    }
+  }
+
+  window.toggleSeason = function(header) {
+    const chapters = header.nextElementSibling;
+    const toggleIcon = header.querySelector('.icon-toggle');
+    if (getComputedStyle(chapters).display === 'none') {
+      chapters.style.display = 'flex';
+      toggleIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>';
+    } else {
+      chapters.style.display = 'none';
+      toggleIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    }
+  }
+
+  window.mudarOrdem = function(asc) {
+      isAscending = asc;
+      document.getElementById('btn-sort-asc').classList.toggle('active', asc);
+      document.getElementById('btn-sort-desc').classList.toggle('active', !asc);
+      gerarHtmlCapitulos(currentSearchTerm);
+  }
+
+  window.filtrarCaps = function(term) {
+      currentSearchTerm = term.toLowerCase();
+      gerarHtmlCapitulos(currentSearchTerm);
+  }
+
+  window.mostrarOcultos = function(btn) {
+      let container = btn.parentElement;
+      let hiddenItems = container.querySelectorAll('.cap-oculto');
+      hiddenItems.forEach(item => {
+          item.style.display = 'flex';
+          item.style.animation = 'fadeIn 0.4s ease-out forwards';
+      });
+      btn.style.display = 'none';
+  }
+
+  // --- SISTEMA 100% OFFLINE DE BAIXAR CAPÍTULO ---
+  window.baixarCapitulo = function(event, capKey, capNome) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
+      if(!offlineDb[obraId]) offlineDb[obraId] = {};
+      
+      // Salva dados completos do capítulo localmente para leitura sem internet
+      offlineDb[obraId][capKey] = {
+          data: globalCapsObj[capKey],
+          salvoEm: Date.now()
+      };
+      localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
+      
+      alert(`✅ Capítulo "${capNome}" baixado com sucesso!\n\nAgora você pode ler este capítulo totalmente offline.`);
+      
+      let btn = event.currentTarget;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado`;
+      btn.style.background = 'var(--success)';
+      btn.style.color = '#000';
+      btn.style.borderColor = 'var(--success)';
+  }
+
+  function gerarHtmlCapitulos(searchTerm = '') {
+      let html = '';
+      let seasonsToRender = JSON.parse(JSON.stringify(globalSeasons));
+      let specialsToRender = JSON.parse(JSON.stringify(globalSpecialKeys));
+
+      let progressoObj = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
+      let progressoAtual = progressoObj[obraId] || { lidos: [], lendo: null };
+      
+      let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
+      let offlineObra = offlineDb[obraId] || {};
+
+      if (!isAscending) {
+          seasonsToRender.reverse();
+          seasonsToRender.forEach(s => s.chapters.reverse());
+          specialsToRender.reverse();
+      }
+
+      seasonsToRender.forEach((season, sIdx) => {
+          let filtered = season.chapters.filter(k => {
+              let c = globalCapsObj[k];
+              if(!c) return false;
+              let t = String(c.nomeCap || `Capítulo ${c.numero}`).toLowerCase();
+              return t.includes(searchTerm) || String(c.numero).includes(searchTerm);
+          });
+
+          if (filtered.length === 0) return;
+
+          let expandido = searchTerm !== ''; 
+          let totalCapsNoVolume = season.chapters.length;
+          let badgeText = season.type === 'Volume' ? `VOL. ${season.num}` : `TEMP. ${season.num}`;
+
+          html += `
+          <div class="season-group">
+            <div class="season-header" onclick="toggleSeason(this)">
+              <div class="season-header-left">
+                  <span class="season-badge">${badgeText}</span>
+                  <span class="season-title">${season.type} ${season.num} ${season.isFinal ? '<span style="color:var(--danger); font-size:12px; margin-left:8px;">(FINAL)</span>' : ''}</span>
+              </div>
+              <div class="season-header-right">
+                  <span>${totalCapsNoVolume} caps</span>
+                  <span class="icon-toggle">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+                  </span>
+              </div>
+            </div>
+            <div class="season-chapters" style="display: flex;">
+          `;
+
+          filtered.forEach((k, cIdx) => {
+              let c = globalCapsObj[k];
+              let isHiddenStyle = (!expandido && cIdx >= 5) ? 'style="display:none;"' : '';
+              let extraClass = (!expandido && cIdx >= 5) ? ' cap-oculto' : '';
+              
+              let isLendo = (progressoAtual.lendo === k);
+              let isLido = (progressoAtual.lidos || []).includes(k) && !isLendo;
+              if(isLido) extraClass += ' lido-style';
+
+              let badgeLeitura = '';
+              if (isLendo) badgeLeitura = `<span class="badge-lendo">Lendo 📖</span>`;
+              else if (isLido) badgeLeitura = `<span class="badge-lido">Lido ✔️</span>`;
+
+              let ehNovo = (Date.now() - (c.dataPostagem || 0)) < 172800000;
+              let tagNovoHtml = ehNovo ? `<span class="tag-novo">NOVO</span>` : '';
+              let tagFimHtml = (c.encerramento === 'FIM') ? `<span class="badge-fim">FIM</span>` : '';
+              let nomeCustomizado = c.nomeCap && c.nomeCap.trim() !== "" ? c.nomeCap : '';
+              let labelTipo = c.tipoLabel || 'Capítulo';
+              let nomeFormatado = nomeCustomizado ? nomeCustomizado : `Capítulo ${c.numero || '?'}`;
+              
+              let jaBaixado = !!offlineObra[k];
+              let btnDownloadHtml = jaBaixado 
+                  ? `<button class="btn-download-cap" style="background:var(--success); color:#000; border-color:var(--success);" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Atualizar Download"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado</button>`
+                  : `<button class="btn-download-cap" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Baixar para ler offline"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar</button>`;
+
+              html += `
+              <div class="chapter-item-wrapper ${extraClass}" ${isHiddenStyle}>
+                <a href="leitura.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link">
+                  <img src="${currentObra.capaUrl}" alt="Thumbnail" class="chap-thumbnail" loading="lazy">
+                  <div class="chap-text-content">
+                    <span class="chap-id-string">${labelTipo} ${c.numero || '?'} | ${new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR')}</span>
+                    <div class="chap-title-wrapper">
+                        <span class="chap-main-title">${nomeFormatado}</span>
+                        ${badgeLeitura} ${tagFimHtml} ${tagNovoHtml}
+                    </div>
+                    <div class="chap-meta-secondary">
+                      <span class="chap-stat-item"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> ${c.cliques || 0} acessos</span>
+                      ${c.protegido ? '• 🔒 Protegido' : ''}
+                    </div>
+                  </div>
+                </a>
+                ${btnDownloadHtml}
+              </div>`;
+          });
+
+          if (!expandido && filtered.length > 5) {
+              html += `<button class="btn-ver-mais" onclick="mostrarOcultos(this)">Ver mais ${filtered.length - 5} capítulos 👇</button>`;
+          }
+          html += `</div></div>`;
+      });
+
+      if (specialsToRender.length > 0) {
+          let filteredSpecials = specialsToRender.filter(k => {
+              let c = globalCapsObj[k];
+              if(!c) return false;
+              let t = String(c.nomeCap || `Especial ${c.numero}`).toLowerCase();
+              return t.includes(searchTerm) || String(c.numero).includes(searchTerm);
+          });
+
+          if (filteredSpecials.length > 0) {
+              let expandido = searchTerm !== '';
+              html += `<div class="section-header-glitch" style="margin-top: 50px; border-bottom: none;"><span>Especiais e Extras</span></div>`;
+              html += `<div class="season-chapters" style="display:flex; border-top: none; background: transparent; padding: 0;">`;
+
+              filteredSpecials.forEach((k, cIdx) => {
+                  let c = globalCapsObj[k];
+                  let isHiddenStyle = (!expandido && cIdx >= 5) ? 'style="display:none;"' : '';
+                  let extraClass = (!expandido && cIdx >= 5) ? ' cap-oculto' : '';
+                  let isLendo = (progressoAtual.lendo === k);
+                  let isLido = (progressoAtual.lidos || []).includes(k) && !isLendo;
+                  if(isLido) extraClass += ' lido-style';
+
+                  let badgeLeitura = '';
+                  if (isLendo) badgeLeitura = `<span class="badge-lendo">Lendo 📖</span>`;
+                  else if (isLido) badgeLeitura = `<span class="badge-lido">Lido ✔️</span>`;
+
+                  let ehNovo = (Date.now() - (c.dataPostagem || 0)) < 172800000;
+                  let tagNovoHtml = ehNovo ? `<span class="tag-novo">NOVO</span>` : '';
+                  let tagFimHtml = (c.encerramento === 'FIM') ? `<span class="badge-fim">FIM</span>` : '';
+                  let nomeCustomizado = c.nomeCap && c.nomeCap.trim() !== "" ? c.nomeCap : '';
+                  let labelTipo = c.tipoLabel || 'Especial';
+                  let nomeFormatado = nomeCustomizado ? nomeCustomizado : `Capítulo ${c.numero || '?'}`;
+                  
+                  let jaBaixado = !!offlineObra[k];
+                  let btnDownloadHtml = jaBaixado 
+                      ? `<button class="btn-download-cap" style="background:var(--success); color:#000; border-color:var(--success);" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Atualizar Download"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado</button>`
+                      : `<button class="btn-download-cap" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Baixar para ler offline"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar</button>`;
+
+                  html += `
+                  <div class="chapter-item-wrapper ${extraClass}" style="margin-bottom: 12px;" ${isHiddenStyle}>
+                    <a href="leitura.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link">
+                      <img src="${currentObra.capaUrl}" class="chap-thumbnail" loading="lazy">
+                      <div class="chap-text-content">
+                        <span class="chap-id-string">${labelTipo} ${c.numero || '?'} | ${new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR')}</span>
+                        <div class="chap-title-wrapper">
+                            <span class="chap-main-title">${nomeFormatado}</span>
+                            ${badgeLeitura} ${tagFimHtml} ${tagNovoHtml}
+                        </div>
+                        <div class="chap-meta-secondary">
+                           <span class="chap-stat-item"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> ${c.cliques || 0} acessos</span>
+                           ${c.protegido ? '• 🔒' : ''}
+                        </div>
+                      </div>
+                    </a>
+                    ${btnDownloadHtml}
+                  </div>`;
+              });
+
+              if (!expandido && filteredSpecials.length > 5) html += `<button class="btn-ver-mais" onclick="mostrarOcultos(this)">Ver mais ${filteredSpecials.length - 5} especiais 👇</button>`;
+              html += `</div>`;
+          }
+      }
+
+      if(html === '') html = '<div class="premium-glass" style="text-align:center; padding:40px; color:var(--text-secondary);">Nenhum capítulo encontrado.</div>';
+      document.getElementById('chapters-container').innerHTML = html;
+  }
+
+  function renderizarPagina(obra) {
+    const nomeObraSafe = String(obra.nome || '').replace(/"/g, '&quot;');
+    const capaObraSafe = String(obra.capaUrl || '').replace(/"/g, '&quot;');
+    document.getElementById('hero-blur').style.backgroundImage = `url(${obra.capaUrl})`;
+
+    const notifList = JSON.parse(localStorage.getItem('meow_notifs') || '[]');
+    const isSubscribed = notifList.some(item => item.id === obraId);
+    const listaBib = JSON.parse(localStorage.getItem('meow_priv') || '[]');
+    const isSaved = listaBib.some(item => item.id === obraId);
+    
+    globalCapsObj = obra.capitulos || {};
+    globalAllKeys = Object.keys(globalCapsObj);
+    
+    const regularChaptersKeys = globalAllKeys.filter(k => (globalCapsObj[k].tipoLabel || 'Capítulo') === 'Capítulo').sort((a, b) => parseFloat(globalCapsObj[a].numero || 0) - parseFloat(globalCapsObj[b].numero || 0));
+    globalSpecialKeys = globalAllKeys.filter(k => (globalCapsObj[k].tipoLabel || 'Capítulo') !== 'Capítulo').sort((a, b) => parseFloat(globalCapsObj[a].numero || 0) - parseFloat(globalCapsObj[b].numero || 0));
+
+    globalSeasons = [];
+    let seasonNum = 1; 
+    let currentSeason = [];
+    
+    const tipoObra = String(obra.tipo || '').toLowerCase();
+    const stringGeneros = String(obra.generos || '').toLowerCase();
+    
+    const isNovel = tipoObra.includes('novel') || stringGeneros.includes('novel');
+    const defaultType = isNovel ? 'Volume' : 'Temporada'; 
+
+    for (const k of regularChaptersKeys) {
+      currentSeason.push(k);
+      const enc = String(globalCapsObj[k].encerramento || '').toLowerCase();
+      
+      const encerraTemporada = enc.includes('temporada') || enc.includes('season');
+      const encerraVolume = enc.includes('volume') || enc.includes('vol');
+      const fimAbsoluto = enc === 'fim' || enc === 'final' || enc.includes('encerrada');
+
+      if (encerraTemporada || encerraVolume || fimAbsoluto) {
+        let sNum = seasonNum;
+        let sType = defaultType; 
+
+        const match = enc.match(/(\d+)/); 
+        if (match) sNum = parseInt(match[1]); 
+
+        globalSeasons.push({ num: sNum, type: sType, chapters: currentSeason, isFinal: fimAbsoluto });
+        currentSeason = []; 
+        seasonNum = sNum + 1;
+      }
+    }
+    
+    if (currentSeason.length > 0) {
+        globalSeasons.push({ num: seasonNum, type: defaultType, chapters: currentSeason, isFinal: false });
+    }
+
+    let progressoObj = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
+    let progressoAtual = progressoObj[obraId];
+    
+    const sortedForNew = globalAllKeys.sort((a, b) => (globalCapsObj[b].dataPostagem || 0) - (globalCapsObj[a].dataPostagem || 0));
+    let btnPrincipalTexto = "Começar a Ler do Cap 1";
+    let linkLer = globalAllKeys.length > 0 ? `leitura.html?obra=${obraId}&cap=${sortedForNew[sortedForNew.length-1]}` : "#"; 
+
+    if (progressoAtual && progressoAtual.lendo && globalCapsObj[progressoAtual.lendo]) {
+        let capName = globalCapsObj[progressoAtual.lendo].numero || '?';
+        btnPrincipalTexto = `Continuar Lendo Cap ${capName}`;
+        linkLer = `leitura.html?obra=${obraId}&cap=${progressoAtual.lendo}`;
+    }
+    
+    // Botão Voltar ajustado puramente para o GitHub Pages (index.html)
+    let linkVoltar = "index.html"; 
+    document.getElementById('nav-voltar-container').innerHTML = `<a href="${linkVoltar}" class="btn-back-home"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Voltar ao Início</a>`;
+
+    hospedagemHtml = `<span class="badge-meow">Scan: MEOW Scan</span>`;
+
+    const ehAdultoEstrito = obra.classificacao === '+18' || obra.adulto === true || stringGeneros.includes('+18') || stringGeneros.includes('smut');
+    const ehSensivelAviso = stringGeneros.includes('maduro') || stringGeneros.includes('sensível') || stringGeneros.includes('sensivel');
+
+    let badgeClassificacaoHtml = '';
+    if (ehAdultoEstrito) {
+        badgeClassificacaoHtml = `<span class="badge-adulto">🔞 +18 / Adulto</span>`;
+    } else if (ehSensivelAviso) {
+        badgeClassificacaoHtml = `<span class="badge-sensivel">⚠️ Conteúdo Maduro</span>`;
+    }
+
+    let statusTexto = (obra.status || 'Ativo').toLowerCase();
+    let statusBadge = '';
+    if(statusTexto.includes('completo')) {
+        statusBadge = `<span class="status-completo">Completo</span>`;
+    } else {
+        statusBadge = `<span class="status-andamento">Em Andamento</span>`;
+    }
+
+    const artistaHtml = isNovel ? '' : `<div class="info-item"><label>Artista</label><span>${obra.artista || 'N/A'}</span></div>`;
+
+    const html = `
+      <div class="header-top">
+        <h1 class="obra-titulo">${obra.nome}</h1>
+        <div class="stats-bar">
+          <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> ${obra.stats?.visualizacoes || 0} views</span>
+          <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> ${obra.stats?.total_cliques_ler || 0} leituras</span>
+          ${badgeClassificacaoHtml}
+        </div>
+      </div>
+
+      <div class="obra-content">
+        <div class="left-column-sticky">
+          <div class="capa-box">
+            <img src="${obra.capaUrl}" loading="lazy" onerror="this.src='https://via.placeholder.com/350x500/141423/E100FF?text=Sem+Capa'">
+          </div>
+        </div>
+        
+        <div class="right-column-content">
+          <div class="info-panel premium-glass">
+            <div class="info-grid">
+              <div class="info-item"><label>Status</label>${statusBadge}</div>
+              <div class="info-item"><label>Autor(a)</label><span>${obra.autor || 'N/A'}</span></div>
+              ${artistaHtml}
+              <div class="info-item"><label>Gêneros</label><span>${obra.generos || '---'}</span></div>
+              <div class="info-item"><label>Atualização</label><span>${obra.dias || 'Variável'}</span></div>
+              <div class="info-item"><label>Scan / Hospedagem</label>${hospedagemHtml}</div>
+            </div>
+            
+            <div class="sinopse-box">
+              <h3>Sinopse</h3>
+              <div class="sinopse-text">${obra.sinopse || 'Nenhuma descrição detalhada disponível no momento.'}</div>
+            </div>
+
+            <div class="actions-flex">
+              <a href="${linkLer}" class="btn-hero btn-ler-big" onclick="registrarLeitura('${progressoAtual?.lendo || sortedForNew[sortedForNew.length-1]}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                ${btnPrincipalTexto}
+              </a>
+              
+              <div class="secondary-actions-flex">
+                  <button id="btn-save-library" onclick="toggleBiblioteca('${obraId}')" data-nome="${nomeObraSafe}" data-capa="${capaObraSafe}" class="btn-hero btn-secondary ${isSaved ? 'saved' : ''}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                    ${isSaved ? 'Salvo' : 'Salvar'}
+                  </button>
+                  <button id="btn-notif" onclick="toggleNotificacao('${obraId}')" data-nome="${nomeObraSafe}" class="btn-hero btn-secondary ${isSubscribed ? 'subscribed' : ''}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${isSubscribed ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    ${isSubscribed ? 'Inscrito' : 'Notificar'}
+                  </button>
+                  <button class="btn-hero btn-secondary" onclick="compartilharObra()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    Compartilhar
+                  </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="chapter-section">
+            <div class="section-header-glitch">
+              <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                  <span>Capítulos</span>
+                  <span class="total-caps">${globalAllKeys.length} Lançados</span>
+              </div>
+              <div class="sort-group">
+                <button id="btn-sort-asc" class="sort-btn" onclick="mudarOrdem(true)" title="Ordem Crescente (Mais Antigos)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
+                <button id="btn-sort-desc" class="sort-btn active" onclick="mudarOrdem(false)" title="Ordem Decrescente (Mais Novos)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
+              </div>
+            </div>
+            <div class="search-container">
+              <input type="text" id="search-cap" class="search-caps" placeholder="Pesquisar capítulo (Ex: 01, Extra)..." oninput="filtrarCaps(this.value)">
+            </div>
+            <div id="chapters-container"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.getElementById('main-obra').innerHTML = html;
+    gerarHtmlCapitulos();
+    verificarConteudoAdulto(obra);
+  }
+
+  // ==========================================
+  // LÓGICA DE CARREGAMENTO OTIMIZADA
+  // ==========================================
+  if (obraId) {
+      const cacheKey = 'cache_obra_' + obraId;
+      const cachedData = localStorage.getItem(cacheKey);
+      
+      let loadingTimeout = setTimeout(() => {
+          if (!currentObra && !cachedData) {
+              document.getElementById('main-obra').innerHTML = `<div class="premium-glass" style="text-align:center; padding:80px; color:var(--warning); font-weight:bold; margin-top:50px; font-size:20px;">DEMORA NA CONEXÃO 😿<br><small style="opacity:0.6; font-weight:normal; font-size:13px; margin-top:10px; display:block;">Sua internet pode estar lenta ou o servidor está demorando. Recarregue a página!</small></div>`;
+          }
+      }, 10000);
+
+      if (cachedData) {
+          try {
+              currentObra = JSON.parse(cachedData);
+              renderizarPagina(currentObra);
+              registrarVisualizacaoObra();
+          } catch(e) {
+              console.error("Erro no cache", e);
+          }
+      }
+      
+      db.ref('obras/' + obraId).on('value', snap => {
+          clearTimeout(loadingTimeout);
+          const newData = snap.val();
+          
+          if (newData) {
+              const oldCapsCount = currentObra && currentObra.capitulos ? Object.keys(currentObra.capitulos).length : 0;
+              const newCapsCount = newData.capitulos ? Object.keys(newData.capitulos).length : 0;
+              
+              try {
+                  localStorage.setItem(cacheKey, JSON.stringify(newData));
+              } catch (e) {
+                  console.warn("Limite de espaço do cache excedido:", e);
+              }
+              
+              if (!currentObra || oldCapsCount !== newCapsCount) {
+                  currentObra = newData;
+                  renderizarPagina(currentObra);
+                  registrarVisualizacaoObra();
+              } else {
+                  currentObra = newData;
+              }
+          } else {
+              document.getElementById('main-obra').innerHTML = `<div class="premium-glass" style="text-align:center; padding:80px; color:var(--danger); font-weight:bold; margin-top:50px; font-size:20px;">OBRA NÃO LOCALIZADA 😿<br><small style="opacity:0.6; font-weight:normal; font-size:13px; margin-top:10px; display:block;">ID: ${obraId}</small></div>`;
+          }
+      }, error => {
+          clearTimeout(loadingTimeout);
+          console.error("Erro no Firebase:", error);
+          if (!currentObra) {
+              document.getElementById('main-obra').innerHTML = `<div class="premium-glass" style="text-align:center; padding:80px; color:var(--danger); font-weight:bold; margin-top:50px; font-size:20px;">ERRO DE CONEXÃO 😿<br><small style="opacity:0.6; font-weight:normal; font-size:13px; margin-top:10px; display:block;">Verifique sua internet e tente recarregar.</small></div>`;
+          }
+      });
+  } else {
+      document.getElementById('main-obra').innerHTML = `<div class="premium-glass" style="text-align:center; padding:80px; color:var(--warning); margin-top:50px;">Erro na URL: Nenhuma obra especificada.</div>`;
+  }
+</script>
+</body>
+</html>
