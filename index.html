@@ -25,11 +25,6 @@
       if (esconderMenuSempre) {
           document.write('<style>#main-header, #mobile-bottom-nav { display: none !important; pointer-events: none !important; opacity: 0 !important; visibility: hidden !important; } #meow-elite-app { padding-bottom: 0px !important; } .page-content-wrapper { margin-top: 30px !important; }</style>');
       }
-      
-      /* BLOQUEIO DA TELA DE CARREGAMENTO SE JÁ FOI VISTA */
-      if (sessionStorage.getItem('meow_loader_visto') === 'true') {
-          document.write('<style>#global-loader { display: none !important; }</style>');
-      }
   </script>
 
   <style>
@@ -136,7 +131,7 @@
     }
     .offline-banner i { font-size: 1.2rem; }
 
-    /* --- TELA DE CARREGAMENTO INICIAL --- */
+    /* --- TELA DE CARREGAMENTO INICIAL (TURBO) --- */
     #global-loader {
         position: fixed;
         inset: 0;
@@ -151,6 +146,7 @@
     #global-loader.hidden {
         opacity: 0;
         visibility: hidden;
+        pointer-events: none;
     }
     .loader-logo {
         width: 180px;
@@ -339,7 +335,7 @@
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     
-    /* ETIQUETA NOVO MAGNÍFICA */
+    /* ETIQUETA NOVO */
     .badge-novo {
         position: absolute; top: 8px; right: 8px; z-index: 5;
         background: #EF4444; color: #fff;
@@ -457,7 +453,7 @@
       <i class="fa-solid fa-wifi"></i> 🥺 Você está offline! Mostrando apenas obras já acessadas.
   </div>
 
-  <!-- NOVA TELA DE CARREGAMENTO -->
+  <!-- TELA DE CARREGAMENTO TURBO (GARANTIDO QUE SOME) -->
   <div id="global-loader">
       <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png" alt="Meow Scan Loading" class="loader-logo">
       <div class="loader-spinner"></div>
@@ -552,18 +548,19 @@
   <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js'></script>
 
   <script type='text/javascript'>
-      // LÓGICA DE REMOVER TELA DE CARREGAMENTO
+      // TRAVA DE SEGURANÇA: A TELA DE CARREGAMENTO SOME NO MÁXIMO EM 0.5 SEGUNDOS
+      var loaderJaFechado = false;
       function fecharTelaCarregamento() {
+          if (loaderJaFechado) return;
           var loader = document.getElementById('global-loader');
-          if (loader && !sessionStorage.getItem('meow_loader_visto')) {
-              setTimeout(function() {
-                  loader.classList.add('hidden');
-                  sessionStorage.setItem('meow_loader_visto', 'true');
-              }, 400); // Mais rápido!
-          } else if (loader) {
+          if (loader) {
               loader.classList.add('hidden');
+              loaderJaFechado = true;
           }
       }
+
+      // Garante que se o Firebase demorar, a tela some sozinha após 500ms
+      setTimeout(fecharTelaCarregamento, 500);
 
       // --- SISTEMA DE OBRAS ACESSADAS (OFFLINE MAGIC) ---
       function marcarComoAcessada(id) {
@@ -717,11 +714,9 @@
           var badgeHtml = getStatusBadge(obra.status);
           var urlObra = URL_BASE + encodeURIComponent(obra.id);
 
-          // VERIFICA SE A OBRA É "NOVA" (Atualizada nos últimos 3 dias - 259200000 ms)
           var htmlNovo = "";
           if (obra.timestamp) {
               var diferencaTempo = Date.now() - obra.timestamp;
-              // Se foi atualizado em menos de 3 dias, mostra a etiqueta NOVO
               if (diferencaTempo >= 0 && diferencaTempo <= 259200000) {
                   htmlNovo = `<span class="badge-novo">NOVO</span>`;
               }
@@ -864,7 +859,7 @@
           });
       }
 
-      // PROCESSAR TODAS AS OBRAS DA BASE DE DADOS E FILTRAR OFFLINE
+      // PROCESSAR TODAS AS OBRAS
       function processarEExibirObras(data) {
           if (!data) return;
 
@@ -936,13 +931,11 @@
               };
           });
 
-          // --------- LÓGICA MÁGICA DO OFFLINE ---------
           let isOffline = !navigator.onLine;
           let msgOffline = document.getElementById('offline-msg');
           
           if (isOffline) {
               if (msgOffline) msgOffline.classList.remove('hidden');
-              // Filtra a lista para mostrar SOMENTE as obras que a pessoa já abriu/clicou (salvas no celular)
               let obrasAcessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
               lista = lista.filter(o => obrasAcessadas.includes(o.id));
           } else {
@@ -951,7 +944,6 @@
 
           listaGlobalObras = lista;
 
-          // 1. Banner Hero
           var recentesParaBanner = [...lista].sort((a,b) => b.timestamp - a.timestamp);
           if (recentesParaBanner.length > 0) {
               document.getElementById('banner-hero').style.display = 'block';
@@ -960,7 +952,6 @@
               document.getElementById('banner-hero').style.display = 'none';
           }
 
-          // 2. Top 10
           var top10Container = document.getElementById('top10');
           if (lista.length > 0) {
               renderizarTop10(lista);
@@ -968,7 +959,6 @@
               top10Container.innerHTML = '<p style="color: var(--text-dim); padding: 10px;">Nenhuma obra salva para leitura offline. 🥺</p>';
           }
 
-          // 3. Lançamentos Recentes
           var gridUpdates = document.getElementById('lista-updates');
           if(gridUpdates) {
               gridUpdates.innerHTML = '';
@@ -980,7 +970,6 @@
               }
           }
 
-          // 4. Obras Concluídas
           var gridConcluidas = document.getElementById('lista-concluidas');
           if(gridConcluidas) {
               gridConcluidas.innerHTML = '';
@@ -995,7 +984,6 @@
               }
           }
 
-          // 5. Todas as Obras
           var gridTodas = document.getElementById('lista-todas');
           if(gridTodas) {
               gridTodas.innerHTML = '';
@@ -1007,13 +995,10 @@
               }
           }
 
-          // 6. Notificações
           processarNotificacoes(lista);
-          
           fecharTelaCarregamento();
       }
 
-      // CAMPO DE BUSCA AO VIVO
       var inputSearch = document.getElementById('search-input');
       if(inputSearch) {
           inputSearch.addEventListener('input', function(e) {
@@ -1033,7 +1018,6 @@
           });
       }
 
-      // MONITOR DE INTERNET PARA ATUALIZAR A PÁGINA NA HORA
       window.addEventListener('offline', function() {
           let backup = localStorage.getItem('meow_backup_obras');
           if (backup) {
@@ -1046,29 +1030,28 @@
           if (msgOffline) msgOffline.classList.add('hidden');
       });
 
-      // --- SISTEMA DE CARREGAMENTO TURBO (CACHE) ---
-      // Executa assim que a tela abre, evitando esperar o banco de dados online!
+      // CARREGAMENTO IMEDIATO VIA CACHE
       document.addEventListener("DOMContentLoaded", function() {
           let backup = localStorage.getItem('meow_backup_obras');
           if (backup) {
               processarEExibirObras(JSON.parse(backup));
-              fecharTelaCarregamento();
           }
       });
 
-      // OUVINTE DO FIREBASE (ATUALIZA NO FUNDO INVISIVELMENTE)
+      // BUSCA DO FIREBASE NO FUNDO
       db.ref('obras').on('value', function(snapshot) {
           var data = snapshot.val();
           if(data) {
-              // Salva os dados mais recentes na memória para carregar ultra rápido na próxima vez
               localStorage.setItem('meow_backup_obras', JSON.stringify(data));
               processarEExibirObras(data);
           } else {
               fecharTelaCarregamento();
           }
+      }, function(error) {
+          // Se der qualquer erro no Firebase, fecha a tela de carregamento na hora para não travar
+          fecharTelaCarregamento();
       });
 
-      // SE JÁ ENTRAR NO APLICATIVO SEM INTERNET, PUXA O BACKUP DIRETO
       if (!navigator.onLine) {
           let backup = localStorage.getItem('meow_backup_obras');
           if (backup) {
@@ -1077,7 +1060,6 @@
               fecharTelaCarregamento();
           }
       }
-
   </script>
 </body>
 </html>
