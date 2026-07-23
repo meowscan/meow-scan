@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -34,73 +34,21 @@
 
   <style>
     :root {
-        /* MODO CLARO PADRÃO (ROSA) */
-        --accent-gradient: linear-gradient(135deg, #FFB6C1, #FFC0CB);
-        --accent-color: #FF9EAB; 
-        --accent-glow: rgba(255, 158, 171, 0.3);
-        --bg-main: #FFF8F9; 
-        --glass-bg: rgba(255, 255, 255, 0.85);
-        --glass-border: rgba(255, 158, 171, 0.2);
-        --text-main: #5C4A4D; 
-        --text-dim: #9E8A8D;
-        --card-bg: #FFFFFF;
+        /* MODO LUXURY WINE RED & BLACK */
+        --accent-gradient: linear-gradient(135deg, #722F37, #9E0018); 
+        --accent-color: #9E0018; 
+        --accent-glow: rgba(158, 0, 24, 0.3);
+        --bg-main: #0B0002; 
+        --glass-bg: rgba(11, 0, 2, 0.9);
+        --glass-border: rgba(158, 0, 24, 0.2);
+        --text-main: #EAE0E1; 
+        --text-dim: #A89B9D;
+        --card-bg: #1A0508;
         --success: #34D399;
         --warning: #FBBF24;
         --radius-lg: 24px;
         --radius-md: 16px;
         --transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    /* MODO ESCURO PADRÃO (ROSA) */
-    body[data-theme="dark"] { 
-        --accent-gradient: linear-gradient(135deg, #FF7B93, #FF9EAB); 
-        --accent-color: #FF7B93; 
-        --accent-glow: rgba(255, 123, 147, 0.15); 
-        --bg-main: #1A1617; 
-        --glass-bg: rgba(30, 25, 26, 0.9);
-        --glass-border: rgba(255, 255, 255, 0.05);
-        --text-main: #EAE0E1; 
-        --text-dim: #A89B9D; 
-        --card-bg: #252021;
-    }
-
-    /* --- NOVAS CORES (TEMA AZUL) --- */
-    body[data-color="blue"] {
-        --accent-gradient: linear-gradient(135deg, #60A5FA, #93C5FD);
-        --accent-color: #3B82F6;
-        --accent-glow: rgba(59, 130, 246, 0.3);
-        --glass-border: rgba(59, 130, 246, 0.2);
-    }
-    body[data-theme="dark"][data-color="blue"] {
-        --accent-gradient: linear-gradient(135deg, #2563EB, #3B82F6);
-        --accent-color: #60A5FA;
-        --accent-glow: rgba(96, 165, 250, 0.15);
-    }
-
-    /* --- NOVAS CORES (TEMA VERMELHO) --- */
-    body[data-color="red"] {
-        --accent-gradient: linear-gradient(135deg, #F87171, #FCA5A5);
-        --accent-color: #EF4444;
-        --accent-glow: rgba(239, 68, 68, 0.3);
-        --glass-border: rgba(239, 68, 68, 0.2);
-    }
-    body[data-theme="dark"][data-color="red"] {
-        --accent-gradient: linear-gradient(135deg, #DC2626, #EF4444);
-        --accent-color: #F87171;
-        --accent-glow: rgba(248, 113, 113, 0.15);
-    }
-
-    /* --- NOVAS CORES (TEMA ROXO) --- */
-    body[data-color="purple"] {
-        --accent-gradient: linear-gradient(135deg, #A78BFA, #C4B5FD);
-        --accent-color: #8B5CF6;
-        --accent-glow: rgba(139, 92, 246, 0.3);
-        --glass-border: rgba(139, 92, 246, 0.2);
-    }
-    body[data-theme="dark"][data-color="purple"] {
-        --accent-gradient: linear-gradient(135deg, #7C3AED, #8B5CF6);
-        --accent-color: #A78BFA;
-        --accent-glow: rgba(167, 139, 250, 0.15);
     }
 
     body { 
@@ -134,52 +82,27 @@
     .offline-banner.hidden {
         opacity: 0; visibility: hidden; transform: translateX(-50%) translateY(-20px);
     }
-    .offline-banner i { font-size: 1.2rem; }
 
     /* --- TELA DE CARREGAMENTO INICIAL --- */
     #global-loader {
-        position: fixed;
-        inset: 0;
-        background-color: var(--bg-main);
-        z-index: 999999;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        position: fixed; inset: 0; background-color: var(--bg-main); z-index: 999999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
         transition: opacity 0.8s ease, visibility 0.8s ease;
     }
-    #global-loader.hidden {
-        opacity: 0;
-        visibility: hidden;
-    }
+    #global-loader.hidden { opacity: 0; visibility: hidden; }
     .loader-logo {
-        width: 180px;
-        height: auto;
-        border-radius: 50%;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        animation: pulse-logo 2s infinite ease-in-out;
+        width: 250px; height: auto; border-radius: var(--radius-md); margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: pulse-logo 2s infinite ease-in-out;
     }
     .loader-spinner {
-        width: 45px;
-        height: 45px;
-        border: 4px solid var(--glass-border);
-        border-top-color: var(--accent-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
+        width: 45px; height: 45px; border: 4px solid var(--glass-border);
+        border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite;
     }
-    .loader-text {
-        margin-top: 20px;
-        font-family: 'Syne', sans-serif;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--text-main);
-        letter-spacing: 1px;
-    }
+    .loader-text { margin-top: 20px; font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text-main); letter-spacing: 1px; }
     @keyframes spin { 100% { transform: rotate(360deg); } }
     @keyframes pulse-logo {
         0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        50% { transform: scale(1.05); box-shadow: 0 15px 40px var(--accent-glow); }
+        50% { transform: scale(1.03); box-shadow: 0 15px 40px var(--accent-glow); }
         100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
     }
 
@@ -193,11 +116,11 @@
     #meow-elite-app header.scrolled {
         background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         border-bottom: 1px solid var(--glass-border); padding: 12px 5%;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     
     #meow-elite-app .logo { display: flex; align-items: center; text-decoration: none; }
-    #meow-elite-app .logo img { height: 50px; width: auto; object-fit: contain; transition: var(--transition); }
+    #meow-elite-app .logo img { height: 50px; width: auto; max-width: 200px; object-fit: contain; transition: var(--transition); }
     #meow-elite-app .logo img:hover { transform: scale(1.05); }
 
     .header-actions { display: flex; gap: 12px; align-items: center; position: relative; }
@@ -206,29 +129,9 @@
         color: var(--text-main); width: 44px; height: 44px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         cursor: pointer; transition: var(--transition); font-size: 1.1rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     .action-btn:hover { background: var(--accent-color); color: #fff; transform: scale(1.08); }
-
-    /* --- MENU DE CORES --- */
-    .color-picker-dropdown { position: relative; display: inline-block; }
-    .color-menu {
-        position: absolute; top: 60px; right: -20px; background: var(--card-bg);
-        border: 1px solid var(--glass-border); border-radius: var(--radius-md);
-        padding: 15px; display: flex; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        opacity: 0; visibility: hidden; transform: translateY(-10px); transition: var(--transition);
-        z-index: 1001;
-    }
-    .color-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-    .color-dot {
-        width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid var(--glass-border);
-        transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .color-dot:hover { transform: scale(1.15); }
-    .color-dot.pink { background: #FF9EAB; }
-    .color-dot.blue { background: #3B82F6; }
-    .color-dot.red { background: #EF4444; }
-    .color-dot.purple { background: #8B5CF6; }
 
     /* --- BOTAO TELEGRAM --- */
     .telegram-float {
@@ -251,7 +154,7 @@
         display: flex; align-items: center; width: 100%; background: var(--card-bg); 
         border: 2px solid var(--glass-border); border-radius: 30px;
         padding: 5px 25px; margin-bottom: 40px; transition: var(--transition);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     .search-input-wrapper:focus-within { border-color: var(--accent-color); box-shadow: 0 0 25px var(--accent-glow); }
     .search-input-wrapper i.fa-magnifying-glass { color: var(--accent-color); font-size: 1.4rem; }
@@ -269,7 +172,7 @@
     #meow-elite-app .banner-container { 
         position: relative; height: 70vh; min-height: 480px; width: 100%; 
         overflow: hidden; border-radius: 0 0 40px 40px; margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
     #meow-elite-app .banner-slide { 
         position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out;
@@ -279,7 +182,7 @@
     #meow-elite-app .banner-bg { position: absolute; inset: 0; background-size: cover; background-position: center 15%; z-index: 1; }
     #meow-elite-app .banner-gradient {
         position: absolute; inset: 0; z-index: 2;
-        background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 70%, var(--bg-main) 100%);
+        background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%);
     }
     #meow-elite-app .banner-content { 
         position: relative; z-index: 20; max-width: 800px;
@@ -295,7 +198,7 @@
     #meow-elite-app .banner-content h1 { 
         font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 6vw, 4rem); 
         font-weight: 800; margin: 0 0 20px 0; line-height: 1.1; color: #fff; 
-        text-shadow: 2px 2px 15px rgba(0,0,0,0.5);
+        text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
     }
     #meow-elite-app .btn-main {
         padding: 14px 30px; background: var(--accent-gradient); color: #fff;
@@ -305,7 +208,7 @@
     }
     #meow-elite-app .btn-main:hover { transform: translateY(-4px); box-shadow: 0 10px 25px var(--accent-glow); }
 
-    /* SEÇÕES E GRIDS */
+    /* SEÇÕES E LAYOUT VERTICAL LIST */
     #meow-elite-app .section-container { padding: 0 5%; margin-top: 50px !important; margin-bottom: 40px !important; }
     #meow-elite-app .secao-titulo { 
         font-family: 'Syne', sans-serif; font-size: 1.6rem; margin-bottom: 25px !important; 
@@ -313,46 +216,67 @@
     }
     #meow-elite-app .secao-titulo i { color: var(--accent-color); font-size: 1.4rem; }
 
+    /* Layout ajustado para Lista Vertical (Black & Wine Red preference) */
     #meow-elite-app .grid-obras { 
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 25px 15px; 
+        display: flex; flex-direction: column; gap: 15px;
     }
 
-    /* CARDS DE OBRAS */
-    #meow-elite-app .obra-card { position: relative; transition: var(--transition); display: flex; flex-direction: column; }
+    #meow-elite-app .obra-card { 
+        display: flex; flex-direction: row; gap: 15px; align-items: center;
+        background: var(--card-bg); border: 1px solid var(--glass-border);
+        padding: 12px; border-radius: var(--radius-md); transition: var(--transition); 
+    }
+    #meow-elite-app .obra-card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px var(--accent-glow); border-color: var(--accent-color); }
+    
     #meow-elite-app .obra-link-principal { text-decoration: none; display: block; }
     
     #meow-elite-app .obra-img-box {
-        position: relative; aspect-ratio: 1 / 1.45; border-radius: var(--radius-md);
-        overflow: hidden; background: var(--card-bg); box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+        position: relative; width: 85px; aspect-ratio: 1 / 1.45; border-radius: 10px;
+        overflow: hidden; background: #000; flex-shrink: 0;
     }
     #meow-elite-app .obra-img-box::after {
         content: ''; position: absolute; inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%); z-index: 2; pointer-events:none;
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%); z-index: 2; pointer-events:none;
     }
     #meow-elite-app .obra-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
     #meow-elite-app .obra-card:hover img { transform: scale(1.05); }
 
     .status-badge {
-        position: absolute; top: 8px; left: 8px; z-index: 5;
-        padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; 
+        position: absolute; top: 6px; left: 6px; z-index: 5;
+        padding: 3px 6px; border-radius: 6px; font-size: 0.55rem; 
         font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
     .status-completo { background: var(--success); color: #fff; }
     .status-andamento { background: var(--accent-color); color: #fff; }
     .status-pausa { background: var(--warning); color: #fff; }
     .status-futura { background: #8B5CF6; color: #fff; }
 
-    #meow-elite-app .obra-info { padding: 12px 4px 0; }
+    /* --- TAG NOVO AUTÊNTICA --- */
+    .novo-badge {
+        position: absolute; top: 6px; right: 6px; z-index: 5;
+        background: #FF003C; color: #fff; padding: 3px 6px;
+        border-radius: 6px; font-size: 0.6rem; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 0.5px;
+        box-shadow: 0 0 10px rgba(255, 0, 60, 0.8);
+        animation: pulse-novo 1.5s infinite;
+    }
+    @keyframes pulse-novo {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(255, 0, 60, 1); }
+        100% { transform: scale(1); }
+    }
+
+    #meow-elite-app .obra-info { padding: 0; flex: 1; display: flex; flex-direction: column; justify-content: center; }
     #meow-elite-app .obra-titulo { 
-        font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text-main);
+        font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text-main);
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         line-height: 1.3; margin-bottom: 8px; transition: color 0.3s;
     }
     #meow-elite-app .obra-card:hover .obra-titulo { color: var(--accent-color); }
     #meow-elite-app .link-capitulo { 
-        display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px;
-        color: var(--text-dim); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: var(--transition);
+        display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px;
+        color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: var(--transition);
     }
     #meow-elite-app .link-capitulo:hover { color: var(--accent-color); }
 
@@ -366,8 +290,7 @@
         color: transparent; -webkit-text-stroke: 2px var(--accent-color);
         z-index: 10; pointer-events: none; opacity: 0.8;
     }
-    #meow-elite-app .top10-card .obra-img-box { border-radius: var(--radius-md); box-shadow: 0 8px 20px rgba(0,0,0,0.08); background: var(--card-bg); }
-    #meow-elite-app .top10-card .obra-img-box img { object-fit: cover; width: 100%; height: 100%; background-color: var(--card-bg); }
+    #meow-elite-app .top10-card .obra-img-box { width: 100%; border-radius: var(--radius-md); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
     #meow-elite-app .top10-titulo {
         font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--text-main); text-align: center;
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 10px; padding: 0 5px;
@@ -378,7 +301,7 @@
         position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
         background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
-        width: 90%; max-width: 400px; max-height: 60vh; overflow-y: auto; padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        width: 90%; max-width: 400px; max-height: 60vh; overflow-y: auto; padding: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         z-index: 1999; opacity: 0; visibility: hidden; transition: var(--transition);
     }
     #notificacoes-panel.active { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
@@ -398,7 +321,7 @@
         position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
         background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         border: 1px solid var(--glass-border); padding: 8px 15px; border-radius: 40px;
-        display: flex; gap: 15px; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        display: flex; gap: 15px; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     #meow-elite-app .bottom-nav.nav-hidden { transform: translate(-50%, 150%) !important; }
@@ -409,7 +332,7 @@
     #meow-elite-app .nav-link:hover, #meow-elite-app .nav-link.active { color: #fff; background: var(--accent-color); }
     
     .badge-count {
-        position: absolute; top: -2px; right: -2px; background: #FF6B6B; color: #fff;
+        position: absolute; top: -2px; right: -2px; background: #FF003C; color: #fff;
         font-size: 0.6rem; font-weight: bold; width: 18px; height: 18px; 
         display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid var(--card-bg);
     }
@@ -428,7 +351,6 @@
         #meow-elite-app .banner-content h1 { font-size: 1.8rem; }
         #meow-elite-app .section-container { margin-top: 35px !important; margin-bottom: 25px !important; }
         #meow-elite-app .secao-titulo { font-size: 1.3rem; margin-bottom: 15px !important; }
-        #meow-elite-app .grid-obras { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px 10px; }
         #meow-elite-app .bottom-nav { width: 90%; justify-content: space-between; padding: 8px 10px; }
         #meow-elite-app .nav-link { font-size: 1.1rem; padding: 10px; }
     }
@@ -441,9 +363,9 @@
       <i class="fa-solid fa-wifi"></i> 🥺 Você está offline! Mostrando apenas obras já acessadas.
   </div>
 
-  <!-- NOVA TELA DE CARREGAMENTO -->
+  <!-- NOVA TELA DE CARREGAMENTO COM O NOVO ÍCONE HORIZONTAL -->
   <div id="global-loader">
-      <img src="7668.png" alt="Meow Scan Loading" class="loader-logo">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png" alt="Meow Scan Loading" class="loader-logo">
       <div class="loader-spinner"></div>
       <div class="loader-text">Carregando o universo Meow...</div>
   </div>
@@ -464,22 +386,12 @@
       </div>
 
       <header id='main-header'>
+          <!-- BANNER LOGO HORIZONTAL PRIORITÁRIO -->
           <a class='logo' href='index.html'>
-              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6aC3chQ6doRxYFj6A_QjodQQOV8c9prAxUUcghfLANYhRLyebekvpQGr5yY7N8WyEEN-V4Dm7E9Z_Yt-296fKDPcsPS-l7OE0cxXIRL2U14fqEUWoNnVqsE9SW4vpNPb4vh7uSeO8A9Ml8wXHbxjKC5yQYOTGmHACMzveICcisVx59uMflIg8Gp2ggbcc/s320/3576.png'/>
+              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjReYpZAgpR0oT_9VWEBggKNbUm5hAkZWspaNWVK-zikcs4mPA7pmXIhczQLHDXFObdgJwp-E4DvvTiEFGEgV_c3rzUjfmL6PLOk6MSiJk7yKnZOj7UfR2P_h918WiLBeeE4Tb4BSjAWxUoBKxUzXe9Pd-_r-tA_mcsUHwyoly1SczGDx2iQfZG7IBrjvzd/s600/7668.png'/>
           </a>
           
           <div class='header-actions'>
-              <div class='color-picker-dropdown'>
-                  <button class='action-btn' onclick='toggleColorMenu()'><i class='fa-solid fa-palette'></i></button>
-                  <div class='color-menu' id='color-menu'>
-                      <div class='color-dot pink' onclick="setColor('pink')" title='Rosa'></div>
-                      <div class='color-dot blue' onclick="setColor('blue')" title='Azul'></div>
-                      <div class='color-dot red' onclick="setColor('red')" title='Vermelho'></div>
-                      <div class='color-dot purple' onclick="setColor('purple')" title='Roxo'></div>
-                  </div>
-              </div>
-
-              <button class='action-btn' onclick='toggleTheme()'><i class='fa-solid fa-moon' id='theme-icon'></i></button>
               <button class='action-btn search-btn' onclick='abrirPesquisa()'><i class='fa-solid fa-magnifying-glass'></i></button>
           </div>
       </header>
@@ -522,13 +434,14 @@
           </div>
       </div>
 
+      <!-- BOTÕES SOLICITADOS NA NAVBAR INFERIOR -->
       <nav class='bottom-nav' id='mobile-bottom-nav'>
           <a class='nav-link active' href='index.html'><i class='fa-solid fa-house'></i></a>
-          <a class='nav-link' href='generos.html'><i class='fa-solid fa-list'></i></a>
-          <a class='nav-link' href='biblioteca.html'><i class='fa-solid fa-bookmark'></i></a>
+          <a class='nav-link' href='gênero.html'><i class='fa-solid fa-list'></i></a>
+          <a class='nav-link' href='Biblioteca.html'><i class='fa-solid fa-bookmark'></i></a>
           <a class='nav-link' href='#' onclick='toggleNotificacoes(event)'><i class='fa-solid fa-bell'></i><span class='badge-count' id='badge-notif' style='display:none;'>0</span></a>
-          <a class='nav-link' href='parcerias.html'><i class='fa-solid fa-handshake'></i></a>
-          <a class='nav-link' href='perfil.html'><i class='fa-solid fa-user'></i></a>
+          <a class='nav-link' href='Parcerias.html'><i class='fa-solid fa-handshake'></i></a>
+          <a class='nav-link' href='Perfil.html'><i class='fa-solid fa-user'></i></a>
       </nav>
   </div>
 
@@ -557,44 +470,6 @@
               localStorage.setItem('meow_obras_acessadas', JSON.stringify(acessadas));
           }
       }
-
-      // SISTEMA DE TEMA CLARO E ESCURO
-      function toggleTheme() {
-          var currentTheme = localStorage.getItem('meow_theme') || 'light';
-          var newTheme = currentTheme === 'light' ? 'dark' : 'light';
-          setTheme(newTheme);
-      }
-
-      function setTheme(theme) {
-          var icon = document.getElementById('theme-icon');
-          if(theme === 'dark') { 
-              document.body.setAttribute('data-theme', 'dark'); 
-              if(icon) { icon.className = 'fa-solid fa-sun'; }
-          } else { 
-              document.body.removeAttribute('data-theme'); 
-              if(icon) { icon.className = 'fa-solid fa-moon'; }
-          }
-          localStorage.setItem('meow_theme', theme);
-      }
-
-      var savedTheme = localStorage.getItem('meow_theme');
-      if(savedTheme) { setTheme(savedTheme); }
-
-      // SISTEMA DE PALETA DE CORES 
-      function toggleColorMenu() {
-          var menu = document.getElementById('color-menu');
-          if(menu) menu.classList.toggle('active');
-      }
-
-      function setColor(color) {
-          document.body.setAttribute('data-color', color);
-          localStorage.setItem('meow_color', color);
-          var menu = document.getElementById('color-menu');
-          if(menu) menu.classList.remove('active');
-      }
-
-      var savedColor = localStorage.getItem('meow_color');
-      if(savedColor) { document.body.setAttribute('data-color', savedColor); }
 
       function toggleNotificacoes(e) {
           e.preventDefault();
@@ -626,7 +501,6 @@
           var header = document.getElementById('main-header');
           var bottomNav = document.getElementById('mobile-bottom-nav');
           var panelNotif = document.getElementById('notificacoes-panel');
-          var colorMenu = document.getElementById('color-menu');
           
           if(header) {
               if (st > 20) { header.classList.add('scrolled'); } 
@@ -637,7 +511,6 @@
               if(header) { header.style.transform = 'translateY(-100%)'; }
               if(bottomNav) bottomNav.classList.add('nav-hidden');
               if(panelNotif) panelNotif.classList.remove('active');
-              if(colorMenu) colorMenu.classList.remove('active');
           } else {
               if(header) { header.style.transform = 'translateY(0)'; }
               if(bottomNav) bottomNav.classList.remove('nav-hidden');
@@ -645,8 +518,18 @@
           lastScrollTop = st <= 0 ? 0 : st;
       });
 
-      // INTEGRAÇÃO COM FIREBASE
-      var firebaseConfig = { apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo", databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com", projectId: "meow-scan-ffff0" };
+      // INTEGRAÇÃO COM FIREBASE - DADOS ATUALIZADOS!
+      var firebaseConfig = {
+          apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
+          authDomain: "meow-scan-ffff0.firebaseapp.com",
+          databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com",
+          projectId: "meow-scan-ffff0",
+          storageBucket: "meow-scan-ffff0.firebasestorage.app",
+          messagingSenderId: "76129834936",
+          appId: "1:76129834936:web:36df84ea0fb31ecc69e14d",
+          measurementId: "G-8VRH28ZBTF"
+      };
+      
       if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
       var db = firebase.database();
       
@@ -693,18 +576,28 @@
           return 0;
       }
 
-      // GERADOR DE CARDS
+      // GERADOR DE CARDS COM LÓGICA DA TAG NOVO
       function criarCardObra(obra) {
           var card = document.createElement('div');
           card.className = 'obra-card';
           
           var badgeHtml = getStatusBadge(obra.status);
+          
+          // LÓGICA DA TAG NOVO (Aparece apenas para obras atualizadas nos últimos 3 dias)
+          var agora = Date.now();
+          var limiteNovo = 3 * 24 * 60 * 60 * 1000; // 3 dias em milissegundos
+          var badgeNovoHtml = "";
+          if (obra.timestamp && (agora - obra.timestamp) <= limiteNovo) {
+              badgeNovoHtml = '<span class="novo-badge">NOVO</span>';
+          }
+
           var urlObra = URL_BASE + encodeURIComponent(obra.id);
 
           card.innerHTML = `
               <a href="${urlObra}" class="obra-link-principal" onclick="marcarComoAcessada('${obra.id}')">
                   <div class="obra-img-box">
                       ${badgeHtml}
+                      ${badgeNovoHtml}
                       <img src="${obra.capa || 'https://via.placeholder.com/300x420'}" alt="${obra.nome}" loading="lazy"/>
                   </div>
               </a>
