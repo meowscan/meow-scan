@@ -1,24 +1,16 @@
 {
-  "name": "Meow Scan",
   "short_name": "MeowScan",
-  "description": "Leitor de obras da Meow Scan",
-  "start_url": "/miau-scan/index.html",
-  "scope": "/miau-scan/",
-  "display": "standalone",
-  "background_color": "#121212",
-  "theme_color": "#121212",
+  "name": "Meow Scan - App",
   "icons": [
     {
-      "src": "/miau-scan/icone-192.png",
-      "sizes": "192x192",
+      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png",
       "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/miau-scan/icone-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "192x192 512x512"
     }
-  ]
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0f0c1b",
+  "theme_color": "#0f0c1b",
+  "display": "standalone",
+  "orientation": "portrait"
 }
