@@ -151,6 +151,7 @@
     #global-loader.hidden {
         opacity: 0;
         visibility: hidden;
+        pointer-events: none;
     }
     .loader-logo {
         width: 180px;
@@ -270,6 +271,7 @@
         position: relative; height: 70vh; min-height: 480px; width: 100%; 
         overflow: hidden; border-radius: 0 0 40px 40px; margin-bottom: 30px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        display: none; /* Só exibe se houver destaques */
     }
     #meow-elite-app .banner-slide { 
         position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out;
@@ -413,6 +415,12 @@
         font-size: 0.6rem; font-weight: bold; width: 18px; height: 18px; 
         display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid var(--card-bg);
     }
+    
+    .mensagem-erro-firebase {
+        color: #EF4444; background: rgba(239, 68, 68, 0.1); 
+        padding: 20px; border-radius: 12px; text-align: center; 
+        grid-column: 1/-1; font-weight: 600; font-family: 'Inter', sans-serif;
+    }
 
     /* RESPONSIVIDADE */
     @media (max-width: 768px) {
@@ -443,7 +451,7 @@
 
   <!-- NOVA TELA DE CARREGAMENTO -->
   <div id="global-loader">
-      <img src="7668.png" alt="Meow Scan Loading" class="loader-logo">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6aC3chQ6doRxYFj6A_QjodQQOV8c9prAxUUcghfLANYhRLyebekvpQGr5yY7N8WyEEN-V4Dm7E9Z_Yt-296fKDPcsPS-l7OE0cxXIRL2U14fqEUWoNnVqsE9SW4vpNPb4vh7uSeO8A9Ml8wXHbxjKC5yQYOTGmHACMzveICcisVx59uMflIg8Gp2ggbcc/s320/3576.png" alt="Meow Scan Loading" class="loader-logo">
       <div class="loader-spinner"></div>
       <div class="loader-text">Carregando o universo Meow...</div>
   </div>
@@ -532,25 +540,23 @@
       </nav>
   </div>
 
-  <!-- AQUI ESTÁ A MUDANÇA: Scripts da Versão Compatível do Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <script type='text/javascript'>
-      // LÓGICA DE REMOVER TELA DE CARREGAMENTO
       function fecharTelaCarregamento() {
           var loader = document.getElementById('global-loader');
-          if (loader && !sessionStorage.getItem('meow_loader_visto')) {
-              setTimeout(function() {
-                  loader.classList.add('hidden');
-                  sessionStorage.setItem('meow_loader_visto', 'true');
-              }, 800);
+          if (loader) {
+              loader.classList.add('hidden');
+              sessionStorage.setItem('meow_loader_visto', 'true');
           }
       }
 
-      window.addEventListener('load', fecharTelaCarregamento);
+      window.addEventListener('load', function() {
+          // Garante esconder se já estourou o tempo de timeout
+          setTimeout(fecharTelaCarregamento, 4000); 
+      });
 
-      // --- SISTEMA DE OBRAS ACESSADAS (OFFLINE MAGIC) ---
       function marcarComoAcessada(id) {
           let acessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
           if(!acessadas.includes(id)) {
@@ -559,7 +565,6 @@
           }
       }
 
-      // SISTEMA DE TEMA CLARO E ESCURO
       function toggleTheme() {
           var currentTheme = localStorage.getItem('meow_theme') || 'light';
           var newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -581,7 +586,6 @@
       var savedTheme = localStorage.getItem('meow_theme');
       if(savedTheme) { setTheme(savedTheme); }
 
-      // SISTEMA DE PALETA DE CORES 
       function toggleColorMenu() {
           var menu = document.getElementById('color-menu');
           if(menu) menu.classList.toggle('active');
@@ -603,7 +607,6 @@
           if(panel) panel.classList.toggle('active');
       }
 
-      // PESQUISA
       function abrirPesquisa() {
           var overlay = document.getElementById('search-overlay');
           if(overlay) {
@@ -618,7 +621,6 @@
           if(overlay) overlay.classList.remove('active');
       }
 
-      // LÓGICA DE SCROLL
       var lastScrollTop = 0;
       window.addEventListener('scroll', function() {
           if (esconderMenuSempre) return;
@@ -646,7 +648,6 @@
           lastScrollTop = st <= 0 ? 0 : st;
       });
 
-      // AQUI ESTÁ A MUDANÇA: SUAS NOVAS CREDENCIAIS DO FIREBASE
       var firebaseConfig = {
           apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
           authDomain: "meow-scan-ffff0.firebaseapp.com",
@@ -667,9 +668,10 @@
       var URL_LEITURA = "lersuasobrasaquinameowscan.html?obra=";
       var listaGlobalObras = [];
 
+      // Função Segura para evitar crash no Status
       function getStatusBadge(statusRaw) {
           var status = statusRaw || "Sem Status";
-          var sLower = status.toLowerCase();
+          var sLower = String(status).toLowerCase();
           var cssClass = "status-andamento";
           if (sLower.includes('completo') || sLower.includes('concluíd') || sLower.includes('concluid')) cssClass = "status-completo";
           else if (sLower.includes('pausa')) cssClass = "status-pausa";
@@ -679,34 +681,31 @@
 
       function formatarNomeCapitulo(capRaw) {
           if (!capRaw || capRaw === "Em breve") return "Em breve";
-          return capRaw.toString().replace(/_/g, " ");
+          return String(capRaw).replace(/_/g, " ");
       }
 
       function parseTimestamp(rawTime) {
           if (!rawTime) return 0;
           if (typeof rawTime === 'number') return rawTime;
-          if (typeof rawTime === 'string') {
-              if (!isNaN(rawTime)) return parseInt(rawTime);
-              if (rawTime.includes('/')) {
-                  var partes = rawTime.split(/[/\s:-]+/); 
-                  if (partes.length >= 3) {
-                      var dia = parseInt(partes[0]);
-                      var mes = parseInt(partes[1]) - 1;
-                      var ano = parseInt(partes[2]);
-                      if (ano < 100) ano += 2000;
-                      var hora = partes[3] ? parseInt(partes[3]) : 0;
-                      var min = partes[4] ? parseInt(partes[4]) : 0;
-                      var d = new Date(ano, mes, dia, hora, min);
-                      if (!isNaN(d.getTime())) return d.getTime();
-                  }
+          var sTime = String(rawTime);
+          if (!isNaN(sTime)) return parseInt(sTime);
+          if (sTime.includes('/')) {
+              var partes = sTime.split(/[/\s:-]+/); 
+              if (partes.length >= 3) {
+                  var dia = parseInt(partes[0]);
+                  var mes = parseInt(partes[1]) - 1;
+                  var ano = parseInt(partes[2]);
+                  if (ano < 100) ano += 2000;
+                  var hora = partes[3] ? parseInt(partes[3]) : 0;
+                  var min = partes[4] ? parseInt(partes[4]) : 0;
+                  var d = new Date(ano, mes, dia, hora, min);
+                  if (!isNaN(d.getTime())) return d.getTime();
               }
-              var dt = new Date(rawTime).getTime();
-              return isNaN(dt) ? 0 : dt;
           }
-          return 0;
+          var dt = new Date(sTime).getTime();
+          return isNaN(dt) ? 0 : dt;
       }
 
-      // GERADOR DE CARDS
       function criarCardObra(obra) {
           var card = document.createElement('div');
           card.className = 'obra-card';
@@ -733,7 +732,6 @@
           return card;
       }
 
-      // BANNER SLIDE HERO
       var slideTimer = null;
       var slideIndexAtual = 0;
 
@@ -775,7 +773,6 @@
           }
       }
 
-      // RENDERIZAR TOP 10
       function renderizarTop10(obras) {
           var top10Container = document.getElementById('top10');
           if (!top10Container) return;
@@ -805,7 +802,6 @@
           });
       }
 
-      // NOTIFICAÇÕES DE FAVORITOS
       function processarNotificacoes(lista) {
           var notifContainer = document.getElementById('lista-notificacoes');
           var badge = document.getElementById('badge-notif');
@@ -850,7 +846,6 @@
           });
       }
 
-      // PROCESSAR TODAS AS OBRAS DA BASE DE DADOS E FILTRAR OFFLINE
       function processarEExibirObras(data) {
           if (!data) return;
 
@@ -860,14 +855,19 @@
               var capCru = "Em breve";
               var exibirCapitulo = "Em breve";
               
-              if (obra.capitulos) {
+              // Bloco Seguro para evitar crash nos Capítulos
+              if (obra.capitulos && typeof obra.capitulos === 'object') {
                   var chaves = Object.keys(obra.capitulos); 
                   if (chaves.length > 0) {
                       chaves.sort(function(a, b) {
-                          var numA = parseFloat(obra.capitulos[a].numero !== undefined ? obra.capitulos[a].numero : a.replace(/[^0-9,.]/g, '').replace(',','.'));
-                          var numB = parseFloat(obra.capitulos[b].numero !== undefined ? obra.capitulos[b].numero : b.replace(/[^0-9,.]/g, '').replace(',','.'));
+                          var capA = obra.capitulos[a];
+                          var capB = obra.capitulos[b];
+                          
+                          var numA = parseFloat((capA && capA.numero !== undefined) ? capA.numero : String(a).replace(/[^0-9,.]/g, '').replace(',','.'));
+                          var numB = parseFloat((capB && capB.numero !== undefined) ? capB.numero : String(b).replace(/[^0-9,.]/g, '').replace(',','.'));
+                          
                           if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
-                          return a.localeCompare(b);
+                          return String(a).localeCompare(String(b));
                       });
                       
                       var ultimaChave = chaves[chaves.length - 1]; 
@@ -875,7 +875,7 @@
                       
                       capCru = ultimaChave;
                       
-                      if (ultimoCapObj && ultimoCapObj.nomeCap && ultimoCapObj.nomeCap.trim() !== "") {
+                      if (ultimoCapObj && typeof ultimoCapObj === 'object' && ultimoCapObj.nomeCap && typeof ultimoCapObj.nomeCap === 'string' && ultimoCapObj.nomeCap.trim() !== "") {
                           exibirCapitulo = ultimoCapObj.nomeCap;
                       } else {
                           exibirCapitulo = formatarNomeCapitulo(ultimaChave);
@@ -883,7 +883,7 @@
                   }
               } else {
                   var capSalvo = obra.ultimoCapitulo || obra.capitulo || obra.ultimo_capitulo || obra.cap || obra.Capitulo || obra.chapter || obra.ultimoCap || null;
-                  if (capSalvo !== null && capSalvo !== undefined && capSalvo !== "") {
+                  if (capSalvo !== null && capSalvo !== undefined && String(capSalvo).trim() !== "") {
                       capCru = capSalvo;
                       exibirCapitulo = formatarNomeCapitulo(capCru);
                   }
@@ -897,12 +897,14 @@
               var timestampReal = parseTimestamp(obra.timestamp || obra.dataAtualizacao || obra.data_atualizacao);
               var maiorTimestampCap = 0;
               
-              if (obra.capitulos) {
+              if (obra.capitulos && typeof obra.capitulos === 'object') {
                   var chavesCaps = Object.keys(obra.capitulos);
                   chavesCaps.forEach(function(k) {
                       var cap = obra.capitulos[k];
-                      var cTime = parseTimestamp(cap.timestamp || cap.data || cap.dataAtualizacao);
-                      if (cTime > maiorTimestampCap) maiorTimestampCap = cTime;
+                      if(cap && typeof cap === 'object'){
+                          var cTime = parseTimestamp(cap.timestamp || cap.data || cap.dataAtualizacao);
+                          if (cTime > maiorTimestampCap) maiorTimestampCap = cTime;
+                      }
                   });
               }
               
@@ -913,22 +915,20 @@
               return {
                   id: id, 
                   capa: obra.capaUrl || obra.capa, 
-                  nome: obra.nome || obra.titulo || 'Sem título',
+                  nome: String(obra.nome || obra.titulo || 'Sem título'),
                   views: viewsReal, 
                   ultimoCapitulo: exibirCapitulo,
                   ultimoCapituloRaw: capCru,
                   timestamp: timestampReal,
-                  status: obra.status || "Sem Status"
+                  status: String(obra.status || "Sem Status")
               };
           });
 
-          // --------- LÓGICA MÁGICA DO OFFLINE ---------
           let isOffline = !navigator.onLine;
           let msgOffline = document.getElementById('offline-msg');
           
           if (isOffline) {
               if (msgOffline) msgOffline.classList.remove('hidden');
-              // Filtra a lista para mostrar SOMENTE as obras que a pessoa já abriu/clicou (salvas no celular)
               let obrasAcessadas = JSON.parse(localStorage.getItem('meow_obras_acessadas') || '[]');
               lista = lista.filter(o => obrasAcessadas.includes(o.id));
           } else {
@@ -937,16 +937,14 @@
 
           listaGlobalObras = lista;
 
-          // 1. Banner Hero
           var recentesParaBanner = [...lista].sort((a,b) => b.timestamp - a.timestamp);
           if (recentesParaBanner.length > 0) {
               document.getElementById('banner-hero').style.display = 'block';
               renderizarBannerHero(recentesParaBanner);
           } else {
-              document.getElementById('banner-hero').style.display = 'none'; // Esconde se não tiver nada pra mostrar offline
+              document.getElementById('banner-hero').style.display = 'none'; 
           }
 
-          // 2. Top 10
           var top10Container = document.getElementById('top10');
           if (lista.length > 0) {
               renderizarTop10(lista);
@@ -954,7 +952,6 @@
               top10Container.innerHTML = '<p style="color: var(--text-dim); padding: 10px;">Nenhuma obra salva para leitura offline. 🥺</p>';
           }
 
-          // 3. Lançamentos Recentes
           var gridUpdates = document.getElementById('lista-updates');
           if(gridUpdates) {
               gridUpdates.innerHTML = '';
@@ -966,12 +963,11 @@
               }
           }
 
-          // 4. Obras Concluídas
           var gridConcluidas = document.getElementById('lista-concluidas');
           if(gridConcluidas) {
               gridConcluidas.innerHTML = '';
               var concluidas = lista.filter(o => {
-                  var st = (o.status || '').toLowerCase();
+                  var st = o.status.toLowerCase();
                   return st.includes('completo') || st.includes('concluíd') || st.includes('concluid');
               });
               if(concluidas.length === 0) {
@@ -981,25 +977,21 @@
               }
           }
 
-          // 5. Todas as Obras
           var gridTodas = document.getElementById('lista-todas');
           if(gridTodas) {
               gridTodas.innerHTML = '';
-              var todas = [...lista].sort((a,b) => (a.nome || '').localeCompare(b.nome || ''));
+              var todas = [...lista].sort((a,b) => a.nome.localeCompare(b.nome));
               if (todas.length === 0) {
-                  gridTodas.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">Você ainda não acessou nenhuma obra para ler offline. 🥺</p>';
+                  gridTodas.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">Nenhuma obra encontrada para exibir. 🥺</p>';
               } else {
                   todas.forEach(o => gridTodas.appendChild(criarCardObra(o)));
               }
           }
 
-          // 6. Notificações
           processarNotificacoes(lista);
-          
           fecharTelaCarregamento();
       }
 
-      // CAMPO DE BUSCA AO VIVO
       var inputSearch = document.getElementById('search-input');
       if(inputSearch) {
           inputSearch.addEventListener('input', function(e) {
@@ -1019,7 +1011,6 @@
           });
       }
 
-      // MONITOR DE INTERNET PARA ATUALIZAR A PÁGINA NA HORA
       window.addEventListener('offline', function() {
           let backup = localStorage.getItem('meow_backup_obras');
           if (backup) {
@@ -1028,28 +1019,41 @@
       });
 
       window.addEventListener('online', function() {
-          // A Firebase normalmente reconecta sozinha, mas esconde a mensagem por segurança
           let msgOffline = document.getElementById('offline-msg');
           if (msgOffline) msgOffline.classList.add('hidden');
       });
 
-      // AQUI ESTÁ A MUDANÇA: OUVINTE DO FIREBASE COM AVISO DE ERRO
-      db.ref('obras').on('value', function(snapshot) {
-          var data = snapshot.val();
-          if(data) {
-              // Quando tem internet, salva as obras no celular para o modo offline!
-              localStorage.setItem('meow_backup_obras', JSON.stringify(data));
-              processarEExibirObras(data);
-          } else {
-              console.warn("Firebase conectou, mas retornou vazio (null). Verifique se o nó 'obras' existe.");
-              fecharTelaCarregamento();
-          }
-      }, function(error) {
-          console.error("Erro ao puxar dados do Firebase: ", error);
-          fecharTelaCarregamento();
-      });
+      function dispararErroNaTela(mensagem) {
+          var grids = ['lista-updates', 'lista-concluidas', 'lista-todas', 'top10'];
+          grids.forEach(id => {
+              var el = document.getElementById(id);
+              if (el) el.innerHTML = `<div class="mensagem-erro-firebase">${mensagem}</div>`;
+          });
+          document.getElementById('banner-hero').style.display = 'none';
+      }
 
-      // SE JÁ ENTRAR NO APLICATIVO SEM INTERNET, PUXA O BACKUP DIRETO
+      // SISTEMA DE LEITURA DO FIREBASE COM ALERTA EM CASO DE ERRO (RULES)
+      try {
+          db.ref('obras').on('value', function(snapshot) {
+              var data = snapshot.val();
+              if(data) {
+                  localStorage.setItem('meow_backup_obras', JSON.stringify(data));
+                  processarEExibirObras(data);
+              } else {
+                  fecharTelaCarregamento();
+                  dispararErroNaTela("⚠️ O banco de dados está vazio. Nenhuma obra foi encontrada no nó 'obras'.");
+              }
+          }, function(error) {
+              console.error("Erro Firebase: ", error);
+              fecharTelaCarregamento();
+              dispararErroNaTela(`⚠️ <b>ACESSO NEGADO PELO FIREBASE:</b><br><br> As permissões do seu banco de dados estão bloqueando a leitura! <br>Vá no Console do Firebase > Realtime Database > Aba <b>"Regras" (Rules)</b> e mude <i>".read"</i> para <i>true</i>.`);
+          });
+      } catch (err) {
+          fecharTelaCarregamento();
+          dispararErroNaTela("Ocorreu um erro ao tentar conectar no banco de dados.");
+          console.error(err);
+      }
+
       if (!navigator.onLine) {
           let backup = localStorage.getItem('meow_backup_obras');
           if (backup) {
