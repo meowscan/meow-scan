@@ -532,8 +532,9 @@
       </nav>
   </div>
 
-  <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js'></script>
+  <!-- AQUI ESTÁ A MUDANÇA: Scripts da Versão Compatível do Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <script type='text/javascript'>
       // LÓGICA DE REMOVER TELA DE CARREGAMENTO
@@ -645,9 +646,21 @@
           lastScrollTop = st <= 0 ? 0 : st;
       });
 
-      // INTEGRAÇÃO COM FIREBASE
-      var firebaseConfig = { apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo", databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com", projectId: "meow-scan-ffff0" };
-      if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+      // AQUI ESTÁ A MUDANÇA: SUAS NOVAS CREDENCIAIS DO FIREBASE
+      var firebaseConfig = {
+          apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
+          authDomain: "meow-scan-ffff0.firebaseapp.com",
+          databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com",
+          projectId: "meow-scan-ffff0",
+          storageBucket: "meow-scan-ffff0.firebasestorage.app",
+          messagingSenderId: "76129834936",
+          appId: "1:76129834936:web:36df84ea0fb31ecc69e14d",
+          measurementId: "G-8VRH28ZBTF"
+      };
+      
+      if (!firebase.apps.length) { 
+          firebase.initializeApp(firebaseConfig); 
+      }
       var db = firebase.database();
       
       var URL_BASE = "obra.html?obra=";
@@ -1020,7 +1033,7 @@
           if (msgOffline) msgOffline.classList.add('hidden');
       });
 
-      // OUVINTE DO FIREBASE
+      // AQUI ESTÁ A MUDANÇA: OUVINTE DO FIREBASE COM AVISO DE ERRO
       db.ref('obras').on('value', function(snapshot) {
           var data = snapshot.val();
           if(data) {
@@ -1028,8 +1041,12 @@
               localStorage.setItem('meow_backup_obras', JSON.stringify(data));
               processarEExibirObras(data);
           } else {
+              console.warn("Firebase conectou, mas retornou vazio (null). Verifique se o nó 'obras' existe.");
               fecharTelaCarregamento();
           }
+      }, function(error) {
+          console.error("Erro ao puxar dados do Firebase: ", error);
+          fecharTelaCarregamento();
       });
 
       // SE JÁ ENTRAR NO APLICATIVO SEM INTERNET, PUXA O BACKUP DIRETO
