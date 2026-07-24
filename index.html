@@ -38,8 +38,6 @@
         --text-main: #EAE0E1; 
         --text-dim: #A89B9D;
         --card-bg: #151515;
-        --success: #34D399;
-        --warning: #FBBF24;
         --radius-lg: 24px;
         --radius-md: 16px;
         --transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -160,13 +158,13 @@
 
     /* --- DESTAQUE PREMIUM (BANNER HERO) --- */
     #meow-elite-app .banner-container { 
-        position: relative; height: 70vh; min-height: 480px; width: 100%; 
+        position: relative; height: 60vh; min-height: 400px; width: 100%; 
         overflow: hidden; border-radius: 0 0 40px 40px; margin-bottom: 30px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     #meow-elite-app .banner-slide { 
         position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out;
-        display: flex; align-items: flex-end; padding: 80px 5%;
+        display: flex; align-items: flex-end; padding: 60px 5%;
     }
     #meow-elite-app .banner-slide.active { opacity: 1; z-index: 10; }
     #meow-elite-app .banner-bg {
@@ -174,7 +172,7 @@
     }
     #meow-elite-app .banner-gradient {
         position: absolute; inset: 0; z-index: 2;
-        background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%);
+        background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 70%, var(--bg-main) 100%);
     }
     #meow-elite-app .banner-content { 
         position: relative; z-index: 20; max-width: 800px;
@@ -185,37 +183,44 @@
     #meow-elite-app .banner-tag {
         display: inline-block; background: var(--accent-gradient); color: #fff;
         padding: 6px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 700;
-        text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px;
+        text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px;
     }
     #meow-elite-app .banner-content h1 { 
-        font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 6vw, 4rem); 
-        font-weight: 800; margin: 0 0 20px 0; line-height: 1.1; color: #fff; 
+        font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 5vw, 3.2rem); 
+        font-weight: 800; margin: 0 0 15px 0; line-height: 1.1; color: #fff; 
         text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
     }
+    .btn-main {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: var(--accent-gradient); color: #fff; padding: 12px 24px;
+        border-radius: 12px; text-decoration: none; font-weight: 700;
+        box-shadow: 0 4px 15px var(--accent-glow); transition: var(--transition);
+    }
+    .btn-main:hover { transform: translateY(-3px); }
 
     /* SEÇÕES E LISTA VERTICAL DE OBRAS */
-    #meow-elite-app .section-container { padding: 0 5%; margin-top: 50px !important; margin-bottom: 40px !important; }
+    #meow-elite-app .section-container { padding: 0 5%; margin-top: 40px !important; margin-bottom: 30px !important; }
     
     #meow-elite-app .secao-titulo { 
-        font-family: 'Syne', sans-serif; font-size: 1.6rem; margin-bottom: 25px !important; 
+        font-family: 'Syne', sans-serif; font-size: 1.5rem; margin-bottom: 20px !important; 
         display: flex; align-items: center; gap: 12px; font-weight: 800; color: var(--text-main);
     }
-    #meow-elite-app .secao-titulo i { color: var(--accent-color); font-size: 1.4rem; }
+    #meow-elite-app .secao-titulo i { color: var(--accent-color); font-size: 1.3rem; }
 
     #meow-elite-app .grid-obras { 
-        display: flex; flex-direction: column; gap: 15px; 
+        display: flex; flex-direction: column; gap: 14px; 
     }
 
     #meow-elite-app .obra-card { 
         position: relative; transition: var(--transition); display: flex; flex-direction: row; align-items: center; gap: 15px;
         background: var(--card-bg); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--glass-border);
     }
-    #meow-elite-app .obra-card:hover { transform: translateX(8px); border-color: var(--accent-color); }
+    #meow-elite-app .obra-card:hover { transform: translateX(6px); border-color: var(--accent-color); }
     
     #meow-elite-app .obra-link-principal { text-decoration: none; display: flex; flex-direction: row; width: 100%; align-items: center; gap: 15px; }
     
     #meow-elite-app .obra-img-box {
-        position: relative; width: 90px; min-width: 90px; aspect-ratio: 1 / 1.45; border-radius: 10px;
+        position: relative; width: 80px; min-width: 80px; aspect-ratio: 1 / 1.45; border-radius: 10px;
         overflow: hidden; background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
     
@@ -224,16 +229,16 @@
 
     #meow-elite-app .obra-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
     #meow-elite-app .obra-titulo { 
-        font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-main);
+        font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text-main);
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         line-height: 1.3; margin-bottom: 8px; transition: color 0.3s;
     }
     #meow-elite-app .obra-card:hover .obra-titulo { color: var(--accent-color); }
     
     #meow-elite-app .link-capitulo { 
-        display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px;
-        color: var(--accent-color); text-decoration: none; font-size: 0.9rem; font-weight: 600;
-        background: rgba(128,0,32, 0.1); padding: 6px 12px; border-radius: 8px; width: max-content;
+        display: inline-flex; align-items: center; gap: 6px;
+        color: var(--accent-color); text-decoration: none; font-size: 0.85rem; font-weight: 600;
+        background: rgba(128,0,32, 0.15); padding: 6px 12px; border-radius: 8px; width: max-content;
         transition: var(--transition);
     }
     #meow-elite-app .link-capitulo:hover { background: var(--accent-color); color: #fff; }
@@ -276,25 +281,23 @@
         border: 2px solid var(--bg-main);
     }
 
+    /* LOADING ANIMATION */
+    .loading-text { color: var(--text-dim); font-size: 0.95rem; text-align: center; padding: 20px; }
+
     /* RESPONSIVIDADE */
     @media (max-width: 768px) {
         #meow-elite-app header { padding: 15px 4%; }
         #meow-elite-app .logo img { max-height: 40px; }
         .header-actions { gap: 8px; }
         .action-btn { width: 38px; height: 38px; font-size: 1rem; }
-        
         .telegram-float { bottom: 85px; right: 15px; width: 45px; height: 45px; font-size: 24px; }
-        
         #search-overlay { padding-top: 8vh; }
         .search-input-wrapper { margin-bottom: 30px; padding: 5px 15px; border-radius: 20px; }
         .search-input-wrapper input { font-size: 1.1rem; padding: 15px 10px; }
-        
-        #meow-elite-app .banner-container { height: 55vh; min-height: 400px; margin-bottom: 20px; border-radius: 0 0 30px 30px;}
-        #meow-elite-app .banner-content h1 { font-size: 1.8rem; }
-        
-        #meow-elite-app .section-container { margin-top: 35px !important; margin-bottom: 25px !important; }
-        #meow-elite-app .secao-titulo { font-size: 1.3rem; margin-bottom: 15px !important; }
-        
+        #meow-elite-app .banner-container { height: 50vh; min-height: 350px; margin-bottom: 20px; border-radius: 0 0 30px 30px;}
+        #meow-elite-app .banner-content h1 { font-size: 1.6rem; }
+        #meow-elite-app .section-container { margin-top: 30px !important; margin-bottom: 20px !important; }
+        #meow-elite-app .secao-titulo { font-size: 1.25rem; margin-bottom: 15px !important; }
         #meow-elite-app .bottom-nav { width: 90%; justify-content: space-between; padding: 8px 10px; }
         #meow-elite-app .nav-link { font-size: 1.1rem; padding: 10px; }
     }
@@ -304,6 +307,7 @@
 
   <div id="meow-elite-app">
       
+      <!-- TELA DE PESQUISA -->
       <div id="search-overlay">
           <div class="search-container-box">
               <div class="search-input-wrapper">
@@ -317,6 +321,7 @@
           </div>
       </div>
 
+      <!-- CABEÇALHO -->
       <header id="main-header">
           <a class="logo" href="index.html">
               <img alt="Meow Scan" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6aC3chQ6doRxYFj6A_QjodQQOV8c9prAxUUcghfLANYhRLyebekvpQGr5yY7N8WyEEN-V4Dm7E9Z_Yt-296fKDPcsPS-l7OE0cxXIRL2U14fqEUWoNnVqsE9SW4vpNPb4vh7uSeO8A9Ml8wXHbxjKC5yQYOTGmHACMzveICcisVx59uMflIg8Gp2ggbcc/s320/3576.png">
@@ -327,26 +332,36 @@
           </div>
       </header>
 
+      <!-- CARROSSEL / BANNER DESTAQUE -->
       <div class="banner-container" id="banner-hero"></div>
 
+      <!-- SEÇÃO LANÇAMENTOS RECENTES -->
       <div class="section-container">
           <h2 class="secao-titulo"><i class="fa-solid fa-bolt"></i> Lançamentos Recentes</h2>
-          <div class="grid-obras" id="lista-updates"></div>
+          <div class="grid-obras" id="lista-updates">
+              <p class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> Carregando obras...</p>
+          </div>
       </div>
 
+      <!-- SEÇÃO TODAS AS OBRAS -->
       <div class="section-container">
           <h2 class="secao-titulo"><i class="fa-solid fa-book-open"></i> Obras</h2>
-          <div class="grid-obras" id="lista-todas"></div>
+          <div class="grid-obras" id="lista-todas">
+              <p class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> Carregando obras...</p>
+          </div>
       </div>
       
+      <!-- BOTAO TELEGRAM -->
       <a class="telegram-float" href="https://t.me/Meowscann1" target="_blank" title="Nosso Canal no Telegram">
           <i class="fa-brands fa-telegram"></i>
       </a>
 
+      <!-- RODAPÉ -->
       <div class="creditos-rodape">
           Desenvolvido com carinho por <span>Sirla</span>
       </div>
 
+      <!-- PAINEL DE NOTIFICAÇÕES -->
       <div id="notificacoes-panel">
           <h3><i class="fa-solid fa-bell"></i> Suas Atualizações</h3>
           <div id="lista-notificacoes">
@@ -354,6 +369,7 @@
           </div>
       </div>
 
+      <!-- NAVBAR INFERIOR MOBILE -->
       <nav class="bottom-nav" id="mobile-bottom-nav">
           <a class="nav-link active" href="index.html"><i class="fa-solid fa-house"></i></a>
           <a class="nav-link" href="generos.html"><i class="fa-solid fa-list"></i></a>
@@ -364,6 +380,7 @@
       </nav>
   </div>
 
+  <!-- FIREBASE INTEGRATION & DYNAMIC RENDERING -->
   <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
       import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
@@ -382,11 +399,129 @@
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
 
-      // Links locais do Github Pages
-      const URL_BASE = "./obra.html?obra=";
-      const URL_LEITURA = "./Capitulo.html?obra=";
+      let todasObras = [];
 
-      // Buscar Notificações Reais do Firebase Modular
+      // Elementos do DOM
+      const listaUpdatesContainer = document.getElementById('lista-updates');
+      const listaTodasContainer = document.getElementById('lista-todas');
+      const bannerHeroContainer = document.getElementById('banner-hero');
+      const searchResultsGrid = document.getElementById('search-results-grid');
+      const searchInput = document.getElementById('search-input');
+
+      // Função para criar o HTML de um Card de Obra
+      function criarCardObra(id, data) {
+          const titulo = data.titulo || data.title || "Sem título";
+          const imagem = data.imagem || data.capa || data.cover || "https://via.placeholder.com/150";
+          const ultimoCap = data.capitulo || data.ultimoCapitulo || data.latestChapter || "Cap. 01";
+          const capSlug = data.capituloUrl || data.capituloSlug || data.capId || "1";
+
+          return `
+              <div class="obra-card">
+                  <a class="obra-link-principal" href="./obra.html?obra=${encodeURIComponent(id)}">
+                      <div class="obra-img-box">
+                          <img src="${imagem}" alt="${titulo}" loading="lazy"/>
+                      </div>
+                      <div class="obra-info">
+                          <div class="obra-titulo">${titulo}</div>
+                          <span class="link-capitulo">
+                              <i class="fa-solid fa-book-open"></i> ${ultimoCap}
+                          </span>
+                      </div>
+                  </a>
+              </div>
+          `;
+      }
+
+      // Função para Renderizar o Banner Hero
+      function renderizarBanner(obras) {
+          if (!bannerHeroContainer) return;
+          const obrasDestaque = obras.filter(o => o.data.destaque || o.data.banner);
+          const listaBanner = obrasDestaque.length > 0 ? obrasDestaque : obras.slice(0, 3);
+          
+          if (listaBanner.length === 0) {
+              bannerHeroContainer.style.display = 'none';
+              return;
+          }
+
+          let htmlBanner = '';
+          listaBanner.forEach((item, index) => {
+              const data = item.data;
+              const bgImg = data.banner || data.imagem || data.capa;
+              const activeClass = index === 0 ? 'active' : '';
+              const tag = data.tag || data.genero || 'Destaque';
+              const titulo = data.titulo || data.title || '';
+
+              htmlBanner += `
+                  <div class="banner-slide ${activeClass}">
+                      <div class="banner-bg" style="background-image: url('${bgImg}');"></div>
+                      <div class="banner-gradient"></div>
+                      <div class="banner-content">
+                          <span class="banner-tag">${tag}</span>
+                          <h1>${titulo}</h1>
+                          <a href="./obra.html?obra=${encodeURIComponent(item.id)}" class="btn-main">
+                              <i class="fa-solid fa-play"></i> Ler Agora
+                          </a>
+                      </div>
+                  </div>
+              `;
+          });
+
+          bannerHeroContainer.innerHTML = htmlBanner;
+
+          // Auto-slide se houver mais de 1 destaque
+          const slides = bannerHeroContainer.querySelectorAll('.banner-slide');
+          if (slides.length > 1) {
+              let currentSlide = 0;
+              setInterval(() => {
+                  slides[currentSlide].classList.remove('active');
+                  currentSlide = (currentSlide + 1) % slides.length;
+                  slides[currentSlide].classList.add('active');
+              }, 5000);
+          }
+      }
+
+      // BUSCAR OBRAS DO FIREBASE REALTIME DATABASE
+      const obrasRef = ref(db, 'obras');
+      onValue(obrasRef, (snapshot) => {
+          if (snapshot.exists()) {
+              const data = snapshot.val();
+              todasObras = [];
+
+              // Converter objeto retornado pelo Firebase em Array
+              Object.keys(data).forEach(key => {
+                  todasObras.push({
+                      id: key,
+                      data: data[key]
+                  });
+              });
+
+              // Ordenar obras recentes por atualização (se existir timestamp/updatedAt)
+              const lancamentos = [...todasObras].sort((a, b) => {
+                  const timeA = a.data.updatedAt || a.data.dataAtualizacao || 0;
+                  const timeB = b.data.updatedAt || b.data.dataAtualizacao || 0;
+                  return timeB - timeA;
+              });
+
+              // Renderizar Lançamentos Recentes
+              if (listaUpdatesContainer) {
+                  listaUpdatesContainer.innerHTML = lancamentos.slice(0, 10).map(item => criarCardObra(item.id, item.data)).join('');
+              }
+
+              // Renderizar Todas as Obras
+              if (listaTodasContainer) {
+                  listaTodasContainer.innerHTML = todasObras.map(item => criarCardObra(item.id, item.data)).join('');
+              }
+
+              // Renderizar Banner
+              renderizarBanner(todasObras);
+
+          } else {
+              if (listaUpdatesContainer) listaUpdatesContainer.innerHTML = '<p class="loading-text">Nenhuma obra encontrada no banco.</p>';
+              if (listaTodasContainer) listaTodasContainer.innerHTML = '<p class="loading-text">Nenhuma obra cadastrada.</p>';
+          }
+      });
+
+      // BUSCAR NOTIFICAÇÕES
       const notificacoesRef = ref(db, 'notificacoes_reais');
       onValue(notificacoesRef, (snapshot) => {
           const badge = document.getElementById('badge-notif');
@@ -403,7 +538,30 @@
           }
       });
 
-      // Exportando funções do escopo modular para o escopo global do HTML
+      // SISTEMA DE PESQUISA EM TEMPO REAL
+      if (searchInput && searchResultsGrid) {
+          searchInput.addEventListener('input', (e) => {
+              const termo = e.target.value.toLowerCase().trim();
+              if (!termo) {
+                  searchResultsGrid.innerHTML = '';
+                  return;
+              }
+
+              const resultados = todasObras.filter(item => {
+                  const titulo = (item.data.titulo || item.data.title || '').toLowerCase();
+                  const generos = (item.data.genero || item.data.generos || '').toString().toLowerCase();
+                  return titulo.includes(termo) || generos.includes(termo);
+              });
+
+              if (resultados.length > 0) {
+                  searchResultsGrid.innerHTML = resultados.map(item => criarCardObra(item.id, item.data)).join('');
+              } else {
+                  searchResultsGrid.innerHTML = '<p style="color: var(--text-dim); text-align: center; padding: 20px;">Nenhuma obra encontrada.</p>';
+              }
+          });
+      }
+
+      // EXPORTAR FUNÇÕES DO MENU AO ESCOPO GLOBAL
       window.toggleNotificacoes = function(e) {
           e.preventDefault();
           const panel = document.getElementById('notificacoes-panel');
@@ -420,7 +578,7 @@
           if(overlay) overlay.classList.remove('active');
       };
 
-      // Lógica de Scroll (Movida para dentro do módulo e mantida)
+      // ANIMAÇÃO DE SCROLL DO CABEÇALHO E MENU
       let lastScrollTop = 0;
       window.addEventListener('scroll', function() {
           if (window.esconderMenuSempre) return;
