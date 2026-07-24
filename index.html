@@ -46,6 +46,19 @@
     @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
     .loader-text { font-weight: 800; color: var(--primary); letter-spacing: 2px; }
 
+    /* ================= MODAL PERSONALIZADO +18 ================= */
+    #modal-18 {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: var(--card-bg); padding: 25px; border-radius: 16px;
+      text-align: center; max-width: 85%; width: 350px;
+      border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .modal-content h3 { color: var(--accent); margin-bottom: 10px; font-weight: 800; }
+    .modal-btn-row { display: flex; gap: 10px; margin-top: 20px; }
+
     /* ================= HEADER ================= */
     header {
       position: sticky; top: 0; z-index: 100;
@@ -64,65 +77,69 @@
     .notification-bell.has-news .badge { display: block; }
 
     /* ================= ESTRUTURA DE ABAS ================= */
-    .view-section { display: none; padding: 15px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+    .view-section { display: none; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.3s ease; }
     .view-section.active { display: block; }
+    .pad-interna { padding: 15px; } /* Padding apenas onde precisa */
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; }
 
-    /* ================= DESTAQUE ROTATIVO ================= */
+    /* ================= DESTAQUE ROTATIVO (GRUDADO NO TOPO) ================= */
     #banner-destaque {
-      width: 100%; height: 200px; border-radius: 16px; margin-bottom: 20px;
+      width: 100%; height: 260px;
       position: relative; overflow: hidden; cursor: pointer;
       background: #222; display: flex; align-items: flex-end;
+      border-bottom: 2px solid var(--primary);
     }
-    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease; }
+    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transition: opacity 0.5s ease; }
     .banner-overlay {
-      position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 15px 15px;
-      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); z-index: 2;
+      position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 15px 20px;
+      background: linear-gradient(to top, rgba(15, 12, 27, 1) 0%, rgba(15, 12, 27, 0.8) 40%, transparent 100%); z-index: 2;
     }
-    .banner-title { font-size: 1.2rem; font-weight: 800; color: #fff; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
-    .banner-tag { background: var(--primary); padding: 3px 8px; border-radius: 8px; font-size: 10px; font-weight: bold; margin-bottom: 5px; display: inline-block;}
+    .banner-title { font-size: 1.3rem; font-weight: 800; color: #fff; text-shadow: 2px 2px 10px rgba(0,0,0,1); line-height: 1.2; }
+    .banner-tag { background: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; margin-bottom: 8px; display: inline-block; letter-spacing: 1px;}
 
     /* ================= GRIDS & TOP 10 HORIZONTAL ================= */
     .grid-obras { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     @media (min-width: 768px) { .grid-obras { grid-template-columns: repeat(4, 1fr); } }
 
-    /* Horizontal Scroll para o Top Lidos */
+    /* Correção do buraco negro embaixo dos cards no scroll horizontal */
     .scroll-horizontal {
-      display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; scroll-snap-type: x mandatory;
+      display: flex; overflow-x: auto; gap: 15px; padding-bottom: 15px; scroll-snap-type: x mandatory;
+      align-items: flex-start; /* Impede que os cards estiquem verticalmente */
     }
     .scroll-horizontal::-webkit-scrollbar { display: none; }
-    .scroll-horizontal .card-obra { min-width: 140px; scroll-snap-align: start; flex: 0 0 auto; }
+    .scroll-horizontal .card-obra { min-width: 145px; scroll-snap-align: start; flex: 0 0 auto; }
     
     .rank-badge {
-      position: absolute; top: -5px; left: -5px; background: #d4af37; color: #000;
-      width: 25px; height: 25px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-      font-weight: 800; font-size: 14px; z-index: 10; border: 2px solid var(--card-bg);
+      position: absolute; top: -8px; left: -8px; background: #d4af37; color: #000;
+      width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+      font-weight: 800; font-size: 14px; z-index: 10; border: 3px solid var(--card-bg); box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
 
     .card-obra {
       background: var(--card-bg); border-radius: 16px; overflow: hidden;
-      text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative;
+      text-decoration: none; color: inherit; display: block; position: relative;
+      height: max-content; /* Se ajusta exatamente ao conteúdo interno */
     }
     .capa-wrapper { position: relative; width: 100%; padding-top: 140%; background: #222; border-radius: 16px; overflow: hidden; }
     .capa-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     
-    .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+    .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.1);}
     .badge-caps { position: absolute; bottom: 8px; left: 8px; background: var(--primary); padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
     .badge-18 { position: absolute; top: 8px; right: 8px; background: var(--accent); padding: 4px 6px; border-radius: 8px; font-size: 10px; font-weight: 800; }
-    .badge-novo { background: #00e676; color: #000; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 800; animation: blink 1.5s infinite; }
+    .badge-novo { background: #00e676; color: #000; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 800; animation: blink 1.5s infinite; margin-left: 5px;}
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
     .info-obra { padding: 12px 10px; }
-    .titulo-obra { font-size: 12px; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 10px; }
+    .titulo-obra { font-size: 12px; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 10px; line-height: 1.4; }
     .chapter-row { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; font-weight: 600; color: #ccc; }
-    .chapter-row i { color: #d4af37; font-size: 12px; margin-right: 5px; }
+    .chapter-row i { color: #d4af37; font-size: 12px; margin-right: 3px; }
 
     /* ================= BARRA DE BUSCA E FILTROS ================= */
-    .search-bar { width: 100%; padding: 12px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: var(--card-bg); color: var(--text-color); margin-bottom: 15px; font-family: var(--font-family); outline: none; }
+    .search-bar { width: 100%; padding: 14px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: var(--card-bg); color: var(--text-color); margin-bottom: 15px; font-family: var(--font-family); outline: none; font-size: 14px;}
     .filters-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
     .filters-scroll::-webkit-scrollbar { display: none; }
-    .filter-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; }
+    .filter-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; transition: 0.2s;}
     .filter-btn.active { background: var(--primary); font-weight: 700; }
 
     /* ================= MENU INFERIOR ================= */
@@ -133,7 +150,7 @@
     .nav-item.active i { transform: translateY(-3px); }
 
     /* ================= CONFIGURAÇÕES E FORMULÁRIOS ================= */
-    .config-box { background: var(--card-bg); padding: 20px; border-radius: 16px; margin-bottom: 15px; }
+    .config-box { background: var(--card-bg); padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.03); }
     .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 14px; }
     
     .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
@@ -143,18 +160,19 @@
     input:checked + .slider { background-color: var(--primary); }
     input:checked + .slider:before { transform: translateX(24px); }
 
-    .color-picker { background: transparent; border: none; cursor: pointer; height: 30px; width: 30px; }
-    .meow-input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: white; margin-bottom: 10px; }
-    .meow-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; background: var(--primary); color: white; font-family: var(--font-family); }
+    .color-picker { background: transparent; border: none; cursor: pointer; height: 35px; width: 35px; border-radius: 8px; overflow: hidden;}
+    .meow-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: white; margin-bottom: 10px; font-family: var(--font-family);}
+    .meow-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; background: var(--primary); color: white; font-family: var(--font-family); font-size: 14px;}
     .meow-btn-google { background: #fff; color: #000; }
 
     .auth-container { text-align: center; padding: 20px; }
     #profile-info { display: none; text-align: center; }
-    .profile-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; margin-bottom: 15px; }
+    .profile-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(157, 78, 221, 0.4);}
 
-    /* ADMIN */
-    #admin-panel { display: none; border: 1px solid var(--primary); padding: 15px; border-radius: 12px; margin-top: 20px; }
-    #nav-parceiros { display: none; } /* Oculto por padrão */
+    /* ADMIN & FOOTER */
+    #admin-panel { display: none; border: 1px solid var(--primary); padding: 15px; border-radius: 12px; margin-top: 20px; background: rgba(157, 78, 221, 0.1);}
+    #nav-parceiros { display: none; } 
+    .footer-app { text-align: center; color: #555; font-size: 12px; padding: 20px 0 40px; font-weight: 600;}
 
   </style>
 </head>
@@ -163,6 +181,18 @@
   <div id="loader">
     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png" class="loader-icon" alt="Meow Scan">
     <div class="loader-text">CARREGANDO...</div>
+  </div>
+
+  <div id="modal-18">
+    <div class="modal-content">
+      <h3>Conteúdo Adulto</h3>
+      <p style="font-size: 14px; color: #ccc;">Esta área contém obras destinadas ao público adulto.</p>
+      <p style="font-size: 16px; font-weight: bold; margin-top: 10px;">Você confirma ser maior de 18 anos?</p>
+      <div class="modal-btn-row">
+        <button id="btn-cancel-18" class="meow-btn" style="background: #444;">Não, sou menor</button>
+        <button id="btn-confirm-18" class="meow-btn" style="background: var(--accent);">Sim, eu confirmo</button>
+      </div>
+    </div>
   </div>
 
   <header>
@@ -186,14 +216,18 @@
       </div>
     </div>
 
-    <div class="section-title">🔥 Top Mais Lidos</div>
-    <div id="grid-top" class="scroll-horizontal" style="margin-bottom: 30px;"></div>
-    
-    <div class="section-title">✨ Últimas Atualizações</div>
-    <div id="grid-inicio" class="grid-obras"></div>
+    <div class="pad-interna">
+      <div class="section-title">🔥 Top Mais Lidos</div>
+      <div id="grid-top" class="scroll-horizontal" style="margin-bottom: 30px;"></div>
+      
+      <div class="section-title">✨ Últimas Atualizações</div>
+      <div id="grid-inicio" class="grid-obras"></div>
+      
+      <div class="footer-app">Aplicativo da Meow Scan</div>
+    </div>
   </div>
 
-  <div id="view-busca" class="view-section">
+  <div id="view-busca" class="view-section pad-interna">
     <input type="text" id="search-input" class="search-bar" placeholder="🔍 Pesquisar obra...">
     <div class="filters-scroll">
       <button class="filter-btn active" data-status="Todos">Todos</button>
@@ -203,27 +237,34 @@
       <button class="filter-btn" data-status="Futuro">Futuro</button>
     </div>
     <div id="grid-busca" class="grid-obras"></div>
+    <div class="footer-app">Aplicativo da Meow Scan</div>
   </div>
 
-  <div id="view-parceiros" class="view-section">
+  <div id="view-parceiros" class="view-section pad-interna">
     <div class="section-title">🤝 Nossos Parceiros</div>
     <div id="lista-parceiros" class="grid-obras"></div>
     
     <div id="admin-panel">
-      <h4 style="margin-bottom: 10px; color: var(--primary);">Área do ADM</h4>
+      <h4 style="margin-bottom: 15px; color: var(--primary);">Área do ADM</h4>
       <input type="text" id="link-github-parceiro" class="meow-input" placeholder="Link do Github do Parceiro">
       <input type="text" id="nome-parceiro" class="meow-input" placeholder="Nome do Parceiro">
       <button onclick="adicionarParceiro()" class="meow-btn">Adicionar Parceiro</button>
     </div>
   </div>
 
-  <div id="view-perfil" class="view-section">
+  <div id="view-perfil" class="view-section pad-interna">
     <div id="auth-box" class="auth-container">
       <h2 style="margin-bottom: 20px;">Sua próxima leitura te aguarda</h2>
+      <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Faça login para acompanhar suas obras e receber notificações.</p>
+      
       <button id="btn-google-login" class="meow-btn meow-btn-google">
         <i class="fa-brands fa-google" style="color: #ea4335;"></i> Continuar com Google
       </button>
-      <div style="margin: 15px 0; color: #666;">ou E-mail</div>
+      
+      <div style="margin: 20px 0; color: #666; font-size: 14px; display: flex; align-items: center; gap: 10px;">
+        <hr style="flex:1; border:none; border-top:1px solid #333;"> OU <hr style="flex:1; border:none; border-top:1px solid #333;">
+      </div>
+      
       <input type="email" id="meow-email" class="meow-input" placeholder="E-mail">
       <input type="password" id="meow-pass" class="meow-input" placeholder="Senha">
       <button id="btn-login-email" class="meow-btn" style="background: #1DB954;">Entrar</button>
@@ -231,21 +272,21 @@
 
     <div id="profile-info">
       <img id="user-avatar" src="https://via.placeholder.com/100" class="profile-avatar">
-      <h3 id="user-name" style="margin-bottom: 20px;">Nome do Leitor</h3>
+      <h3 id="user-name" style="margin-bottom: 25px; font-weight: 800;">Nome do Leitor</h3>
       
       <div class="section-title" style="text-align: left;">📚 Histórico de Leitura</div>
-      <div id="history-grid" class="scroll-horizontal" style="margin-bottom: 20px;"></div>
+      <div id="history-grid" class="scroll-horizontal" style="margin-bottom: 30px;"></div>
       
-      <button id="btn-logout" class="meow-btn" style="background: #e63946;">Sair da Conta</button>
+      <button id="btn-logout" class="meow-btn" style="background: #e63946; border-radius: 30px;">Sair da Conta</button>
     </div>
   </div>
 
-  <div id="view-config" class="view-section">
+  <div id="view-config" class="view-section pad-interna">
     <div class="section-title">⚙️ Ajustes do App</div>
     
     <div class="config-box">
       <div class="toggle-row">
-        <span>Mostrar conteúdo +18 <br><small style="color:#aaa;font-size:10px;">Confirmo ser maior de 18 anos</small></span>
+        <span>Mostrar conteúdo +18 <br><small style="color:#aaa;font-size:10px;">Requer confirmação de idade</small></span>
         <label class="switch"><input type="checkbox" id="toggle-18"><span class="slider"></span></label>
       </div>
       <div class="toggle-row">
@@ -255,18 +296,19 @@
     </div>
 
     <div class="config-box">
-      <h4 style="margin-bottom: 15px;">Aparência</h4>
+      <h4 style="margin-bottom: 20px; color: var(--primary);">Aparência</h4>
       <div class="toggle-row">Cor de Fundo <input type="color" id="cfg-bg" class="color-picker" value="#0f0c1b"></div>
       <div class="toggle-row">Cor do Texto <input type="color" id="cfg-text" class="color-picker" value="#ffffff"></div>
       
-      <label for="bg-upload" class="meow-btn" style="background: #333; margin-top: 10px;">
-        <i class="fa-solid fa-image"></i> Escolher Fundo da Galeria
+      <label for="bg-upload" class="meow-btn" style="background: #333; margin-top: 15px;">
+        <i class="fa-solid fa-image"></i> Fundo da Galeria
       </label>
       <input type="file" id="bg-upload" accept="image/*" style="display: none;">
 
-      <button id="btn-salvar-cores" class="meow-btn" style="margin-top: 15px;">Aplicar Tema</button>
+      <button id="btn-salvar-cores" class="meow-btn" style="margin-top: 20px;">Salvar Temas</button>
       <button id="btn-reset-cores" class="meow-btn" style="background: transparent; border: 1px solid #555;">Restaurar Padrão</button>
     </div>
+    <div class="footer-app">Aplicativo da Meow Scan</div>
   </div>
 
   <nav class="bottom-nav">
@@ -309,16 +351,31 @@
     }
     applySettings();
 
-    // Eventos +18 e Sensível
-    document.getElementById('toggle-18').addEventListener('change', (e) => {
+    /* ================= LÓGICA DO MODAL +18 ================= */
+    const toggle18 = document.getElementById('toggle-18');
+    const modal18 = document.getElementById('modal-18');
+
+    toggle18.addEventListener('change', (e) => {
       if(e.target.checked && !settings.ageVerified) {
-        if(confirm("Você confirma ser maior de 18 anos?")) {
-          settings.ageVerified = true;
-        } else {
-          e.target.checked = false; return;
-        }
+        // Mostra o modal customizado ao invés do prompt padrão
+        modal18.style.display = 'flex';
+        e.target.checked = false; // Desmarca até ele confirmar
+      } else {
+        settings.show18 = e.target.checked;
+        saveSettings(); renderObras();
       }
-      settings.show18 = e.target.checked; saveSettings(); renderObras();
+    });
+
+    document.getElementById('btn-confirm-18').addEventListener('click', () => {
+      settings.ageVerified = true;
+      settings.show18 = true;
+      toggle18.checked = true;
+      modal18.style.display = 'none';
+      saveSettings(); renderObras();
+    });
+
+    document.getElementById('btn-cancel-18').addEventListener('click', () => {
+      modal18.style.display = 'none';
     });
 
     // Sensível apenas liga e desliga sem burocracia
@@ -326,7 +383,7 @@
       settings.showSensitive = e.target.checked; saveSettings(); renderObras();
     });
 
-    // Fundo da Galeria (Base64)
+    // Fundo da Galeria
     document.getElementById('bg-upload').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -334,7 +391,7 @@
         reader.onload = function(event) {
           settings.bgImage = event.target.result;
           saveSettings(); applySettings();
-          alert("Imagem de fundo aplicada!");
+          alert("Imagem de fundo aplicada com sucesso!");
         };
         reader.readAsDataURL(file);
       }
@@ -359,9 +416,10 @@
       document.getElementById(`view-${tabId}`).classList.add('active');
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* ================= 3. FIREBASE (NOVAS CHAVES) ================= */
+    /* ================= 3. FIREBASE ================= */
     const firebaseConfig = {
       apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
       authDomain: "meow-scan-ffff0.firebaseapp.com",
@@ -379,7 +437,15 @@
     let currentFiltro = 'Todos';
     let currentUser = null;
     let isAdmin = false;
+    let appCarregado = false; // Flag para parar de piscar o loading
     const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3";
+
+    // Formatador de Views (ex: 1500 -> 1.5K)
+    function formatViews(v) {
+      if (!v) return '0';
+      if (v >= 1000) return (v / 1000).toFixed(1).replace('.0', '') + 'K';
+      return v;
+    }
 
     // Carregar Obras
     db.ref('obras').on('value', snap => {
@@ -389,9 +455,13 @@
           todasObras.push({ id: child.key, ...child.val() });
         });
       }
-      // Oculta a tela de carregamento quando terminar de buscar
-      document.getElementById('loader').style.opacity = '0';
-      setTimeout(() => document.getElementById('loader').style.display = 'none', 400);
+      
+      // Some com o Loading Apenas na Primeira Vez
+      if(!appCarregado) {
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 400);
+        appCarregado = true;
+      }
       
       renderObras();
       iniciarDestaqueRotativo();
@@ -399,7 +469,7 @@
 
     /* ================= 4. RENDERIZAÇÃO E LÓGICA DE CARDS ================= */
     function createCardHTML(obra, ranking = null, isUpdated = false) {
-      const views = obra.views || Math.floor(Math.random() * 500) + "K";
+      const viewsExibicao = formatViews(obra.views || 0);
       let capsHTML = '';
       let totalCaps = 0;
       
@@ -408,7 +478,7 @@
         totalCaps = capArray.length;
         
         capArray.slice(0, 2).forEach((cap, index) => {
-          // Se for recém atualizado, colocar badge Novo no primeiro capítulo
+          // Tag de Novo apenas no último cap postado das obras recém atualizadas
           const badgeNovo = (isUpdated && index === 0) ? `<span class="badge-novo">NOVO</span>` : '';
           capsHTML += `
             <div class="chapter-row">
@@ -426,7 +496,7 @@
           ${rankHTML}
           <div class="capa-wrapper">
             <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
-            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
+            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${viewsExibicao}</div>
             <div class="badge-caps">${totalCaps} CAPS</div>
             ${obra.adulto ? '<div class="badge-18">18+</div>' : ''}
           </div>
@@ -439,6 +509,10 @@
     }
 
     function registrarClique(id) {
+      // SOMA 1 VIEW REAL NO BANCO DE DADOS
+      db.ref('obras/' + id + '/views').set(firebase.database.ServerValue.increment(1));
+
+      // Salva no histórico local
       let history = JSON.parse(localStorage.getItem('meowHistory')) || [];
       if(!history.includes(id)) { history.unshift(id); }
       if(history.length > 10) history.pop();
@@ -446,26 +520,23 @@
     }
 
     function renderObras() {
-      // Filtra conteúdo Sensível e +18
       let obrasFiltradas = todasObras.filter(o => {
         if(o.adulto && !settings.show18) return false;
         if(o.sensivel && !settings.showSensitive) return false;
         return true;
       });
 
-      // 1. Top 10 (Horizontal)
+      // 1. Top 10 (Ordenado por VIEWS REAIS)
       const topObras = [...obrasFiltradas].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
       document.getElementById('grid-top').innerHTML = topObras.map((o, index) => createCardHTML(o, index + 1)).join('');
 
-      // 2. Atualizações (Prioriza por data ou id simulado, as que sofreram update sobem)
-      // Como não temos a data exata no exemplo, simulamos que as primeiras da lista reversa são atualizações
+      // 2. Atualizações 
       const obrasAtualizadas = [...obrasFiltradas].reverse(); 
       document.getElementById('grid-inicio').innerHTML = obrasAtualizadas.slice(0, 12).map((o, index) => {
-        // Simula que as 3 primeiras foram recém atualizadas
-        return createCardHTML(o, null, index < 3); 
+        return createCardHTML(o, null, index < 4); // As 4 primeiras ganham tag NOVO
       }).join('');
 
-      // 3. Aba Busca
+      // 3. Busca
       const searchTerm = document.getElementById('search-input').value.toLowerCase();
       let obrasBusca = obrasFiltradas.filter(o => {
         const matchesSearch = o.nome.toLowerCase().includes(searchTerm) || searchTerm === '';
@@ -479,7 +550,7 @@
       renderHistorico();
     }
 
-    // Busca e Filtros
+    // Sistema de Busca
     document.getElementById('search-input').addEventListener('input', renderObras);
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -497,31 +568,28 @@
     function iniciarDestaqueRotativo() {
       if(todasObras.length === 0) return;
       if(destaqueInterval) clearInterval(destaqueInterval);
-      
-      trocarDestaque(); // Troca imediata
-      destaqueInterval = setInterval(trocarDestaque, 5000); // 5 em 5 segundos
+      trocarDestaque(); 
+      destaqueInterval = setInterval(trocarDestaque, 5000); 
     }
 
     function trocarDestaque() {
-      // Filtra obras baseadas nas configs de idade
       let obrasValidas = todasObras.filter(o => {
         if(o.adulto && !settings.show18) return false;
         if(o.sensivel && !settings.showSensitive) return false;
         return true;
       });
-
       if(obrasValidas.length === 0) return;
       
       const randomIndex = Math.floor(Math.random() * obrasValidas.length);
       obraDestaqueAtual = obrasValidas[randomIndex];
       
       const bannerImg = document.getElementById('banner-img');
-      bannerImg.style.opacity = 0; // fade out
+      bannerImg.style.opacity = 0; 
       
       setTimeout(() => {
         bannerImg.src = obraDestaqueAtual.capaUrl || 'https://via.placeholder.com/600x300';
         document.getElementById('banner-titulo').innerText = obraDestaqueAtual.nome;
-        bannerImg.style.opacity = 1; // fade in
+        bannerImg.style.opacity = 1; 
       }, 300);
     }
 
@@ -532,7 +600,7 @@
       }
     }
 
-    /* ================= 6. AUTH, ADMIN E PARCEIROS ================= */
+    /* ================= 6. AUTH E TELA BRANCA FIX ================= */
     auth.onAuthStateChanged(user => {
       currentUser = user;
       if (user) {
@@ -541,7 +609,7 @@
         document.getElementById('user-name').innerText = user.displayName || 'Leitor(a)';
         document.getElementById('user-avatar').src = user.photoURL || 'https://via.placeholder.com/100';
 
-        // Escutar Sininho de Notificações
+        // Escutar Sininho
         db.ref(`notificacoes/${user.uid}`).on('value', snap => {
           if(snap.exists() && snap.val().lida === false) {
              document.querySelector('.notification-bell').classList.add('has-news');
@@ -550,7 +618,7 @@
           }
         });
 
-        // Verificação de Admin (Seu UID)
+        // ADM
         if (user.uid === ADMIN_UID) {
           isAdmin = true;
           document.getElementById('nav-parceiros').style.display = 'flex';
@@ -564,14 +632,17 @@
       }
     });
 
+    // Correção da Tela Branca (signInWithRedirect)
     document.getElementById('btn-google-login').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).catch(err => alert(err.message));
+      // O redirect evita os bloqueios de pop-up do celular
+      auth.signInWithRedirect(provider);
     });
     
     document.getElementById('btn-login-email').addEventListener('click', () => {
       const email = document.getElementById('meow-email').value;
       const pass = document.getElementById('meow-pass').value;
+      if(!email || !pass) return alert("Preencha os campos!");
       auth.signInWithEmailAndPassword(email, pass).catch(err => alert("Erro: " + err.message));
     });
     
@@ -583,17 +654,14 @@
       
       document.getElementById('history-grid').innerHTML = historyObras.length > 0 
         ? historyObras.map(o => createCardHTML(o)).join('') 
-        : '<p style="color:#aaa; text-align:center; width:100%;">Você ainda não leu nada.</p>';
+        : '<p style="color:#aaa; text-align:center; width:100%; font-size: 14px;">Você ainda não leu nada.</p>';
     }
 
-    // Ação do Sininho
     function abrirNotificacoes() {
       if(!currentUser) return alert("Faça login para ver notificações!");
-      
       const bell = document.querySelector('.notification-bell');
       if(bell.classList.contains('has-news')) {
          alert("Você tem uma nova resposta nos comentários!");
-         // Marca como lida no Firebase
          db.ref(`notificacoes/${currentUser.uid}`).update({ lida: true });
          bell.classList.remove('has-news');
       } else {
@@ -601,34 +669,33 @@
       }
     }
 
-    // Ação Adicionar Parceiro (ADM)
+    // Parceiros
     function adicionarParceiro() {
       if(!isAdmin) return;
       const nome = document.getElementById('nome-parceiro').value;
       const link = document.getElementById('link-github-parceiro').value;
       if(nome && link) {
         db.ref('parceiros').push({ nome, link });
-        alert("Parceiro adicionado com sucesso!");
+        alert("Parceiro adicionado!");
         document.getElementById('nome-parceiro').value = '';
         document.getElementById('link-github-parceiro').value = '';
       }
     }
 
-    // Carregar Parceiros na aba
     db.ref('parceiros').on('value', snap => {
       let html = '';
       if(snap.exists()){
         snap.forEach(child => {
           const p = child.val();
           html += `
-            <a href="${p.link}" target="_blank" class="card-obra" style="padding: 20px; text-align: center;">
-              <i class="fa-brands fa-github" style="font-size: 30px; margin-bottom: 10px;"></i>
-              <div style="font-weight: bold;">${p.nome}</div>
+            <a href="${p.link}" target="_blank" class="card-obra" style="padding: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+              <i class="fa-brands fa-github" style="font-size: 30px; margin-bottom: 10px; color: var(--primary);"></i>
+              <div style="font-weight: 800; font-size: 14px;">${p.nome}</div>
             </a>
           `;
         });
       } else {
-        html = '<p style="color:#aaa;">Nenhum parceiro no momento.</p>';
+        html = '<p style="color:#aaa; text-align:center; width:100%;">Nenhum parceiro no momento.</p>';
       }
       document.getElementById('lista-parceiros').innerHTML = html;
     });
