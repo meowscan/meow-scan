@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Meow Scan - App</title>
   
+  <!-- ================= SUPORTE PWA ================= -->
+  <link rel="manifest" href="./manifest.json"> 
+  <meta name="theme-color" content="#0f0c1b"> 
+  <meta name="apple-mobile-web-app-capable" content="yes"> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- ================= FIM DO SUPORTE PWA ================= -->
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -712,6 +719,31 @@
       }
       document.getElementById('lista-parceiros').innerHTML = html;
     });
+
+    /* ================= 8. SUPORTE PWA E MODO OFFLINE (FIREBASE) ================= */
+    
+    // Ativar persistência offline no Firebase Realtime Database
+    try {
+      db.goOnline();
+      firebase.database().ref('.info/connected').on('value', function(snap) {
+        if (snap.val() === true) {
+          console.log("Conectado ao Firebase");
+        } else {
+          console.log("Navegando em modo offline");
+        }
+      });
+    } catch(e) {
+      console.log("Erro na persistência do banco:", e);
+    }
+
+    // Registrar o Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(reg => console.log('Service Worker registrado com sucesso!', reg))
+          .catch(err => console.error('Falha ao registrar Service Worker:', err));
+      });
+    }
 
   </script>
 </body>
