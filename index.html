@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Meow Scan - App</title>
+  <title id="app-document-title">Meow Scan - App</title>
   
   <!-- ================= SUPORTE PWA ================= -->
   <link rel="manifest" href="./manifest.json"> 
@@ -51,7 +51,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .brand-title { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; }
-    .brand-title img { width: 35px; border-radius: 8px; }
+    .brand-title img { width: 35px; height: 35px; border-radius: 8px; object-fit: cover; }
     
     .notification-bell { font-size: 1.4rem; position: relative; color: #ccc; cursor: pointer; transition: 0.2s; }
     .notification-bell:active { transform: scale(0.9); }
@@ -89,9 +89,9 @@
     /* Horizontal Scroll */
     .scroll-horizontal { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 15px; scroll-snap-type: x mandatory; }
     .scroll-horizontal::-webkit-scrollbar { display: none; }
-    .scroll-horizontal .card-obra { scroll-snap-align: start; flex: 0 0 auto; }
+    .scroll-horizontal .card-obra { scroll-snap-align: start; flex: 0 0 auto; width: 140px; }
     
-    /* Top 10 Específico (Apenas Capa e Número) */
+    /* Top 10 Específico */
     .top-card { width: 120px; min-width: 120px; position: relative; border-radius: 12px; overflow: visible !important; }
     .top-card .capa-wrapper { padding-top: 140%; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
     .rank-badge {
@@ -132,7 +132,7 @@
 
     /* ================= MENU INFERIOR ================= */
     .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 14, 25, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
-    .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; font-size: 10px; text-decoration: none; background: none; border: none; cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: 0.3s; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; font-size: 10px; text-decoration: none; background: none; border: none; cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: 0.3s; width: 20%; }
     .nav-item i { font-size: 20px; margin-bottom: 5px; transition: 0.3s; }
     .nav-item.active { color: var(--primary); }
     .nav-item.active i { transform: translateY(-3px); }
@@ -175,14 +175,18 @@
     /* ADMIN */
     #admin-panel { display: none; background: rgba(157, 78, 221, 0.05); border: 1px solid var(--primary); padding: 20px; border-radius: 16px; margin-top: 20px; }
     #nav-parceiros { display: none; }
+    
+    /* BIBLIOTECA VAZIA */
+    .empty-library { text-align: center; color: #888; padding: 40px 20px; font-size: 14px; }
+    .empty-library i { font-size: 40px; color: var(--primary); margin-bottom: 15px; opacity: 0.5; }
   </style>
 </head>
 <body>
 
   <header>
     <div class="brand-title">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png" alt="Logo">
-      MEOW SCAN
+      <img id="header-logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png" alt="Logo">
+      <span id="header-title">MEOW SCAN</span>
     </div>
     <div class="notification-bell" onclick="abrirNotificacoes()">
       <i class="fa-regular fa-bell"></i>
@@ -221,6 +225,15 @@
       </div>
     </div>
     <div id="grid-busca" class="grid-obras"></div>
+  </div>
+
+  <!-- ABA BIBLIOTECA (NOVA ABA OFFLINE) -->
+  <div id="view-biblioteca" class="view-section">
+    <div class="section-title"><i class="fa-solid fa-book-bookmark" style="color: var(--primary);"></i> Minha Biblioteca Offline</div>
+    <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">As obras salvas aqui podem ser acessadas mesmo sem internet. Certifique-se de abri-las uma vez para salvar os capítulos.</p>
+    <div id="grid-biblioteca" class="grid-obras">
+      <!-- Obras da biblioteca aparecerão aqui -->
+    </div>
   </div>
 
   <!-- ABA PARCEIROS -->
@@ -305,6 +318,21 @@
       </div>
     </div>
 
+    <!-- NOVA SEÇÃO: MODO DISCRETO -->
+    <div class="config-box">
+      <h4 style="margin-bottom: 20px; font-size: 16px;"><i class="fa-solid fa-user-secret"></i> Modo Discreto (Esconder)</h4>
+      <p style="font-size: 11px; color: #aaa; margin-bottom: 15px;">Disfarce o app alterando o nome e a logo principal.</p>
+      <input type="text" id="cfg-app-name" class="meow-input" placeholder="Ex: Calculadora, Notas...">
+      
+      <label for="icon-upload" class="meow-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; box-shadow: none;">
+        <i class="fa-solid fa-mask"></i> Escolher Ícone Discreto
+      </label>
+      <input type="file" id="icon-upload" accept="image/*" style="display: none;">
+
+      <button id="btn-salvar-discreto" class="meow-btn" style="margin-top: 10px;">Aplicar Disfarce</button>
+      <button id="btn-reset-discreto" class="meow-btn" style="background: transparent; border: 1px solid #555; color: #aaa; box-shadow: none;">Remover Disfarce</button>
+    </div>
+
     <div class="config-box">
       <h4 style="margin-bottom: 20px; font-size: 16px;"><i class="fa-solid fa-palette"></i> Personalizar Aparência</h4>
       <div class="toggle-row">Cor de Fundo <input type="color" id="cfg-bg" class="color-picker" value="#0f0c1b"></div>
@@ -327,6 +355,10 @@
     <button class="nav-item" onclick="switchTab('busca', this)">
       <i class="fa-solid fa-magnifying-glass"></i> Busca
     </button>
+    <!-- NOVA ABA DA BIBLIOTECA -->
+    <button class="nav-item" onclick="switchTab('biblioteca', this); renderBiblioteca();">
+      <i class="fa-solid fa-book-bookmark"></i> Biblioteca
+    </button>
     <button class="nav-item" id="nav-parceiros" onclick="switchTab('parceiros', this)">
       <i class="fa-solid fa-handshake"></i> Parceiros
     </button>
@@ -338,18 +370,20 @@
     </button>
   </nav>
 
-  <!-- FIREBASE SCRIPTS (SEM O TYPE MODULE QUE CAUSAVA TELA BRANCA) -->
+  <!-- FIREBASE SCRIPTS -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    /* ================= 1. CONFIGURAÇÕES LOCAIS ================= */
+    /* ================= 1. CONFIGURAÇÕES LOCAIS E DISFARCE ================= */
     const settings = JSON.parse(localStorage.getItem('meowSettings')) || { 
-      show18: false, showSensitive: false, bgColor: '#0f0c1b', textColor: '#ffffff', bgImage: '', ageVerified: false 
+      show18: false, showSensitive: false, bgColor: '#0f0c1b', textColor: '#ffffff', bgImage: '', ageVerified: false,
+      appName: '', appIcon: '' 
     };
 
     function applySettings() {
+      // Cores e Fundo
       document.documentElement.style.setProperty('--bg-color', settings.bgColor);
       document.documentElement.style.setProperty('--text-color', settings.textColor);
       document.documentElement.style.setProperty('--bg-image', settings.bgImage ? `url(${settings.bgImage})` : 'none');
@@ -358,9 +392,52 @@
       document.getElementById('toggle-sensitive').checked = settings.showSensitive;
       document.getElementById('cfg-bg').value = settings.bgColor;
       document.getElementById('cfg-text').value = settings.textColor;
+
+      // Aplicar Modo Discreto
+      if(settings.appName) {
+        document.getElementById('header-title').innerText = settings.appName;
+        document.getElementById('app-document-title').innerText = settings.appName;
+        document.getElementById('cfg-app-name').value = settings.appName;
+      } else {
+        document.getElementById('header-title').innerText = "MEOW SCAN";
+        document.getElementById('app-document-title').innerText = "Meow Scan - App";
+        document.getElementById('cfg-app-name').value = "";
+      }
+
+      if(settings.appIcon) {
+        document.getElementById('header-logo').src = settings.appIcon;
+      } else {
+        document.getElementById('header-logo').src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png";
+      }
     }
     applySettings();
 
+    // Eventos Modo Discreto
+    document.getElementById('icon-upload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          settings.appIcon = event.target.result;
+          alert("Ícone discreto selecionado! Clique em 'Aplicar Disfarce'.");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('btn-salvar-discreto').addEventListener('click', () => {
+      settings.appName = document.getElementById('cfg-app-name').value;
+      saveSettings(); applySettings();
+      alert("Modo discreto ativado!");
+    });
+
+    document.getElementById('btn-reset-discreto').addEventListener('click', () => {
+      settings.appName = ''; settings.appIcon = '';
+      saveSettings(); applySettings();
+      alert("Modo discreto desativado!");
+    });
+
+    // Eventos Gerais de Configuração
     document.getElementById('toggle-18').addEventListener('change', (e) => {
       if(e.target.checked && !settings.ageVerified) {
         if(confirm("Você confirma ser maior de 18 anos?")) {
@@ -434,7 +511,6 @@
     let isAdmin = false;
     const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3"; 
 
-    // Buscar dados sem tela de loading travando
     db.ref('obras').on('value', snap => {
       todasObras = [];
       if(snap.exists()){
@@ -444,13 +520,12 @@
       }
       renderObras();
       iniciarDestaqueRotativo();
+      renderBiblioteca(); // Atualiza a biblioteca offline se houver dados novos
     });
 
     /* ================= 4. RENDERIZAÇÃO INTELIGENTE ================= */
-    
-    // Função para Card do Top 10 (Somente Imagem e Rank)
     function createTop10CardHTML(obra, ranking) {
-      const views = obra.views || 0; // VIEWS REAIS DO BANCO! Sem Fake News
+      const views = obra.views || 0; 
       return `
         <a href="obra.html?obra=${obra.id}" class="card-obra top-card" onclick="registrarClique('${obra.id}')">
           <div class="rank-badge">${ranking}</div>
@@ -462,8 +537,7 @@
       `;
     }
 
-    // Função para Card Normal (Inicio e Busca)
-    function createNormalCardHTML(obra, isUpdated = false) {
+    function createNormalCardHTML(obra, isUpdated = false, isBiblioteca = false) {
       const views = obra.views || 0;
       let capsHTML = '';
       let totalCaps = 0;
@@ -482,13 +556,18 @@
         });
       }
 
+      // Botão de remover caso esteja renderizando na aba de Biblioteca
+      const removeBtn = isBiblioteca ? `<button onclick="event.preventDefault(); removerDaBiblioteca('${obra.id}')" style="position: absolute; top: 8px; right: 8px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; z-index: 20; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>` : '';
+      const badge18 = (obra.adulto && !isBiblioteca) ? '<div class="badge-18">18+</div>' : '';
+
       return `
         <a href="obra.html?obra=${obra.id}" class="card-obra" onclick="registrarClique('${obra.id}')">
+          ${removeBtn}
           <div class="capa-wrapper">
             <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
             <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
             <div class="badge-caps">${totalCaps} CAPS</div>
-            ${obra.adulto ? '<div class="badge-18">18+</div>' : ''}
+            ${badge18}
           </div>
           <div class="info-obra">
             <div class="titulo-obra">${obra.nome}</div>
@@ -501,7 +580,7 @@
     function registrarClique(id) {
       let history = JSON.parse(localStorage.getItem('meowHistory')) || [];
       if(!history.includes(id)) { history.unshift(id); }
-      if(history.length > 15) history.pop(); // Guarda até 15 no histórico
+      if(history.length > 15) history.pop(); 
       localStorage.setItem('meowHistory', JSON.stringify(history));
     }
 
@@ -512,17 +591,14 @@
         return true;
       });
 
-      // 1. Top 10 (Real, baseado nas views do banco)
       const topObras = [...obrasFiltradas].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
       document.getElementById('grid-top').innerHTML = topObras.map((o, index) => createTop10CardHTML(o, index + 1)).join('');
 
-      // 2. Últimas Atualizações
       const obrasAtualizadas = [...obrasFiltradas].reverse(); 
       document.getElementById('grid-inicio').innerHTML = obrasAtualizadas.slice(0, 12).map((o, index) => {
-        return createNormalCardHTML(o, index < 3); // Simula "Novo" nas 3 primeiras
+        return createNormalCardHTML(o, index < 3); 
       }).join('');
 
-      // 3. Busca e Filtros
       const searchTerm = document.getElementById('search-input').value.toLowerCase();
       let obrasBusca = obrasFiltradas.filter(o => {
         const matchesSearch = o.nome.toLowerCase().includes(searchTerm) || searchTerm === '';
@@ -545,6 +621,42 @@
       });
     });
 
+    /* ================= 4.1 BIBLIOTECA OFFLINE (LOGIC) ================= */
+    // Função global que você pode chamar na página "obra.html" para salvar offline
+    window.salvarNaBiblioteca = function(obraObj) {
+      let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
+      // Se não existir, salva o objeto inteiro para leitura offline
+      if(!bib.find(o => o.id === obraObj.id)) {
+        bib.push(obraObj);
+        localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
+        alert("Obra salva na Biblioteca Offline!");
+      }
+    };
+
+    window.removerDaBiblioteca = function(id) {
+      let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
+      bib = bib.filter(o => o.id !== id);
+      localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
+      renderBiblioteca();
+    };
+
+    function renderBiblioteca() {
+      const bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
+      const grid = document.getElementById('grid-biblioteca');
+      
+      if(bib.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-library" style="grid-column: span 2;">
+            <i class="fa-solid fa-box-open"></i>
+            <p>Sua biblioteca está vazia.</p>
+            <p style="font-size: 11px; margin-top: 5px;">Abra uma obra e clique no botão de salvar para lê-la offline depois.</p>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = bib.map(o => createNormalCardHTML(o, false, true)).join('');
+    }
+
     /* ================= 5. DESTAQUE ROTATIVO OTIMIZADO ================= */
     let destaqueInterval;
     let obraDestaqueAtual = null;
@@ -553,7 +665,7 @@
       if(todasObras.length === 0) return;
       if(destaqueInterval) clearInterval(destaqueInterval);
       trocarDestaque();
-      destaqueInterval = setInterval(trocarDestaque, 6000); // Muda a cada 6 seg
+      destaqueInterval = setInterval(trocarDestaque, 6000); 
     }
 
     function trocarDestaque() {
@@ -585,9 +697,7 @@
       }
     }
 
-    /* ================= 6. AUTHENTICAÇÃO INTELIGENTE ================= */
-    
-    // Trocar abas do Login / Cadastro
+    /* ================= 6. AUTHENTICAÇÃO INTELIGENTE E CORRIGIDA ================= */
     window.switchAuthTab = function(tabName) {
       document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.auth-tabs button').forEach(el => el.classList.remove('active'));
@@ -600,7 +710,9 @@
 
     auth.onAuthStateChanged(user => {
       currentUser = user;
-      if (user) {
+      
+      // VERIFICA SE O E-MAIL FOI VALIDADO ANTES DE LIBERAR O PERFIL
+      if (user && (user.emailVerified || user.providerData.some(p => p.providerId === 'google.com'))) {
         document.getElementById('auth-box').style.display = 'none';
         document.getElementById('profile-info').style.display = 'block';
         document.getElementById('user-name').innerText = user.displayName || 'Leitor(a)';
@@ -625,6 +737,11 @@
         document.getElementById('nav-parceiros').style.display = 'none';
         isAdmin = false;
         switchAuthTab('login');
+        
+        // Se existe user mas não verificou e-mail, forçar deslogar UI internamente
+        if(user && !user.emailVerified && !user.providerData.some(p => p.providerId === 'google.com')) {
+           auth.signOut();
+        }
       }
     });
 
@@ -634,15 +751,21 @@
       auth.signInWithPopup(provider).catch(err => alert(err.message));
     });
     
-    // Login E-mail
+    // Login E-mail COM VALIDAÇÃO
     document.getElementById('btn-login-email').addEventListener('click', () => {
       const email = document.getElementById('login-email').value;
       const pass = document.getElementById('login-pass').value;
       if(!email || !pass) return alert("Preencha e-mail e senha!");
-      auth.signInWithEmailAndPassword(email, pass).catch(err => alert("Erro ao entrar: " + err.message));
+      
+      auth.signInWithEmailAndPassword(email, pass).then(cred => {
+         if(!cred.user.emailVerified) {
+             alert("Sua conta ainda não foi verificada. Por favor, cheque seu e-mail (incluindo a caixa de spam) e clique no link de verificação.");
+             auth.signOut();
+         }
+      }).catch(err => alert("Erro ao entrar: " + err.message));
     });
 
-    // Cadastro
+    // Cadastro COM ENVIO DE VERIFICAÇÃO
     document.getElementById('btn-register').addEventListener('click', () => {
       const name = document.getElementById('reg-name').value;
       const email = document.getElementById('reg-email').value;
@@ -650,9 +773,13 @@
       if(!name || !email || !pass) return alert("Preencha todos os campos!");
       
       auth.createUserWithEmailAndPassword(email, pass).then(cred => {
-         return cred.user.updateProfile({ displayName: name });
+         cred.user.updateProfile({ displayName: name });
+         // Envia o e-mail de verificação
+         return cred.user.sendEmailVerification();
       }).then(() => {
-         alert("Conta criada com sucesso! Bem-vindo!");
+         alert("Conta criada com sucesso! Um e-mail de verificação foi enviado. Verifique sua caixa de entrada (ou spam) antes de fazer login.");
+         auth.signOut(); // Desloga pra forçar a verificação primeiro
+         switchAuthTab('login');
       }).catch(err => alert("Erro ao criar conta: " + err.message));
     });
 
@@ -721,8 +848,6 @@
     });
 
     /* ================= 8. SUPORTE PWA E MODO OFFLINE (FIREBASE) ================= */
-    
-    // Ativar persistência offline no Firebase Realtime Database
     try {
       db.goOnline();
       firebase.database().ref('.info/connected').on('value', function(snap) {
