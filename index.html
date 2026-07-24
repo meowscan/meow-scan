@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Meow Scan - App</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -33,167 +33,144 @@
       padding-bottom: 80px;
       user-select: none;
       transition: all 0.3s ease;
+      min-height: 100vh;
     }
-
-    /* ================= TELA DE CARREGAMENTO ================= */
-    #loader {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: var(--bg-color); z-index: 9999;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: opacity 0.4s ease;
-    }
-    .loader-icon { width: 80px; border-radius: 20px; animation: pulse 1s infinite alternate; margin-bottom: 15px; }
-    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
-    .loader-text { font-weight: 800; color: var(--primary); letter-spacing: 2px; }
-
-    /* ================= MODAL PERSONALIZADO +18 ================= */
-    #modal-18 {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-      z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px);
-    }
-    .modal-content {
-      background: var(--card-bg); padding: 25px; border-radius: 16px;
-      text-align: center; max-width: 85%; width: 350px;
-      border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .modal-content h3 { color: var(--accent); margin-bottom: 10px; font-weight: 800; }
-    .modal-btn-row { display: flex; gap: 10px; margin-top: 20px; }
 
     /* ================= HEADER ================= */
     header {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(15, 12, 27, 0.9); backdrop-filter: blur(10px);
+      background: rgba(15, 12, 27, 0.95); backdrop-filter: blur(15px);
       padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .brand-title { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; }
     .brand-title img { width: 35px; border-radius: 8px; }
     
-    .notification-bell { font-size: 1.4rem; position: relative; color: #ccc; cursor: pointer; }
+    .notification-bell { font-size: 1.4rem; position: relative; color: #ccc; cursor: pointer; transition: 0.2s; }
+    .notification-bell:active { transform: scale(0.9); }
     .notification-bell .badge { 
       display: none; position: absolute; top: -3px; right: -3px; 
-      background: red; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--bg-color);
+      background: var(--accent); width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--bg-color);
     }
     .notification-bell.has-news .badge { display: block; }
 
     /* ================= ESTRUTURA DE ABAS ================= */
-    .view-section { display: none; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+    .view-section { display: none; padding: 0 15px 15px 15px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s ease; }
     .view-section.active { display: block; }
-    .pad-interna { padding: 15px; } /* Padding apenas onde precisa */
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; margin-top: 15px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
 
-    /* ================= DESTAQUE ROTATIVO (GRUDADO NO TOPO) ================= */
+    /* ================= DESTAQUE ROTATIVO GRUDADO ================= */
     #banner-destaque {
-      width: 100%; height: 260px;
+      width: calc(100% + 30px); margin-left: -15px; height: 240px; margin-bottom: 20px;
       position: relative; overflow: hidden; cursor: pointer;
-      background: #222; display: flex; align-items: flex-end;
-      border-bottom: 2px solid var(--primary);
+      background: #111; display: flex; align-items: flex-end;
+      border-radius: 0 0 24px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transition: opacity 0.5s ease; }
+    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: opacity 0.5s ease; }
     .banner-overlay {
-      position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 15px 20px;
-      background: linear-gradient(to top, rgba(15, 12, 27, 1) 0%, rgba(15, 12, 27, 0.8) 40%, transparent 100%); z-index: 2;
+      position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 20px 20px;
+      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.5), transparent); z-index: 2;
     }
-    .banner-title { font-size: 1.3rem; font-weight: 800; color: #fff; text-shadow: 2px 2px 10px rgba(0,0,0,1); line-height: 1.2; }
-    .banner-tag { background: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; margin-bottom: 8px; display: inline-block; letter-spacing: 1px;}
+    .banner-title { font-size: 1.4rem; font-weight: 800; color: #fff; text-shadow: 2px 2px 8px rgba(0,0,0,0.9); line-height: 1.2; }
+    .banner-tag { background: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; margin-bottom: 8px; display: inline-block; letter-spacing: 1px;}
 
     /* ================= GRIDS & TOP 10 HORIZONTAL ================= */
     .grid-obras { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     @media (min-width: 768px) { .grid-obras { grid-template-columns: repeat(4, 1fr); } }
 
-    /* Correção do buraco negro embaixo dos cards no scroll horizontal */
-    .scroll-horizontal {
-      display: flex; overflow-x: auto; gap: 15px; padding-bottom: 15px; scroll-snap-type: x mandatory;
-      align-items: flex-start; /* Impede que os cards estiquem verticalmente */
-    }
+    /* Horizontal Scroll */
+    .scroll-horizontal { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 15px; scroll-snap-type: x mandatory; }
     .scroll-horizontal::-webkit-scrollbar { display: none; }
-    .scroll-horizontal .card-obra { min-width: 145px; scroll-snap-align: start; flex: 0 0 auto; }
+    .scroll-horizontal .card-obra { scroll-snap-align: start; flex: 0 0 auto; }
     
+    /* Top 10 Específico (Apenas Capa e Número) */
+    .top-card { width: 120px; min-width: 120px; position: relative; border-radius: 12px; overflow: visible !important; }
+    .top-card .capa-wrapper { padding-top: 140%; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
     .rank-badge {
-      position: absolute; top: -8px; left: -8px; background: #d4af37; color: #000;
-      width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-      font-weight: 800; font-size: 14px; z-index: 10; border: 3px solid var(--card-bg); box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      position: absolute; top: -10px; left: -10px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;
+      width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+      font-weight: 900; font-size: 16px; z-index: 10; border: 3px solid var(--bg-color); box-shadow: 0 4px 8px rgba(0,0,0,0.5);
     }
+    .top-card .badge-views { bottom: 8px; top: auto; left: 8px; font-size: 10px; background: rgba(0,0,0,0.8); }
 
+    /* Cards Padrão */
     .card-obra {
       background: var(--card-bg); border-radius: 16px; overflow: hidden;
-      text-decoration: none; color: inherit; display: block; position: relative;
-      height: max-content; /* Se ajusta exatamente ao conteúdo interno */
+      text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s;
     }
-    .capa-wrapper { position: relative; width: 100%; padding-top: 140%; background: #222; border-radius: 16px; overflow: hidden; }
+    .card-obra:active { transform: scale(0.97); }
+    .capa-wrapper { position: relative; width: 100%; padding-top: 135%; background: #222; overflow: hidden; }
     .capa-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     
-    .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.1);}
-    .badge-caps { position: absolute; bottom: 8px; left: 8px; background: var(--primary); padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-    .badge-18 { position: absolute; top: 8px; right: 8px; background: var(--accent); padding: 4px 6px; border-radius: 8px; font-size: 10px; font-weight: 800; }
-    .badge-novo { background: #00e676; color: #000; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 800; animation: blink 1.5s infinite; margin-left: 5px;}
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+    .badge-caps { position: absolute; bottom: 8px; left: 8px; background: var(--primary); padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .badge-18 { position: absolute; top: 8px; right: 8px; background: var(--accent); padding: 4px 6px; border-radius: 8px; font-size: 10px; font-weight: 900; }
+    .badge-novo { background: #00e676; color: #000; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 800; margin-left: 5px; }
 
     .info-obra { padding: 12px 10px; }
-    .titulo-obra { font-size: 12px; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 10px; line-height: 1.4; }
-    .chapter-row { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; font-weight: 600; color: #ccc; }
-    .chapter-row i { color: #d4af37; font-size: 12px; margin-right: 3px; }
+    .titulo-obra { font-size: 13px; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 10px; }
+    .chapter-row { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; color: #ccc; }
+    .chapter-row i { color: var(--primary); font-size: 12px; margin-right: 5px; }
 
     /* ================= BARRA DE BUSCA E FILTROS ================= */
-    .search-bar { width: 100%; padding: 14px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: var(--card-bg); color: var(--text-color); margin-bottom: 15px; font-family: var(--font-family); outline: none; font-size: 14px;}
-    .filters-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+    .search-container { position: sticky; top: 60px; background: var(--bg-color); z-index: 90; padding: 15px 0 5px 0; margin-bottom: 10px;}
+    .search-bar { width: 100%; padding: 14px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: var(--card-bg); color: var(--text-color); font-family: var(--font-family); font-size: 14px; outline: none; transition: border 0.3s; }
+    .search-bar:focus { border-color: var(--primary); }
+    .filters-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
     .filters-scroll::-webkit-scrollbar { display: none; }
-    .filter-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; transition: 0.2s;}
-    .filter-btn.active { background: var(--primary); font-weight: 700; }
+    .filter-btn { background: rgba(255,255,255,0.08); border: 1px solid transparent; color: #aaa; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.3s; }
+    .filter-btn.active { background: rgba(157, 78, 221, 0.15); color: var(--primary); border-color: var(--primary); font-weight: 700; }
 
     /* ================= MENU INFERIOR ================= */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #110e19; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
-    .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; font-size: 10px; text-decoration: none; background: none; border: none; cursor: pointer; font-family: var(--font-family); font-weight: 600; }
-    .nav-item i { font-size: 20px; margin-bottom: 4px; transition: 0.3s; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 14, 25, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; font-size: 10px; text-decoration: none; background: none; border: none; cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: 0.3s; }
+    .nav-item i { font-size: 20px; margin-bottom: 5px; transition: 0.3s; }
     .nav-item.active { color: var(--primary); }
     .nav-item.active i { transform: translateY(-3px); }
 
+    /* ================= SISTEMA DE CONTAS INTELIGENTE ================= */
+    .auth-container { max-width: 400px; margin: 20px auto; background: var(--card-bg); padding: 30px 20px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .auth-tabs { display: flex; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 25px; padding: 5px; }
+    .auth-tabs button { flex: 1; background: transparent; border: none; color: #888; padding: 10px; font-family: var(--font-family); font-weight: 700; font-size: 14px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .auth-tabs button.active { background: var(--primary); color: #fff; }
+    
+    .auth-form { display: none; animation: fadeIn 0.3s ease; }
+    .auth-form.active { display: block; }
+    
+    .meow-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.4); color: white; margin-bottom: 15px; font-family: var(--font-family); font-size: 14px; outline: none; transition: 0.3s; }
+    .meow-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); }
+    
+    .meow-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; background: var(--primary); color: white; font-family: var(--font-family); font-size: 15px; transition: 0.2s; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3); }
+    .meow-btn:active { transform: scale(0.98); }
+    .meow-btn-google { background: #fff; color: #000; box-shadow: 0 4px 15px rgba(255,255,255,0.1); }
+    
+    .forgot-pass { text-align: center; font-size: 12px; color: var(--primary); font-weight: 600; cursor: pointer; margin-top: 5px; }
+    .forgot-pass:hover { text-decoration: underline; }
+
+    #profile-info { display: none; text-align: center; padding-top: 20px; }
+    .profile-avatar { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(157, 78, 221, 0.4); }
+
     /* ================= CONFIGURAÇÕES E FORMULÁRIOS ================= */
-    .config-box { background: var(--card-bg); padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.03); }
-    .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 14px; }
+    .config-box { background: var(--card-bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); }
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 14px; font-weight: 600; }
     
     .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px; }
     .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: var(--primary); }
     input:checked + .slider:before { transform: translateX(24px); }
 
-    .color-picker { background: transparent; border: none; cursor: pointer; height: 35px; width: 35px; border-radius: 8px; overflow: hidden;}
-    .meow-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: white; margin-bottom: 10px; font-family: var(--font-family);}
-    .meow-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; background: var(--primary); color: white; font-family: var(--font-family); font-size: 14px;}
-    .meow-btn-google { background: #fff; color: #000; }
+    .color-picker { background: transparent; border: none; cursor: pointer; height: 35px; width: 45px; border-radius: 8px; }
 
-    .auth-container { text-align: center; padding: 20px; }
-    #profile-info { display: none; text-align: center; }
-    .profile-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(157, 78, 221, 0.4);}
-
-    /* ADMIN & FOOTER */
-    #admin-panel { display: none; border: 1px solid var(--primary); padding: 15px; border-radius: 12px; margin-top: 20px; background: rgba(157, 78, 221, 0.1);}
-    #nav-parceiros { display: none; } 
-    .footer-app { text-align: center; color: #555; font-size: 12px; padding: 20px 0 40px; font-weight: 600;}
-
+    /* ADMIN */
+    #admin-panel { display: none; background: rgba(157, 78, 221, 0.05); border: 1px solid var(--primary); padding: 20px; border-radius: 16px; margin-top: 20px; }
+    #nav-parceiros { display: none; }
   </style>
 </head>
 <body>
-
-  <div id="loader">
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png" class="loader-icon" alt="Meow Scan">
-    <div class="loader-text">CARREGANDO...</div>
-  </div>
-
-  <div id="modal-18">
-    <div class="modal-content">
-      <h3>Conteúdo Adulto</h3>
-      <p style="font-size: 14px; color: #ccc;">Esta área contém obras destinadas ao público adulto.</p>
-      <p style="font-size: 16px; font-weight: bold; margin-top: 10px;">Você confirma ser maior de 18 anos?</p>
-      <div class="modal-btn-row">
-        <button id="btn-cancel-18" class="meow-btn" style="background: #444;">Não, sou menor</button>
-        <button id="btn-confirm-18" class="meow-btn" style="background: var(--accent);">Sim, eu confirmo</button>
-      </div>
-    </div>
-  </div>
 
   <header>
     <div class="brand-title">
@@ -206,109 +183,134 @@
     </div>
   </header>
 
+  <!-- ABA INÍCIO -->
   <div id="view-inicio" class="view-section active">
     
+    <!-- Destaque Grudado -->
     <div id="banner-destaque" onclick="irParaDestaque()">
-      <img id="banner-img" src="" class="banner-img">
+      <img id="banner-img" src="https://via.placeholder.com/600x300" class="banner-img">
       <div class="banner-overlay">
-        <div class="banner-tag">DESTAQUE</div>
-        <div id="banner-titulo" class="banner-title">Carregando...</div>
+        <div class="banner-tag">EM DESTAQUE</div>
+        <div id="banner-titulo" class="banner-title">Carregando Obras...</div>
       </div>
     </div>
 
-    <div class="pad-interna">
-      <div class="section-title">🔥 Top Mais Lidos</div>
-      <div id="grid-top" class="scroll-horizontal" style="margin-bottom: 30px;"></div>
-      
-      <div class="section-title">✨ Últimas Atualizações</div>
-      <div id="grid-inicio" class="grid-obras"></div>
-      
-      <div class="footer-app">Aplicativo da Meow Scan</div>
-    </div>
+    <div class="section-title"><i class="fa-solid fa-fire" style="color: #ff477e;"></i> Top 10 Mais Lidos</div>
+    <div id="grid-top" class="scroll-horizontal" style="margin-bottom: 15px;"></div>
+    
+    <div class="section-title"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Últimas Atualizações</div>
+    <div id="grid-inicio" class="grid-obras"></div>
   </div>
 
-  <div id="view-busca" class="view-section pad-interna">
-    <input type="text" id="search-input" class="search-bar" placeholder="🔍 Pesquisar obra...">
-    <div class="filters-scroll">
-      <button class="filter-btn active" data-status="Todos">Todos</button>
-      <button class="filter-btn" data-status="Em Andamento">Em Andamento</button>
-      <button class="filter-btn" data-status="Completo">Completo</button>
-      <button class="filter-btn" data-status="Em Pausa">Em Pausa</button>
-      <button class="filter-btn" data-status="Futuro">Futuro</button>
+  <!-- ABA BUSCA -->
+  <div id="view-busca" class="view-section">
+    <div class="search-container">
+      <input type="text" id="search-input" class="search-bar" placeholder="🔍 Qual obra você quer ler hoje?">
+      <div class="filters-scroll" style="margin-top: 15px;">
+        <button class="filter-btn active" data-status="Todos">Todos</button>
+        <button class="filter-btn" data-status="Em Andamento">Em Andamento</button>
+        <button class="filter-btn" data-status="Completo">Completo</button>
+        <button class="filter-btn" data-status="Em Pausa">Em Pausa</button>
+      </div>
     </div>
     <div id="grid-busca" class="grid-obras"></div>
-    <div class="footer-app">Aplicativo da Meow Scan</div>
   </div>
 
-  <div id="view-parceiros" class="view-section pad-interna">
-    <div class="section-title">🤝 Nossos Parceiros</div>
+  <!-- ABA PARCEIROS -->
+  <div id="view-parceiros" class="view-section">
+    <div class="section-title"><i class="fa-solid fa-handshake"></i> Nossos Parceiros</div>
     <div id="lista-parceiros" class="grid-obras"></div>
     
     <div id="admin-panel">
-      <h4 style="margin-bottom: 15px; color: var(--primary);">Área do ADM</h4>
-      <input type="text" id="link-github-parceiro" class="meow-input" placeholder="Link do Github do Parceiro">
+      <h4 style="margin-bottom: 15px; color: var(--primary);"><i class="fa-solid fa-shield-halved"></i> Área do ADM</h4>
+      <input type="text" id="link-github-parceiro" class="meow-input" placeholder="Link do Parceiro (Ex: Github/Site)">
       <input type="text" id="nome-parceiro" class="meow-input" placeholder="Nome do Parceiro">
       <button onclick="adicionarParceiro()" class="meow-btn">Adicionar Parceiro</button>
     </div>
   </div>
 
-  <div id="view-perfil" class="view-section pad-interna">
+  <!-- ABA PERFIL -->
+  <div id="view-perfil" class="view-section">
+    
+    <!-- Sistema de Contas Moderno -->
     <div id="auth-box" class="auth-container">
-      <h2 style="margin-bottom: 20px;">Sua próxima leitura te aguarda</h2>
-      <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Faça login para acompanhar suas obras e receber notificações.</p>
+      <h2 style="text-align: center; margin-bottom: 25px; font-size: 1.5rem;">Sua próxima leitura te aguarda</h2>
       
-      <button id="btn-google-login" class="meow-btn meow-btn-google">
-        <i class="fa-brands fa-google" style="color: #ea4335;"></i> Continuar com Google
-      </button>
-      
-      <div style="margin: 20px 0; color: #666; font-size: 14px; display: flex; align-items: center; gap: 10px;">
-        <hr style="flex:1; border:none; border-top:1px solid #333;"> OU <hr style="flex:1; border:none; border-top:1px solid #333;">
+      <div class="auth-tabs">
+        <button id="tab-login" class="active" onclick="switchAuthTab('login')">Entrar</button>
+        <button id="tab-register" onclick="switchAuthTab('register')">Cadastrar</button>
       </div>
-      
-      <input type="email" id="meow-email" class="meow-input" placeholder="E-mail">
-      <input type="password" id="meow-pass" class="meow-input" placeholder="Senha">
-      <button id="btn-login-email" class="meow-btn" style="background: #1DB954;">Entrar</button>
+
+      <!-- Formulário de Login -->
+      <div id="form-login" class="auth-form active">
+        <button id="btn-google-login" class="meow-btn meow-btn-google">
+          <i class="fa-brands fa-google" style="color: #ea4335; font-size: 18px;"></i> Continuar com Google
+        </button>
+        <div style="text-align: center; margin: 20px 0; color: #666; font-size: 12px; text-transform: uppercase; font-weight: 700;">ou use seu e-mail</div>
+        <input type="email" id="login-email" class="meow-input" placeholder="E-mail">
+        <input type="password" id="login-pass" class="meow-input" placeholder="Senha">
+        <button id="btn-login-email" class="meow-btn">Fazer Login</button>
+        <p class="forgot-pass" onclick="switchAuthTab('recover')">Esqueceu sua senha?</p>
+      </div>
+
+      <!-- Formulário de Cadastro -->
+      <div id="form-register" class="auth-form">
+        <input type="text" id="reg-name" class="meow-input" placeholder="Como devemos te chamar?">
+        <input type="email" id="reg-email" class="meow-input" placeholder="Seu melhor e-mail">
+        <input type="password" id="reg-pass" class="meow-input" placeholder="Crie uma senha forte">
+        <button id="btn-register" class="meow-btn">Criar Minha Conta</button>
+      </div>
+
+      <!-- Formulário de Recuperação -->
+      <div id="form-recover" class="auth-form">
+        <p style="font-size: 13px; color: #aaa; text-align: center; margin-bottom: 15px;">Enviaremos um link seguro para você redefinir sua senha.</p>
+        <input type="email" id="rec-email" class="meow-input" placeholder="Digite seu e-mail cadastrado">
+        <button id="btn-recover" class="meow-btn">Enviar Link de Recuperação</button>
+        <p class="forgot-pass" onclick="switchAuthTab('login')">Voltar para o Login</p>
+      </div>
     </div>
 
+    <!-- Perfil Logado -->
     <div id="profile-info">
-      <img id="user-avatar" src="https://via.placeholder.com/100" class="profile-avatar">
-      <h3 id="user-name" style="margin-bottom: 25px; font-weight: 800;">Nome do Leitor</h3>
+      <img id="user-avatar" src="https://via.placeholder.com/150" class="profile-avatar">
+      <h2 id="user-name" style="margin-bottom: 5px;">Nome do Leitor</h2>
+      <p style="color: #888; font-size: 12px; margin-bottom: 25px;">Membro da Meow Scan</p>
       
-      <div class="section-title" style="text-align: left;">📚 Histórico de Leitura</div>
+      <div class="section-title" style="text-align: left;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Leitura</div>
       <div id="history-grid" class="scroll-horizontal" style="margin-bottom: 30px;"></div>
       
-      <button id="btn-logout" class="meow-btn" style="background: #e63946; border-radius: 30px;">Sair da Conta</button>
+      <button id="btn-logout" class="meow-btn" style="background: rgba(230, 57, 70, 0.1); color: #e63946; border: 1px solid rgba(230, 57, 70, 0.3); box-shadow: none;">Sair da Conta</button>
     </div>
   </div>
 
-  <div id="view-config" class="view-section pad-interna">
-    <div class="section-title">⚙️ Ajustes do App</div>
+  <!-- ABA CONFIGURAÇÕES -->
+  <div id="view-config" class="view-section">
+    <div class="section-title"><i class="fa-solid fa-gear"></i> Ajustes do App</div>
     
     <div class="config-box">
       <div class="toggle-row">
-        <span>Mostrar conteúdo +18 <br><small style="color:#aaa;font-size:10px;">Requer confirmação de idade</small></span>
+        <span>Conteúdo Adulto (+18) <br><small style="color:#888;font-size:11px;font-weight:400;">Confirmo ser maior de 18 anos</small></span>
         <label class="switch"><input type="checkbox" id="toggle-18"><span class="slider"></span></label>
       </div>
-      <div class="toggle-row">
-        <span>Mostrar obras Sensíveis</span>
+      <div class="toggle-row" style="margin-bottom: 0;">
+        <span>Obras Sensíveis <br><small style="color:#888;font-size:11px;font-weight:400;">Gatilhos e violência</small></span>
         <label class="switch"><input type="checkbox" id="toggle-sensitive"><span class="slider"></span></label>
       </div>
     </div>
 
     <div class="config-box">
-      <h4 style="margin-bottom: 20px; color: var(--primary);">Aparência</h4>
+      <h4 style="margin-bottom: 20px; font-size: 16px;"><i class="fa-solid fa-palette"></i> Personalizar Aparência</h4>
       <div class="toggle-row">Cor de Fundo <input type="color" id="cfg-bg" class="color-picker" value="#0f0c1b"></div>
       <div class="toggle-row">Cor do Texto <input type="color" id="cfg-text" class="color-picker" value="#ffffff"></div>
       
-      <label for="bg-upload" class="meow-btn" style="background: #333; margin-top: 15px;">
-        <i class="fa-solid fa-image"></i> Fundo da Galeria
+      <label for="bg-upload" class="meow-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; box-shadow: none; margin-top: 15px;">
+        <i class="fa-regular fa-image"></i> Escolher Fundo da Galeria
       </label>
       <input type="file" id="bg-upload" accept="image/*" style="display: none;">
 
-      <button id="btn-salvar-cores" class="meow-btn" style="margin-top: 20px;">Salvar Temas</button>
-      <button id="btn-reset-cores" class="meow-btn" style="background: transparent; border: 1px solid #555;">Restaurar Padrão</button>
+      <button id="btn-salvar-cores" class="meow-btn" style="margin-top: 15px;">Aplicar Novo Tema</button>
+      <button id="btn-reset-cores" class="meow-btn" style="background: transparent; border: 1px solid #555; color: #aaa; box-shadow: none;">Restaurar Padrão</button>
     </div>
-    <div class="footer-app">Aplicativo da Meow Scan</div>
   </div>
 
   <nav class="bottom-nav">
@@ -329,12 +331,13 @@
     </button>
   </nav>
 
+  <!-- FIREBASE SCRIPTS (SEM O TYPE MODULE QUE CAUSAVA TELA BRANCA) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    /* ================= 1. CONFIGURAÇÕES LOCAIS (TEMAS E FILTROS) ================= */
+    /* ================= 1. CONFIGURAÇÕES LOCAIS ================= */
     const settings = JSON.parse(localStorage.getItem('meowSettings')) || { 
       show18: false, showSensitive: false, bgColor: '#0f0c1b', textColor: '#ffffff', bgImage: '', ageVerified: false 
     };
@@ -351,39 +354,21 @@
     }
     applySettings();
 
-    /* ================= LÓGICA DO MODAL +18 ================= */
-    const toggle18 = document.getElementById('toggle-18');
-    const modal18 = document.getElementById('modal-18');
-
-    toggle18.addEventListener('change', (e) => {
+    document.getElementById('toggle-18').addEventListener('change', (e) => {
       if(e.target.checked && !settings.ageVerified) {
-        // Mostra o modal customizado ao invés do prompt padrão
-        modal18.style.display = 'flex';
-        e.target.checked = false; // Desmarca até ele confirmar
-      } else {
-        settings.show18 = e.target.checked;
-        saveSettings(); renderObras();
+        if(confirm("Você confirma ser maior de 18 anos?")) {
+          settings.ageVerified = true;
+        } else {
+          e.target.checked = false; return;
+        }
       }
+      settings.show18 = e.target.checked; saveSettings(); renderObras();
     });
 
-    document.getElementById('btn-confirm-18').addEventListener('click', () => {
-      settings.ageVerified = true;
-      settings.show18 = true;
-      toggle18.checked = true;
-      modal18.style.display = 'none';
-      saveSettings(); renderObras();
-    });
-
-    document.getElementById('btn-cancel-18').addEventListener('click', () => {
-      modal18.style.display = 'none';
-    });
-
-    // Sensível apenas liga e desliga sem burocracia
     document.getElementById('toggle-sensitive').addEventListener('change', (e) => {
       settings.showSensitive = e.target.checked; saveSettings(); renderObras();
     });
 
-    // Fundo da Galeria
     document.getElementById('bg-upload').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -410,16 +395,16 @@
 
     function saveSettings() { localStorage.setItem('meowSettings', JSON.stringify(settings)); }
 
-    /* ================= 2. NAVEGAÇÃO DE ABAS ================= */
+    /* ================= 2. NAVEGAÇÃO DE ABAS DO APP ================= */
     function switchTab(tabId, btn) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.getElementById(`view-${tabId}`).classList.add('active');
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
     }
 
-    /* ================= 3. FIREBASE ================= */
+    /* ================= 3. INICIALIZAÇÃO SEGURA DO FIREBASE ================= */
     const firebaseConfig = {
       apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
       authDomain: "meow-scan-ffff0.firebaseapp.com",
@@ -429,7 +414,10 @@
       messagingSenderId: "76129834936",
       appId: "1:76129834936:web:36df84ea0fb31ecc69e14d"
     };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    
+    if (!firebase.apps.length) {
+       firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.database();
     const auth = firebase.auth();
 
@@ -437,17 +425,9 @@
     let currentFiltro = 'Todos';
     let currentUser = null;
     let isAdmin = false;
-    let appCarregado = false; // Flag para parar de piscar o loading
-    const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3";
+    const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3"; 
 
-    // Formatador de Views (ex: 1500 -> 1.5K)
-    function formatViews(v) {
-      if (!v) return '0';
-      if (v >= 1000) return (v / 1000).toFixed(1).replace('.0', '') + 'K';
-      return v;
-    }
-
-    // Carregar Obras
+    // Buscar dados sem tela de loading travando
     db.ref('obras').on('value', snap => {
       todasObras = [];
       if(snap.exists()){
@@ -455,21 +435,29 @@
           todasObras.push({ id: child.key, ...child.val() });
         });
       }
-      
-      // Some com o Loading Apenas na Primeira Vez
-      if(!appCarregado) {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => document.getElementById('loader').style.display = 'none', 400);
-        appCarregado = true;
-      }
-      
       renderObras();
       iniciarDestaqueRotativo();
     });
 
-    /* ================= 4. RENDERIZAÇÃO E LÓGICA DE CARDS ================= */
-    function createCardHTML(obra, ranking = null, isUpdated = false) {
-      const viewsExibicao = formatViews(obra.views || 0);
+    /* ================= 4. RENDERIZAÇÃO INTELIGENTE ================= */
+    
+    // Função para Card do Top 10 (Somente Imagem e Rank)
+    function createTop10CardHTML(obra, ranking) {
+      const views = obra.views || 0; // VIEWS REAIS DO BANCO! Sem Fake News
+      return `
+        <a href="obra.html?obra=${obra.id}" class="card-obra top-card" onclick="registrarClique('${obra.id}')">
+          <div class="rank-badge">${ranking}</div>
+          <div class="capa-wrapper">
+            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
+            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
+          </div>
+        </a>
+      `;
+    }
+
+    // Função para Card Normal (Inicio e Busca)
+    function createNormalCardHTML(obra, isUpdated = false) {
+      const views = obra.views || 0;
       let capsHTML = '';
       let totalCaps = 0;
       
@@ -478,25 +466,20 @@
         totalCaps = capArray.length;
         
         capArray.slice(0, 2).forEach((cap, index) => {
-          // Tag de Novo apenas no último cap postado das obras recém atualizadas
           const badgeNovo = (isUpdated && index === 0) ? `<span class="badge-novo">NOVO</span>` : '';
           capsHTML += `
             <div class="chapter-row">
               <span><i class="fa-solid fa-wand-magic-sparkles"></i> CAP ${cap.numero} ${badgeNovo}</span>
-              <span>${cap.dataPostagem || ''}</span>
             </div>
           `;
         });
       }
 
-      const rankHTML = ranking ? `<div class="rank-badge">${ranking}</div>` : '';
-
       return `
         <a href="obra.html?obra=${obra.id}" class="card-obra" onclick="registrarClique('${obra.id}')">
-          ${rankHTML}
           <div class="capa-wrapper">
             <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
-            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${viewsExibicao}</div>
+            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
             <div class="badge-caps">${totalCaps} CAPS</div>
             ${obra.adulto ? '<div class="badge-18">18+</div>' : ''}
           </div>
@@ -509,13 +492,9 @@
     }
 
     function registrarClique(id) {
-      // SOMA 1 VIEW REAL NO BANCO DE DADOS
-      db.ref('obras/' + id + '/views').set(firebase.database.ServerValue.increment(1));
-
-      // Salva no histórico local
       let history = JSON.parse(localStorage.getItem('meowHistory')) || [];
       if(!history.includes(id)) { history.unshift(id); }
-      if(history.length > 10) history.pop();
+      if(history.length > 15) history.pop(); // Guarda até 15 no histórico
       localStorage.setItem('meowHistory', JSON.stringify(history));
     }
 
@@ -526,17 +505,17 @@
         return true;
       });
 
-      // 1. Top 10 (Ordenado por VIEWS REAIS)
+      // 1. Top 10 (Real, baseado nas views do banco)
       const topObras = [...obrasFiltradas].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
-      document.getElementById('grid-top').innerHTML = topObras.map((o, index) => createCardHTML(o, index + 1)).join('');
+      document.getElementById('grid-top').innerHTML = topObras.map((o, index) => createTop10CardHTML(o, index + 1)).join('');
 
-      // 2. Atualizações 
+      // 2. Últimas Atualizações
       const obrasAtualizadas = [...obrasFiltradas].reverse(); 
       document.getElementById('grid-inicio').innerHTML = obrasAtualizadas.slice(0, 12).map((o, index) => {
-        return createCardHTML(o, null, index < 4); // As 4 primeiras ganham tag NOVO
+        return createNormalCardHTML(o, index < 3); // Simula "Novo" nas 3 primeiras
       }).join('');
 
-      // 3. Busca
+      // 3. Busca e Filtros
       const searchTerm = document.getElementById('search-input').value.toLowerCase();
       let obrasBusca = obrasFiltradas.filter(o => {
         const matchesSearch = o.nome.toLowerCase().includes(searchTerm) || searchTerm === '';
@@ -544,13 +523,11 @@
         const matchesStatus = currentFiltro === 'Todos' || status.includes(currentFiltro.toLowerCase());
         return matchesSearch && matchesStatus;
       });
-      document.getElementById('grid-busca').innerHTML = obrasBusca.map(o => createCardHTML(o)).join('');
+      document.getElementById('grid-busca').innerHTML = obrasBusca.map(o => createNormalCardHTML(o)).join('');
       
-      // 4. Histórico
       renderHistorico();
     }
 
-    // Sistema de Busca
     document.getElementById('search-input').addEventListener('input', renderObras);
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -561,15 +538,15 @@
       });
     });
 
-    /* ================= 5. DESTAQUE ROTATIVO (5 SEGUNDOS) ================= */
+    /* ================= 5. DESTAQUE ROTATIVO OTIMIZADO ================= */
     let destaqueInterval;
     let obraDestaqueAtual = null;
 
     function iniciarDestaqueRotativo() {
       if(todasObras.length === 0) return;
       if(destaqueInterval) clearInterval(destaqueInterval);
-      trocarDestaque(); 
-      destaqueInterval = setInterval(trocarDestaque, 5000); 
+      trocarDestaque();
+      destaqueInterval = setInterval(trocarDestaque, 6000); // Muda a cada 6 seg
     }
 
     function trocarDestaque() {
@@ -578,6 +555,7 @@
         if(o.sensivel && !settings.showSensitive) return false;
         return true;
       });
+
       if(obrasValidas.length === 0) return;
       
       const randomIndex = Math.floor(Math.random() * obrasValidas.length);
@@ -587,10 +565,10 @@
       bannerImg.style.opacity = 0; 
       
       setTimeout(() => {
-        bannerImg.src = obraDestaqueAtual.capaUrl || 'https://via.placeholder.com/600x300';
+        bannerImg.src = obraDestaqueAtual.capaUrl || 'https://via.placeholder.com/800x400';
         document.getElementById('banner-titulo').innerText = obraDestaqueAtual.nome;
         bannerImg.style.opacity = 1; 
-      }, 300);
+      }, 400);
     }
 
     function irParaDestaque() {
@@ -600,16 +578,27 @@
       }
     }
 
-    /* ================= 6. AUTH E TELA BRANCA FIX ================= */
+    /* ================= 6. AUTHENTICAÇÃO INTELIGENTE ================= */
+    
+    // Trocar abas do Login / Cadastro
+    window.switchAuthTab = function(tabName) {
+      document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.auth-tabs button').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('form-' + tabName).classList.add('active');
+      if(tabName !== 'recover') {
+        document.getElementById('tab-' + tabName).classList.add('active');
+      }
+    };
+
     auth.onAuthStateChanged(user => {
       currentUser = user;
       if (user) {
         document.getElementById('auth-box').style.display = 'none';
         document.getElementById('profile-info').style.display = 'block';
         document.getElementById('user-name').innerText = user.displayName || 'Leitor(a)';
-        document.getElementById('user-avatar').src = user.photoURL || 'https://via.placeholder.com/100';
+        document.getElementById('user-avatar').src = user.photoURL || 'https://via.placeholder.com/150';
 
-        // Escutar Sininho
         db.ref(`notificacoes/${user.uid}`).on('value', snap => {
           if(snap.exists() && snap.val().lida === false) {
              document.querySelector('.notification-bell').classList.add('has-news');
@@ -618,7 +607,6 @@
           }
         });
 
-        // ADM
         if (user.uid === ADMIN_UID) {
           isAdmin = true;
           document.getElementById('nav-parceiros').style.display = 'flex';
@@ -629,21 +617,46 @@
         document.getElementById('profile-info').style.display = 'none';
         document.getElementById('nav-parceiros').style.display = 'none';
         isAdmin = false;
+        switchAuthTab('login');
       }
     });
 
-    // Correção da Tela Branca (signInWithRedirect)
+    // Login Google
     document.getElementById('btn-google-login').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
-      // O redirect evita os bloqueios de pop-up do celular
-      auth.signInWithRedirect(provider);
+      auth.signInWithPopup(provider).catch(err => alert(err.message));
     });
     
+    // Login E-mail
     document.getElementById('btn-login-email').addEventListener('click', () => {
-      const email = document.getElementById('meow-email').value;
-      const pass = document.getElementById('meow-pass').value;
-      if(!email || !pass) return alert("Preencha os campos!");
-      auth.signInWithEmailAndPassword(email, pass).catch(err => alert("Erro: " + err.message));
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-pass').value;
+      if(!email || !pass) return alert("Preencha e-mail e senha!");
+      auth.signInWithEmailAndPassword(email, pass).catch(err => alert("Erro ao entrar: " + err.message));
+    });
+
+    // Cadastro
+    document.getElementById('btn-register').addEventListener('click', () => {
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const pass = document.getElementById('reg-pass').value;
+      if(!name || !email || !pass) return alert("Preencha todos os campos!");
+      
+      auth.createUserWithEmailAndPassword(email, pass).then(cred => {
+         return cred.user.updateProfile({ displayName: name });
+      }).then(() => {
+         alert("Conta criada com sucesso! Bem-vindo!");
+      }).catch(err => alert("Erro ao criar conta: " + err.message));
+    });
+
+    // Recuperar Senha
+    document.getElementById('btn-recover').addEventListener('click', () => {
+      const email = document.getElementById('rec-email').value;
+      if(!email) return alert("Digite seu e-mail para recuperar a senha.");
+      auth.sendPasswordResetEmail(email).then(() => {
+         alert("Link de recuperação enviado para o seu e-mail!");
+         switchAuthTab('login');
+      }).catch(err => alert("Erro: " + err.message));
     });
     
     document.getElementById('btn-logout').addEventListener('click', () => auth.signOut());
@@ -653,30 +666,30 @@
       const historyObras = historyIds.map(id => todasObras.find(o => o.id === id)).filter(Boolean);
       
       document.getElementById('history-grid').innerHTML = historyObras.length > 0 
-        ? historyObras.map(o => createCardHTML(o)).join('') 
-        : '<p style="color:#aaa; text-align:center; width:100%; font-size: 14px;">Você ainda não leu nada.</p>';
+        ? historyObras.map(o => createNormalCardHTML(o)).join('') 
+        : '<p style="color:#666; text-align:center; width:100%; font-size:12px; margin-top:20px;">Você ainda não leu nenhuma obra.</p>';
     }
 
     function abrirNotificacoes() {
       if(!currentUser) return alert("Faça login para ver notificações!");
       const bell = document.querySelector('.notification-bell');
       if(bell.classList.contains('has-news')) {
-         alert("Você tem uma nova resposta nos comentários!");
+         alert("Você tem novas mensagens/atualizações!");
          db.ref(`notificacoes/${currentUser.uid}`).update({ lida: true });
          bell.classList.remove('has-news');
       } else {
-         alert("Nenhuma notificação nova.");
+         alert("Você não tem notificações no momento.");
       }
     }
 
-    // Parceiros
+    /* ================= 7. PARCEIROS (ADMIN) ================= */
     function adicionarParceiro() {
       if(!isAdmin) return;
       const nome = document.getElementById('nome-parceiro').value;
       const link = document.getElementById('link-github-parceiro').value;
       if(nome && link) {
         db.ref('parceiros').push({ nome, link });
-        alert("Parceiro adicionado!");
+        alert("Parceiro adicionado com sucesso!");
         document.getElementById('nome-parceiro').value = '';
         document.getElementById('link-github-parceiro').value = '';
       }
@@ -688,14 +701,14 @@
         snap.forEach(child => {
           const p = child.val();
           html += `
-            <a href="${p.link}" target="_blank" class="card-obra" style="padding: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-              <i class="fa-brands fa-github" style="font-size: 30px; margin-bottom: 10px; color: var(--primary);"></i>
-              <div style="font-weight: 800; font-size: 14px;">${p.nome}</div>
+            <a href="${p.link}" target="_blank" class="card-obra" style="padding: 20px; text-align: center; justify-content: center;">
+              <i class="fa-solid fa-link" style="font-size: 28px; margin-bottom: 10px; color: var(--primary);"></i>
+              <div style="font-weight: 800; font-size: 13px;">${p.nome}</div>
             </a>
           `;
         });
       } else {
-        html = '<p style="color:#aaa; text-align:center; width:100%;">Nenhum parceiro no momento.</p>';
+        html = '<p style="color:#666; font-size: 12px; grid-column: span 2;">Nenhum parceiro adicionado ainda.</p>';
       }
       document.getElementById('lista-parceiros').innerHTML = html;
     });
