@@ -1,18 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true' b:templateUrl='indie.xml' b:templateVersion='1.3.0' expr:dir='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta content='width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1' name='viewport'/>
-  <title><data:blog.pageTitle/></title>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" name="viewport">
+  <title>Meow Scan</title>
   
-  <b:skin><![CDATA[
-    /* Tag obrigatoria para o Blogger */
-  ]]></b:skin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Syne:wght@600;700;800&amp;display=swap' rel='stylesheet'/>
-  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'/>
-
-  <script type='text/javascript'>
-  //<![CDATA[
+  <script type="text/javascript">
       /* SISTEMA DE BLOQUEIO DE MENU E CABEÇALHO DIRETO NO CARREGAMENTO */
       var urlAtual = window.location.href.toLowerCase();
       var paginasSemMenu = [
@@ -28,7 +24,6 @@
       if (esconderMenuSempre) {
           document.write('<style>#main-header, #mobile-bottom-nav { display: none !important; pointer-events: none !important; opacity: 0 !important; visibility: hidden !important; } #meow-elite-app { padding-bottom: 0px !important; } .page-content-wrapper { margin-top: 30px !important; }</style>');
       }
-  //]]>
   </script>
 
   <style>
@@ -129,7 +124,7 @@
         box-shadow: 0 8px 25px rgba(0, 136, 204, 0.6);
     }
 
-    /* --- PESQUISA PREMIUM CONSERTADA --- */
+    /* --- PESQUISA PREMIUM --- */
     #search-overlay {
         position: fixed; inset: 0; background: var(--bg-main); z-index: 9999;
         display: flex; flex-direction: column; align-items: center;
@@ -197,13 +192,6 @@
         font-weight: 800; margin: 0 0 20px 0; line-height: 1.1; color: #fff; 
         text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
     }
-    #meow-elite-app .btn-main {
-        padding: 14px 30px; background: var(--accent-gradient); color: #fff;
-        text-decoration: none; font-weight: 700; border-radius: 16px;
-        display: inline-flex; align-items: center; gap: 10px; transition: var(--transition);
-        font-size: 1rem; text-transform: uppercase; border: none; box-shadow: 0 4px 15px var(--accent-glow);
-    }
-    #meow-elite-app .btn-main:hover { transform: translateY(-4px); box-shadow: 0 10px 25px var(--accent-glow); }
 
     /* SEÇÕES E LISTA VERTICAL DE OBRAS */
     #meow-elite-app .section-container { padding: 0 5%; margin-top: 50px !important; margin-bottom: 40px !important; }
@@ -214,7 +202,6 @@
     }
     #meow-elite-app .secao-titulo i { color: var(--accent-color); font-size: 1.4rem; }
 
-    /* SUBSTITUÍDO O GRID ANTIGO PELA LISTA VERTICAL */
     #meow-elite-app .grid-obras { 
         display: flex; flex-direction: column; gap: 15px; 
     }
@@ -251,7 +238,7 @@
     }
     #meow-elite-app .link-capitulo:hover { background: var(--accent-color); color: #fff; }
 
-    /* --- MENU DE NOTIFICAÇÕES (SEM FAKES) --- */
+    /* --- MENU DE NOTIFICAÇÕES --- */
     #notificacoes-panel {
         position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
         background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -282,7 +269,6 @@
     }
     #meow-elite-app .nav-link:hover, #meow-elite-app .nav-link.active { color: #fff; background: var(--accent-color); }
     
-    /* O Badge real agora só é gerado no JS quando há notificações verdadeiras */
     .badge-count {
         position: absolute; top: -2px; right: -2px; background: var(--accent-color); color: #fff;
         font-size: 0.65rem; font-weight: bold; width: 20px; height: 20px; 
@@ -309,117 +295,140 @@
         #meow-elite-app .section-container { margin-top: 35px !important; margin-bottom: 25px !important; }
         #meow-elite-app .secao-titulo { font-size: 1.3rem; margin-bottom: 15px !important; }
         
-        .page-content-wrapper { padding: 20px 5%; margin-top: 80px; border-radius: 0; border: none; background: transparent; box-shadow: none;}
         #meow-elite-app .bottom-nav { width: 90%; justify-content: space-between; padding: 8px 10px; }
         #meow-elite-app .nav-link { font-size: 1.1rem; padding: 10px; }
     }
   </style>
-  
-  <b:if cond='not data:view.isHomepage'>
-      <script>document.documentElement.className += ' is-post';</script>
-  </b:if>
 </head>
-<body expr:class='data:view.isHomepage ? "is-homepage" : "is-post"'>
+<body>
 
-  <div id='meow-elite-app'>
+  <div id="meow-elite-app">
       
-      <div id='search-overlay'>
-          <div class='search-container-box'>
-              <div class='search-input-wrapper'>
-                  <i class='fa-solid fa-magnifying-glass'/>
-                  <input autocomplete='off' id='search-input' placeholder='Encontre sua próxima leitura...' type='text'/>
-                  <i class='fa-solid fa-xmark close-search-icon' onclick='fecharPesquisa()'/>
+      <div id="search-overlay">
+          <div class="search-container-box">
+              <div class="search-input-wrapper">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input autocomplete="off" id="search-input" placeholder="Encontre sua próxima leitura..." type="text">
+                  <i class="fa-solid fa-xmark close-search-icon" onclick="window.fecharPesquisa()"></i>
               </div>
-              <div class='search-results-area'>
-                  <div class='grid-obras' id='search-results-grid'/>
+              <div class="search-results-area">
+                  <div class="grid-obras" id="search-results-grid"></div>
               </div>
           </div>
       </div>
 
-      <header id='main-header'>
-          <a class='logo' href='/'>
-              <img alt='Meow Scan' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6aC3chQ6doRxYFj6A_QjodQQOV8c9prAxUUcghfLANYhRLyebekvpQGr5yY7N8WyEEN-V4Dm7E9Z_Yt-296fKDPcsPS-l7OE0cxXIRL2U14fqEUWoNnVqsE9SW4vpNPb4vh7uSeO8A9Ml8wXHbxjKC5yQYOTGmHACMzveICcisVx59uMflIg8Gp2ggbcc/s320/3576.png'/>
+      <header id="main-header">
+          <a class="logo" href="index.html">
+              <img alt="Meow Scan" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6aC3chQ6doRxYFj6A_QjodQQOV8c9prAxUUcghfLANYhRLyebekvpQGr5yY7N8WyEEN-V4Dm7E9Z_Yt-296fKDPcsPS-l7OE0cxXIRL2U14fqEUWoNnVqsE9SW4vpNPb4vh7uSeO8A9Ml8wXHbxjKC5yQYOTGmHACMzveICcisVx59uMflIg8Gp2ggbcc/s320/3576.png">
           </a>
           
-          <div class='header-actions'>
-              <button class='action-btn search-btn' onclick='abrirPesquisa()'><i class='fa-solid fa-magnifying-glass'/></button>
+          <div class="header-actions">
+              <button class="action-btn search-btn" onclick="window.abrirPesquisa()"><i class="fa-solid fa-magnifying-glass"></i></button>
           </div>
       </header>
 
-      <b:if cond='data:view.isHomepage'>
-          <div class='banner-container' id='banner-hero'/>
+      <div class="banner-container" id="banner-hero"></div>
 
-          <div class='section-container'>
-              <h2 class='secao-titulo'><i class='fa-solid fa-bolt'/> Lançamentos Recentes</h2>
-              <div class='grid-obras' id='lista-updates'/>
-          </div>
+      <div class="section-container">
+          <h2 class="secao-titulo"><i class="fa-solid fa-bolt"></i> Lançamentos Recentes</h2>
+          <div class="grid-obras" id="lista-updates"></div>
+      </div>
 
-          <div class='section-container'>
-              <h2 class='secao-titulo'><i class='fa-solid fa-book-open'/> Obras</h2>
-              <div class='grid-obras' id='lista-todas'/>
-          </div>
-          
-          <a class='telegram-float' href='https://t.me/Meowscann1' target='_blank' title='Nosso Canal no Telegram'>
-              <i class='fa-brands fa-telegram'/>
-          </a>
-      </b:if>
+      <div class="section-container">
+          <h2 class="secao-titulo"><i class="fa-solid fa-book-open"></i> Obras</h2>
+          <div class="grid-obras" id="lista-todas"></div>
+      </div>
+      
+      <a class="telegram-float" href="https://t.me/Meowscann1" target="_blank" title="Nosso Canal no Telegram">
+          <i class="fa-brands fa-telegram"></i>
+      </a>
 
-      <b:if cond='not data:view.isHomepage'>
-          <div class='page-content-wrapper'>
-              <b:section class='main' id='main' showaddelement='yes'>
-                <b:widget id='Blog1' locked='true' title='Postagens no blog' type='Blog' version='1'>
-                  <b:includable id='main'>
-                        <b:loop values='data:posts' var='post'>
-                            <h1 class='post-title'><data:post.title/></h1>
-                            <div class='post-body'><data:post.body/></div>
-                        </b:loop>
-                    </b:includable>
-                </b:widget>
-              </b:section>
-          </div>
-      </b:if>
-
-      <div class='creditos-rodape'>
+      <div class="creditos-rodape">
           Desenvolvido com carinho por <span>Sirla</span>
       </div>
 
-      <div id='notificacoes-panel'>
-          <h3><i class='fa-solid fa-bell'/> Suas Atualizações</h3>
-          <div id='lista-notificacoes'>
-              <p style='color: var(--text-dim); text-align: center; font-size: 0.9rem;'>Tudo lido por enquanto!</p>
+      <div id="notificacoes-panel">
+          <h3><i class="fa-solid fa-bell"></i> Suas Atualizações</h3>
+          <div id="lista-notificacoes">
+              <p style="color: var(--text-dim); text-align: center; font-size: 0.9rem;">Tudo lido por enquanto!</p>
           </div>
       </div>
 
-      <nav class='bottom-nav' id='mobile-bottom-nav'>
-          <a class='nav-link active' href='/'><i class='fa-solid fa-house'/></a>
-          <a class='nav-link' href='https://meowscan7.blogspot.com/p/generos.html?m=1'><i class='fa-solid fa-list'/></a>
-          <a class='nav-link' href='https://meowscan7.blogspot.com/p/biblioteca_02070148545.html?m=1'><i class='fa-solid fa-bookmark'/></a>
-          <a class='nav-link' href='#' onclick='toggleNotificacoes(event)'><i class='fa-solid fa-bell'/><span class='badge-count' id='badge-notif' style='display:none;'>0</span></a>
-          <a class='nav-link' href='https://meowscan7.blogspot.com/p/meow-scan-hospedagem-body-font-family.html?m=1'><i class='fa-solid fa-handshake'/></a>
-          <a class='nav-link' href='https://meowscan7.blogspot.com/p/perfil.html?m=1'><i class='fa-solid fa-user'/></a>
+      <nav class="bottom-nav" id="mobile-bottom-nav">
+          <a class="nav-link active" href="index.html"><i class="fa-solid fa-house"></i></a>
+          <a class="nav-link" href="generos.html"><i class="fa-solid fa-list"></i></a>
+          <a class="nav-link" href="biblioteca.html"><i class="fa-solid fa-bookmark"></i></a>
+          <a class="nav-link" href="#" onclick="window.toggleNotificacoes(event)"><i class="fa-solid fa-bell"></i><span class="badge-count" id="badge-notif" style="display:none;">0</span></a>
+          <a class="nav-link" href="parcerias.html"><i class="fa-solid fa-handshake"></i></a>
+          <a class="nav-link" href="perfil.html"><i class="fa-solid fa-user"></i></a>
       </nav>
   </div>
 
-  <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js'/>
-  <script src='https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js'/>
+  <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+      import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+      
+      const firebaseConfig = {
+        apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
+        authDomain: "meow-scan-ffff0.firebaseapp.com",
+        databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com",
+        projectId: "meow-scan-ffff0",
+        storageBucket: "meow-scan-ffff0.firebasestorage.app",
+        messagingSenderId: "76129834936",
+        appId: "1:76129834936:web:36df84ea0fb31ecc69e14d",
+        measurementId: "G-8VRH28ZBTF"
+      };
 
- <script type='text/javascript'>
-  //<![CDATA[
-      function toggleNotificacoes(e) {
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      // Links locais do Github Pages
+      const URL_BASE = "./obra.html?obra=";
+      const URL_LEITURA = "./Capitulo.html?obra=";
+
+      // Buscar Notificações Reais do Firebase Modular
+      const notificacoesRef = ref(db, 'notificacoes_reais');
+      onValue(notificacoesRef, (snapshot) => {
+          const badge = document.getElementById('badge-notif');
+          const listaNotif = document.getElementById('lista-notificacoes');
+          
+          if (snapshot.exists() && snapshot.hasChildren()) {
+              const total = snapshot.size;
+              badge.style.display = 'flex';
+              badge.innerText = total;
+              listaNotif.innerHTML = '<p style="color: var(--accent-color); text-align: center; font-size: 0.9rem;">Você tem ' + total + ' novas atualizações!</p>';
+          } else {
+              badge.style.display = 'none';
+              listaNotif.innerHTML = '<p style="color: var(--text-dim); text-align: center; font-size: 0.9rem;">Tudo lido por enquanto!</p>';
+          }
+      });
+
+      // Exportando funções do escopo modular para o escopo global do HTML
+      window.toggleNotificacoes = function(e) {
           e.preventDefault();
-          var panel = document.getElementById('notificacoes-panel');
+          const panel = document.getElementById('notificacoes-panel');
           if(panel) panel.classList.toggle('active');
-      }
+      };
 
-      // LÓGICA DE SCROLL
-      var lastScrollTop = 0;
+      window.abrirPesquisa = function() {
+          const overlay = document.getElementById('search-overlay');
+          if(overlay) overlay.classList.add('active');
+      };
+      
+      window.fecharPesquisa = function() {
+          const overlay = document.getElementById('search-overlay');
+          if(overlay) overlay.classList.remove('active');
+      };
+
+      // Lógica de Scroll (Movida para dentro do módulo e mantida)
+      let lastScrollTop = 0;
       window.addEventListener('scroll', function() {
-          if (esconderMenuSempre) return;
+          if (window.esconderMenuSempre) return;
 
-          var st = window.pageYOffset || document.documentElement.scrollTop;
-          var header = document.getElementById('main-header');
-          var bottomNav = document.getElementById('mobile-bottom-nav');
-          var panelNotif = document.getElementById('notificacoes-panel');
+          let st = window.pageYOffset || document.documentElement.scrollTop;
+          const header = document.getElementById('main-header');
+          const bottomNav = document.getElementById('mobile-bottom-nav');
+          const panelNotif = document.getElementById('notificacoes-panel');
           
           if(header) {
               if (st > 20) { header.classList.add('scrolled'); } 
@@ -436,42 +445,6 @@
           }
           lastScrollTop = st <= 0 ? 0 : st;
       });
-
-      // INTEGRAÇÃO COM FIREBASE
-      var firebaseConfig = { apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo", databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com", projectId: "meow-scan-ffff0" };
-      if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-      var db = firebase.database();
-      
-      var URL_BASE = "https://meowscan7.blogspot.com/p/obra.html?obra=";
-      var URL_LEITURA = "https://meowscan7.blogspot.com/p/lersuasobrasaquinameowscan.html?obra=";
-
-      // Buscar Notificações Reais do Firebase (Badge só aparece se houver dados reais)
-      db.ref('notificacoes_reais').on('value', function(snapshot) {
-          var badge = document.getElementById('badge-notif');
-          var listaNotif = document.getElementById('lista-notificacoes');
-          
-          if (snapshot.exists() && snapshot.hasChildren()) {
-              var total = snapshot.numChildren();
-              badge.style.display = 'flex';
-              badge.innerText = total;
-              listaNotif.innerHTML = '<p style="color: var(--accent-color); text-align: center; font-size: 0.9rem;">Você tem ' + total + ' novas atualizações!</p>';
-          } else {
-              badge.style.display = 'none';
-              listaNotif.innerHTML = '<p style="color: var(--text-dim); text-align: center; font-size: 0.9rem;">Tudo lido por enquanto!</p>';
-          }
-      });
-
-      // Funções do Menu de Pesquisa
-      function abrirPesquisa() {
-          var overlay = document.getElementById('search-overlay');
-          if(overlay) overlay.classList.add('active');
-      }
-      
-      function fecharPesquisa() {
-          var overlay = document.getElementById('search-overlay');
-          if(overlay) overlay.classList.remove('active');
-      }
-  //]]>
   </script>
 </body>
 </html>
