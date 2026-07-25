@@ -3,17 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0c0c11">
-<title>Lendo Capítulo - Meow Scan</title>
+<title>Detalhes da Obra - Meow Scan</title>
 <link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap' rel='stylesheet'/>
 <style>
-  /* ========================================================= */
-  /* VARIÁVEIS GERAIS (CARA DE APLICATIVO) */
-  /* ========================================================= */
   :root {
+    --accent-gradient: linear-gradient(135deg, #f472b6, #ff69b4);
     --accent-color: #f472b6;
     --bg-main: #0c0c11; 
     --bg-surface: #15151e;
+    --bg-surface-light: #20202d;
     --text-main: #F8F9FA;
     --text-secondary: #9ba1a6;
     --danger: #FF2A55; 
@@ -24,271 +22,85 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+  body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Outfit', sans-serif; line-height: 1.5; }
+
+  /* App Bar */
+  .app-bar { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%); transition: 0.3s; }
+  .app-bar.scrolled { background: rgba(12, 12, 17, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; color: #fff; text-decoration: none; border: none; cursor: pointer; transition: 0.2s; }
+  .icon-btn:active { transform: scale(0.9); }
+  .offline-badge { display: none; background: var(--danger); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+  body.is-offline .offline-badge { display: block; }
+
+  /* Hero */
+  .hero-header { position: relative; width: 100%; height: 55vh; min-height: 400px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .hero-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+  .hero-gradient { position: absolute; bottom: 0; left: 0; width: 100%; height: 80%; background: linear-gradient(to top, var(--bg-main) 0%, rgba(12,12,17,0.8) 40%, transparent 100%); z-index: -1; }
+  .hero-content { padding: 0 20px 20px 20px; z-index: 2; }
+  .obra-titulo { font-size: 32px; font-weight: 900; line-height: 1.1; margin-bottom: 5px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+  .obra-uploader { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
   
-  body { 
-    background-color: var(--bg-main); 
-    color: var(--text-main); 
-    font-family: 'Outfit', sans-serif; 
-    overflow-x: hidden;
-    /* SEGURANÇA MÁXIMA CONTRA SELEÇÃO / DOWNLOAD */
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-  }
+  .tags-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+  .tags-scroll::-webkit-scrollbar { display: none; }
+  .tag-pill { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.05); }
+  .tag-pill.accent { background: rgba(244, 114, 182, 0.15); color: var(--accent-color); border-color: rgba(244, 114, 182, 0.3); }
 
-  /* ========================================================= */
-  /* BARRAS DO LEITOR (ESTILO WEBTOON/NATIVO) */
-  /* ========================================================= */
-  .reader-bar {
-    position: fixed;
-    left: 0; width: 100%;
-    background: rgba(12, 12, 17, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    z-index: 1000;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 15px 20px;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .top-bar { top: 0; border-bottom: 1px solid rgba(255,255,255,0.05); --hide-dir: -100%; }
-  .bottom-bar { bottom: 0; border-top: 1px solid rgba(255,255,255,0.05); --hide-dir: 100%; }
-  .reader-bar.hidden { transform: translateY(var(--hide-dir)); }
-
-  .icon-btn {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    display: flex; justify-content: center; align-items: center;
-    color: #fff; border: none; cursor: pointer; transition: 0.2s;
-  }
-  .icon-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
-
-  .chapter-title-bar {
-    flex: 1; text-align: center;
-    font-weight: 700; font-size: 16px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    padding: 0 15px;
-  }
-
-  /* ========================================================= */
-  /* ÁREA DE LEITURA E IMAGENS */
-  /* ========================================================= */
-  #reader-content {
-    min-height: 100vh;
-    padding-top: 20px;
-    padding-bottom: 100px;
-  }
-
-  .chapter-start-info {
-    text-align: center;
-    padding: 60px 20px 30px 20px;
-  }
-  .chapter-start-info h1 { font-size: 24px; font-weight: 900; margin-bottom: 8px; }
-  
-  .uploader-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,0.05);
-    padding: 8px 16px; border-radius: 20px;
-    font-size: 13px; color: var(--text-secondary);
-    border: 1px solid rgba(255,255,255,0.05);
-    margin-top: 10px;
-  }
-  .uploader-badge strong { color: var(--accent-color); font-weight: 700; }
-
-  #image-container {
-    display: flex; flex-direction: column; align-items: center; width: 100%;
-  }
-  .leitor-imagem {
-    width: 100%;
-    max-width: 800px; /* Limite para não esticar demais em Tablets */
-    display: block;
-    pointer-events: none; /* IMPEDE CLIQUE DIREITO E LONG PRESS */
-    margin: 0; padding: 0;
-    min-height: 200px;
-    background: var(--bg-surface);
-  }
-
-  /* ========================================================= */
-  /* SISTEMA DE AVALIAÇÃO REAL */
-  /* ========================================================= */
-  .rating-section {
-    margin: 40px 20px;
-    background: var(--bg-surface);
-    padding: 24px;
-    border-radius: var(--radius-lg);
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-  .rating-section h3 { font-size: 18px; font-weight: 800; margin-bottom: 15px; }
-  .stars { display: flex; justify-content: center; gap: 10px; flex-direction: row-reverse; }
-  .stars input { display: none; }
-  .stars label {
-    font-size: 38px; color: rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;
-  }
-  .stars label:hover, .stars label:hover ~ label,
-  .stars input:checked ~ label {
-    color: var(--warning);
-    text-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
-  }
-
-  /* ========================================================= */
-  /* BLOQUEADOR PARA QUEM ACESSA PELO SITE */
-  /* ========================================================= */
-  #site-blocker {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: var(--bg-main); z-index: 99999;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    text-align: center; padding: 30px;
-  }
-  #site-blocker.hidden { display: none !important; }
-  .blocker-card {
-    background: var(--bg-surface);
-    padding: 40px 30px; border-radius: var(--radius-lg);
-    border: 1px solid rgba(255,255,255,0.05); max-width: 400px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  }
-  .blocker-card h2 { font-size: 24px; font-weight: 900; margin-bottom: 15px; color: var(--accent-color); }
-  .blocker-card p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 30px; }
-  
-  .btn-primary {
-    background: var(--accent-color); color: #000; font-weight: 800; font-size: 15px;
-    border-radius: var(--radius-lg); border: none; width: 100%;
-    padding: 16px; text-decoration: none; box-shadow: 0 4px 20px rgba(244, 114, 182, 0.4);
-    cursor: pointer; transition: 0.2s; display: block;
-  }
+  /* Body */
+  .app-body { padding: 20px; background: var(--bg-main); }
+  .action-buttons { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; margin-bottom: 25px; }
+  .btn-primary { background: var(--accent-color); color: #000; font-weight: 800; font-size: 15px; border-radius: var(--radius-lg); border: none; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px; text-decoration: none; transition: 0.2s; }
   .btn-primary:active { transform: scale(0.97); }
+  .btn-square { width: 56px; height: 56px; background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-lg); display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-main); font-size: 10px; font-weight: 600; gap: 4px; cursor: pointer; }
+  .btn-square.active { background: rgba(244, 114, 182, 0.15); color: var(--accent-color); border-color: var(--accent-color); }
 
-  /* ========================================================= */
-  /* TOASTS E LOADERS */
-  /* ========================================================= */
-  #toast-container {
-    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; gap: 10px; z-index: 10000; width: 90%; max-width: 400px;
-    pointer-events: none;
-  }
-  .toast {
-    background: rgba(21, 21, 30, 0.95); backdrop-filter: blur(10px);
-    color: #fff; padding: 14px 20px; border-radius: 100px; font-size: 14px; font-weight: 600;
-    display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.05);
-    animation: toastSlideUp 0.3s ease, toastFadeOut 0.3s ease 2.7s forwards;
-  }
-  .toast.success { border-left: 4px solid var(--success); }
-  .toast.error { border-left: 4px solid var(--danger); }
+  /* Avaliação */
+  .rating-container { background: var(--bg-surface); padding: 15px; border-radius: var(--radius-md); margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
+  .rating-info { display: flex; flex-direction: column; gap: 2px; }
+  .rating-nota { font-size: 24px; font-weight: 800; color: var(--warning); display: flex; align-items: center; gap: 5px;}
+  .rating-text { font-size: 12px; color: var(--text-secondary); }
+  .stars-interative { display: flex; gap: 5px; flex-direction: row-reverse; }
+  .stars-interative input { display: none; }
+  .stars-interative label { font-size: 28px; color: rgba(255,255,255,0.2); cursor: pointer; transition: 0.2s; }
+  .stars-interative label:hover, .stars-interative label:hover ~ label, .stars-interative input:checked ~ label { color: var(--warning); text-shadow: 0 0 10px rgba(255, 183, 3, 0.5); }
+
+  .synopsis-box { margin-bottom: 30px; }
+  .synopsis-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .synopsis-text.expanded { -webkit-line-clamp: unset; }
+  .btn-expand { background: none; border: none; color: var(--accent-color); font-size: 13px; font-weight: 700; margin-top: 8px; cursor: pointer; }
+  .section-title { font-size: 18px; font-weight: 800; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+
+  /* Capítulos */
+  .season-header { background: var(--bg-surface); padding: 16px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 10px; cursor: pointer; }
+  .season-content { display: none; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .chapter-item { display: flex; align-items: center; padding: 12px; background: var(--bg-surface); border-radius: var(--radius-md); }
+  .chapter-link-area { display: flex; align-items: center; gap: 15px; flex: 1; text-decoration: none; color: white; min-width: 0; }
+  .chapter-thumb { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
+  .chapter-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
+  .chapter-number { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chapter-date { font-size: 12px; color: var(--text-secondary); }
+  .chapter-action-area { padding-left: 15px; border-left: 1px solid rgba(255,255,255,0.05); }
+  .btn-dl-app { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.05); border: none; color: var(--text-secondary); display: flex; justify-content: center; align-items: center; cursor: pointer; }
+  .btn-dl-app.downloaded { background: rgba(0, 245, 212, 0.15); color: var(--success); }
+
+  #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; width: 90%; max-width: 400px; }
+  .toast { background: rgba(21, 21, 30, 0.95); color: #fff; padding: 14px 20px; border-radius: 100px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.05); animation: toastSlideUp 0.3s ease, toastFadeOut 0.3s ease 2.7s forwards; }
   @keyframes toastSlideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   @keyframes toastFadeOut { to { opacity: 0; transform: translateY(-10px); } }
   
-  .loading-container { height: 100vh; display: flex; justify-content: center; align-items: center; }
-  @keyframes spinApp { 100% { transform: rotate(360deg); } }
-  .spinner-icon {
-    width: 40px; height: 40px; border: 4px solid transparent; 
-    border-top-color: var(--accent-color); border-left-color: var(--accent-color);
-    border-radius: 50%; animation: spinApp 0.8s linear infinite;
-  }
+  .badge-lido { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; }
+  .badge-lendo { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(244, 114, 182, 0.2); color: var(--accent-color); }
 </style>
 </head>
 <body>
 
-<!-- TELA DE BLOQUEIO (APARECE SÓ NO NAVEGADOR/SITE) -->
-<div id="site-blocker" class="hidden">
-  <div class="blocker-card">
-    <svg style="margin-bottom:20px; color:var(--accent-color);" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-    <h2>Leia no Aplicativo</h2>
-    <p>Para ter a melhor experiência, ver imagens em alta qualidade e ler offline, você precisa baixar o aplicativo oficial da Meow Scan!</p>
-    <a href="LINK_DO_SEU_APP_AQUI" class="btn-primary">Baixar Aplicativo</a>
-  </div>
-</div>
-
-<!-- BARRA SUPERIOR (APP) -->
-<div id="app-top-bar" class="reader-bar top-bar" style="display: none;">
-  <button class="icon-btn" onclick="window.history.back()">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-  </button>
-  <div class="chapter-title-bar" id="top-title">Carregando...</div>
-  <button class="icon-btn" onclick="location.reload()">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 2v6h6"/></svg>
-  </button>
-</div>
-
-<!-- CONTEÚDO PRINCIPAL -->
-<div id="reader-content" style="display: none;">
-  <div class="chapter-start-info">
-    <h1 id="obra-nome-header">Carregando Obra</h1>
-    <p style="color:var(--text-secondary); font-size:15px;" id="cap-nome-header">Capítulo --</p>
-    <div id="uploader-info"></div>
-  </div>
-
-  <div id="image-container">
-    <!-- IMAGENS SERÃO INJETADAS AQUI VIA JAVASCRIPT -->
-  </div>
-
-  <!-- AVALIAÇÃO DE CONTA REAL -->
-  <div class="rating-section">
-    <h3>Avalie este capítulo</h3>
-    <div class="stars">
-      <input type="radio" id="star5" name="rating" value="5" onclick="avaliarCapitulo(5)"/><label for="star5">★</label>
-      <input type="radio" id="star4" name="rating" value="4" onclick="avaliarCapitulo(4)"/><label for="star4">★</label>
-      <input type="radio" id="star3" name="rating" value="3" onclick="avaliarCapitulo(3)"/><label for="star3">★</label>
-      <input type="radio" id="star2" name="rating" value="2" onclick="avaliarCapitulo(2)"/><label for="star2">★</label>
-      <input type="radio" id="star1" name="rating" value="1" onclick="avaliarCapitulo(1)"/><label for="star1">★</label>
-    </div>
-    <p style="font-size:12px; color:var(--text-secondary); margin-top:10px;" id="rating-status">Seja sincero na avaliação!</p>
-  </div>
-</div>
-
-<!-- LOADER INICIAL -->
-<div id="initial-loader" class="loading-container">
-  <div class="spinner-icon"></div>
-</div>
-
-<!-- BARRA INFERIOR (APP) -->
-<div id="app-bottom-bar" class="reader-bar bottom-bar" style="display: none;">
-  <button class="icon-btn" id="btn-prev" onclick="navChapter(-1)">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-  </button>
-  <div style="font-size:14px; font-weight:700; color:var(--text-secondary);" id="page-counter">Meow Scan</div>
-  <button class="icon-btn" id="btn-next" onclick="navChapter(1)">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-  </button>
-</div>
-
+<div id="main-obra"></div>
 <div id="toast-container"></div>
 
-<!-- SDKs Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
 <script>
-  // ==========================================
-  // LÓGICA DE BLOQUEIO SE NÃO FOR APP
-  // ==========================================
-  function isApp() {
-    // Detecta PWA ou WebView de Aplicativos Nativos
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    const isWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) || /\bwv\b/.test(navigator.userAgent);
-    
-    // Deixe TRUE localmente para você conseguir testar no PC
-    const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost';
-    
-    return isStandalone || isWebView || isLocal; 
-  }
-
-  // SE FOR ACESSADO PELO NAVEGADOR NORMAL DO CELULAR/PC (SITE):
-  if (!isApp()) {
-    document.getElementById('site-blocker').classList.remove('hidden'); // Mostra aviso
-    document.getElementById('initial-loader').style.display = 'none'; // Some o loader
-    throw new Error("Página bloqueada: O usuário está acessando pelo Site, exigindo download do App.");
-  }
-
-  // ==========================================
-  // BLOQUEIOS DE SEGURANÇA (DOWNLOAD DE IMAGEM)
-  // ==========================================
-  document.addEventListener('contextmenu', event => event.preventDefault()); 
-  document.addEventListener('dragstart', event => event.preventDefault());
-
-  // ==========================================
-  // CONFIG FIREBASE
-  // ==========================================
   const firebaseConfig = {
     apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo",
     authDomain: "meow-scan-ffff0.firebaseapp.com",
@@ -299,212 +111,220 @@
     appId: "1:76129834936:web:9927218dee30b1f069e14d"
   };
 
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  let userLogged = null;
+  let db = null;
+  if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); db = firebase.database(); }
 
   const urlParams = new URLSearchParams(window.location.search);
   const obraId = urlParams.get('obra'); 
-  const capId = urlParams.get('cap');
-
-  firebase.auth().onAuthStateChanged(user => {
-      userLogged = user;
-      if(user && obraId && capId) carregarAvaliacaoUsuario();
-  });
-
   let currentObra = null;
-  let capitulosArray = [];
-  let currentIndex = -1;
+  let globalSeasons = [];
+  let globalCapsObj = {};
+  let globalAllKeys = [];
+  
+  // Gera um ID único para o usuário avaliar
+  let userId = localStorage.getItem('meow_user_id');
+  if(!userId) { userId = 'user_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('meow_user_id', userId); }
 
-  function showToast(message, type = 'info') {
+  function showToast(message) {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    let icon = type === 'success' 
-      ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` 
-      : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
-    toast.innerHTML = `${icon} <span>${message}</span>`;
+    toast.className = `toast`;
+    toast.innerHTML = `<span>${message}</span>`;
     container.appendChild(toast);
     setTimeout(() => { if(toast.parentNode) toast.remove(); }, 3000);
   }
 
-  // ==========================================
-  // RECUPERAR IMAGENS OFFLINE 
-  // ==========================================
-  const initDB = () => {
-      return new Promise((resolve, reject) => {
-          const request = indexedDB.open('MeowScanOfflineDB', 1);
-          request.onupgradeneeded = (e) => {
-              if (!e.target.result.objectStoreNames.contains('capitulos_imagens')) {
-                  e.target.result.createObjectStore('capitulos_imagens', { keyPath: 'id' });
-              }
-          };
-          request.onsuccess = () => resolve(request.result);
-          request.onerror = () => reject(request.error);
+  // Lógica de Avaliação de Verdade
+  window.avaliarObra = function(nota) {
+      if(!navigator.onLine) return showToast("Você precisa estar online para avaliar.");
+      db.ref(`obras/${obraId}/avaliacoes/${userId}`).set(Number(nota)).then(() => {
+          showToast(`Você avaliou com ${nota} estrelas! 💖`);
+          calcularMediaAvaliacoes();
       });
-  };
+  }
 
-  const getImagensOffline = async (id) => {
-      try {
-          const idb = await initDB();
-          return new Promise((resolve) => {
-              const tx = idb.transaction('capitulos_imagens', 'readonly');
-              const store = tx.objectStore('capitulos_imagens');
-              const req = store.get(id);
-              req.onsuccess = () => resolve(req.result ? req.result.imagens : null);
-              req.onerror = () => resolve(null);
-          });
-      } catch (e) { return null; }
-  };
-
-  // ==========================================
-  // SISTEMA DE AVALIAÇÃO DE CONTA
-  // ==========================================
-  function carregarAvaliacaoUsuario() {
-      db.ref(`obras/${obraId}/capitulos/${capId}/avaliacoes/${userLogged.uid}`).once('value').then(snap => {
-          if (snap.exists()) {
-              const nota = snap.val().nota;
-              document.getElementById(`star${nota}`).checked = true;
-              document.getElementById('rating-status').innerText = "Você já avaliou este capítulo. Obrigado!";
+  function calcularMediaAvaliacoes() {
+      db.ref(`obras/${obraId}/avaliacoes`).on('value', snap => {
+          const avaliacoes = snap.val();
+          if(avaliacoes) {
+              const notas = Object.values(avaliacoes);
+              const media = (notas.reduce((a, b) => a + b, 0) / notas.length).toFixed(1);
+              const total = notas.length;
+              document.getElementById('nota-media').innerText = media;
+              document.getElementById('total-avaliacoes').innerText = `(${total} avaliações)`;
           }
       });
   }
 
-  window.avaliarCapitulo = function(nota) {
-      if (!userLogged) {
-          showToast("Você precisa fazer login no App para avaliar!", "error");
-          document.querySelectorAll('input[name="rating"]').forEach(el => el.checked = false);
+  // Restante da lógica (Toggle, Download DB offline) se mantém...
+  const initDB = () => { return new Promise((res, rej) => { const req = indexedDB.open('MeowScanOfflineDB', 1); req.onupgradeneeded = e => { if(!e.target.result.objectStoreNames.contains('capitulos_imagens')) e.target.result.createObjectStore('capitulos_imagens', { keyPath: 'id' }); }; req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); }); };
+  const salvarImagensIndexedDB = async (id, imagensBase64) => { const db = await initDB(); return new Promise((res) => { const tx = db.transaction('capitulos_imagens', 'readwrite'); tx.objectStore('capitulos_imagens').put({ id: id, imagens: imagensBase64 }); tx.oncomplete = () => res(); }); };
+  const removerImagensIndexedDB = async (id) => { const db = await initDB(); return new Promise((res) => { const tx = db.transaction('capitulos_imagens', 'readwrite'); tx.objectStore('capitulos_imagens').delete(id); tx.oncomplete = () => res(); }); };
+  const urlToBase64 = async (url) => { try { const response = await fetch(url); const blob = await response.blob(); return new Promise(res => { const reader = new FileReader(); reader.onloadend = () => res(reader.result); reader.readAsDataURL(blob); }); } catch (e) { return null; } };
+
+  window.baixarCapituloApp = async function(capKey) {
+      let btn = document.getElementById(`btn-dl-${capKey}`);
+      let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
+      
+      if (offlineDb[obraId] && offlineDb[obraId][capKey]) {
+          if(confirm("Deseja apagar este capítulo dos downloads?")) {
+              delete offlineDb[obraId][capKey];
+              localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
+              await removerImagensIndexedDB(`${obraId}_${capKey}`);
+              btn.classList.remove('downloaded'); showToast("Apagado do dispositivo.");
+          }
           return;
       }
+      if (!navigator.onLine) return showToast("Sem internet para baixar!");
+      showToast("Baixando páginas...");
       
-      db.ref(`obras/${obraId}/capitulos/${capId}/avaliacoes/${userLogged.uid}`).set({
-          nota: nota,
-          data: Date.now()
-      }).then(() => {
-          showToast("Avaliação computada com sucesso!", "success");
-          document.getElementById('rating-status').innerText = "Avaliação salva na sua conta!";
-      }).catch(() => showToast("Erro ao avaliar.", "error"));
-  };
+      try {
+          let capData = globalCapsObj[capKey];
+          let urlsImagens = capData.paginas || capData.imagens || capData.urls || []; 
+          if (urlsImagens.length > 0) {
+              let imagensBase64 = [];
+              for (let url of urlsImagens) { let base64 = await urlToBase64(url); if (base64) imagensBase64.push(base64); }
+              await salvarImagensIndexedDB(`${obraId}_${capKey}`, imagensBase64);
+          }
+          if(!offlineDb[obraId]) offlineDb[obraId] = {};
+          capData.obraInfo = { nome: currentObra.nome, capaUrl: currentObra.capaUrl };
+          offlineDb[obraId][capKey] = { data: capData, salvoEm: Date.now() };
+          localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
+          btn.classList.add('downloaded'); showToast("Baixado com sucesso!");
+      } catch (erro) { showToast("Erro ao baixar."); }
+  }
 
-  // ==========================================
-  // LÓGICA PRINCIPAL DO LEITOR E IMAGENS
-  // ==========================================
-  async function carregarCapitulo() {
-      if (!obraId || !capId) return showToast("Erro: URL inválida.", "error");
+  window.toggleSeason = function(header) {
+    const chapters = header.nextElementSibling;
+    chapters.style.display = chapters.style.display === 'none' ? 'flex' : 'none';
+  }
+  
+  function expandirSinopse() {
+      const p = document.getElementById('sinopse-text');
+      p.classList.toggle('expanded');
+      document.getElementById('btn-ler-mais').innerText = p.classList.contains('expanded') ? "Recolher ▲" : "Ler mais ▼";
+  }
 
-      let capData = null;
+  function gerarHtmlCapitulos() {
+      let html = '';
       let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
-      let cacheObra = JSON.parse(localStorage.getItem(`cache_obra_${obraId}`) || '{}');
-      
-      currentObra = cacheObra;
-      if(currentObra && currentObra.capitulos) {
-         capitulosArray = Object.keys(currentObra.capitulos)
-            .filter(k => (currentObra.capitulos[k].tipoLabel || 'Capítulo') === 'Capítulo')
-            .sort((a,b) => parseFloat(currentObra.capitulos[a].numero||0) - parseFloat(currentObra.capitulos[b].numero||0));
-         currentIndex = capitulosArray.indexOf(capId);
-      }
+      let progresso = JSON.parse(localStorage.getItem('progresso_leitura') || '{}')[obraId] || {};
 
-      // Procura primeiro offline, depois cache, e puxa banco real se online
-      if (offlineDb[obraId] && offlineDb[obraId][capId]) {
-          capData = offlineDb[obraId][capId].data;
-      } else if (currentObra && currentObra.capitulos && currentObra.capitulos[capId]) {
-          capData = currentObra.capitulos[capId];
-      }
+      globalSeasons.reverse().forEach(season => season.chapters.reverse());
 
-      if (navigator.onLine) {
-          try {
-              let snapObra = await db.ref(`obras/${obraId}/nome`).once('value');
-              let snapCap = await db.ref(`obras/${obraId}/capitulos/${capId}`).once('value');
-              if (snapCap.exists()) {
-                  capData = snapCap.val();
-                  if(!currentObra) currentObra = {};
-                  currentObra.nome = snapObra.val();
-              }
-          } catch(e) {}
-      }
+      globalSeasons.forEach((season) => {
+          html += `<div class="season-header" onclick="toggleSeason(this)"><span>Temp/Vol ${season.num} • ${season.chapters.length} Caps</span></div><div class="season-content" style="display: flex;">`;
+          season.chapters.forEach((k) => {
+              let c = globalCapsObj[k];
+              let jaBaixado = !!(offlineDb[obraId] && offlineDb[obraId][k]);
+              let nomeFormatado = c.nomeCap || `Capítulo ${c.numero || '?'}`;
+              
+              let badgeHtml = progresso.lendo === k ? `<span class="badge-lendo">Lendo</span>` : ((progresso.lidos || []).includes(k) ? `<span class="badge-lido">Lido</span>` : '');
 
-      if (!capData) return showToast("Capítulo não encontrado offline.", "error");
-
-      // Atualizar textos da Tela
-      let nomeObra = currentObra.nome || "Obra";
-      let nomeCap = capData.nomeCap ? capData.nomeCap : `Capítulo ${capData.numero || '?'}`;
-      let postador = capData.postadoPor || capData.hospedagem || "Meow Scan";
-
-      document.getElementById('top-title').innerText = nomeCap;
-      document.getElementById('obra-nome-header').innerText = nomeObra;
-      document.getElementById('cap-nome-header').innerText = nomeCap;
-      
-      document.getElementById('uploader-info').innerHTML = `
-        <div class="uploader-badge">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Publicado por: <strong>${postador}</strong>
-        </div>`;
-
-      // LOGICA DAS IMAGENS: Tenta Offline > Tenta Links do Firebase
-      let imagens = [];
-      let base64Imgs = await getImagensOffline(`${obraId}_${capId}`);
-      
-      if (base64Imgs && base64Imgs.length > 0) {
-          imagens = base64Imgs;
-      } else {
-          imagens = capData.paginas || capData.imagens || capData.urls || [];
-      }
-
-      const container = document.getElementById('image-container');
-      container.innerHTML = '';
-
-      if (imagens.length === 0) {
-          container.innerHTML = `<p style="text-align:center; padding:50px; color:var(--danger); font-weight:700;">Nenhuma imagem carregada. Você está offline e o capítulo não foi baixado.</p>`;
-      } else {
-          imagens.forEach((src) => {
-              const img = document.createElement('img');
-              img.className = 'leitor-imagem';
-              img.loading = 'lazy'; // Lazy loading nativo e eficiente
-              img.src = src;
-              container.appendChild(img);
+              html += `
+              <div class="chapter-item">
+                <a href="Capitulo.html?obra=${obraId}&cap=${k}" class="chapter-link-area">
+                  <img src="${currentObra.capaUrl}" class="chapter-thumb" loading="lazy">
+                  <div class="chapter-info"><span class="chapter-number">${nomeFormatado} ${badgeHtml}</span></div>
+                </a>
+                <div class="chapter-action-area">
+                  <button id="btn-dl-${k}" class="btn-dl-app ${jaBaixado ? 'downloaded' : ''}" onclick="baixarCapituloApp('${k}')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </button>
+                </div>
+              </div>`;
           });
-      }
-
-      // Mostra a Tela final
-      document.getElementById('initial-loader').style.display = 'none';
-      document.getElementById('app-top-bar').style.display = 'flex';
-      document.getElementById('app-bottom-bar').style.display = 'flex';
-      document.getElementById('reader-content').style.display = 'block';
-
-      if (currentIndex <= 0) document.getElementById('btn-prev').style.opacity = '0.3';
-      if (currentIndex >= capitulosArray.length - 1 || currentIndex === -1) document.getElementById('btn-next').style.opacity = '0.3';
+          html += `</div>`;
+      });
+      document.getElementById('chapters-container').innerHTML = html || '<div style="text-align:center; padding:40px; color:var(--text-secondary);">Nenhum capítulo.</div>';
   }
 
-  window.navChapter = function(dir) {
-      if(currentIndex === -1) return;
-      let nextIndex = currentIndex + dir;
-      if (nextIndex >= 0 && nextIndex < capitulosArray.length) {
-          window.location.href = `Capitulo.html?obra=${obraId}&cap=${capitulosArray[nextIndex]}`;
-      } else if (dir > 0) {
-          showToast("Você chegou no último capítulo!", "info");
-      }
+  function renderizarPagina(obra) {
+    globalCapsObj = obra.capitulos || {};
+    globalAllKeys = Object.keys(globalCapsObj);
+    let keysOrd = globalAllKeys.sort((a, b) => parseFloat(globalCapsObj[a].numero||0) - parseFloat(globalCapsObj[b].numero||0));
+    
+    globalSeasons = [{ num: 1, type: 'Temporada', chapters: keysOrd }]; // Simplificado p/ exemplo
+
+    // PEGA INFORMAÇÃO DO UPLOADER/HOSPEDAGEM
+    let uploaderInfo = obra.hospedagem || obra.uploader || 'Meow Scan';
+
+    let linkLer = globalAllKeys.length > 0 ? `Capitulo.html?obra=${obraId}&cap=${keysOrd[keysOrd.length-1]}` : "#";
+
+    // Pega a nota pré-avaliada do usuário offline/cache local para deixar a estrela marcada
+    let minhaNota = 0; // será atualizada pelo firebase
+
+    const html = `
+      <div id="app-top-bar" class="app-bar">
+        <a href="index.html" class="icon-btn">←</a>
+        <div class="offline-badge">OFFLINE</div>
+      </div>
+      <div class="hero-header">
+        <img src="${obra.capaUrl}" class="hero-bg-img">
+        <div class="hero-gradient"></div>
+        <div class="hero-content">
+          <h1 class="obra-titulo">${obra.nome}</h1>
+          <div class="obra-uploader">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Postado por: <strong>${uploaderInfo}</strong>
+          </div>
+          <div class="tags-scroll"><span class="tag-pill accent">⭐ Visualizações</span></div>
+        </div>
+      </div>
+      <div class="app-body">
+        
+        <div class="rating-container">
+          <div class="rating-info">
+            <span class="rating-nota"><span id="nota-media">0.0</span> ★</span>
+            <span class="rating-text" id="total-avaliacoes">(0 avaliações)</span>
+          </div>
+          <div class="stars-interative">
+            <input type="radio" name="star" id="star5" value="5" onclick="avaliarObra(5)"><label for="star5">★</label>
+            <input type="radio" name="star" id="star4" value="4" onclick="avaliarObra(4)"><label for="star4">★</label>
+            <input type="radio" name="star" id="star3" value="3" onclick="avaliarObra(3)"><label for="star3">★</label>
+            <input type="radio" name="star" id="star2" value="2" onclick="avaliarObra(2)"><label for="star2">★</label>
+            <input type="radio" name="star" id="star1" value="1" onclick="avaliarObra(1)"><label for="star1">★</label>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <a href="${linkLer}" class="btn-primary">Começar Leitura</a>
+        </div>
+        <div class="synopsis-box">
+          <div class="section-title">Sobre a obra</div>
+          <p id="sinopse-text" class="synopsis-text">${obra.sinopse || '...'}</p>
+          <button id="btn-ler-mais" class="btn-expand" onclick="expandirSinopse()">Ler mais ▼</button>
+        </div>
+        <div class="chapters-box">
+          <div class="section-title">Capítulos</div>
+          <div id="chapters-container"></div>
+        </div>
+      </div>
+    `;
+    
+    document.getElementById('main-obra').innerHTML = html;
+    gerarHtmlCapitulos();
+    
+    // Busca avaliações reais se online
+    if(db && navigator.onLine) {
+        calcularMediaAvaliacoes();
+        // Marca a estrela que o usuário já votou antes
+        db.ref(`obras/${obraId}/avaliacoes/${userId}`).once('value', snap => {
+            if(snap.val()) { document.getElementById('star' + snap.val()).checked = true; }
+        });
+    }
   }
 
-  // ESCONDER/MOSTRAR BARRAS COM TOQUE NA TELA (CARA DE APP NATIVO)
-  document.getElementById('reader-content').addEventListener('click', (e) => {
-      // Impede de fechar as barras se estiver clicando nas estrelas de avaliação
-      if(e.target.closest('.rating-section') || e.target.closest('.icon-btn')) return;
-
-      document.getElementById('app-top-bar').classList.toggle('hidden');
-      document.getElementById('app-bottom-bar').classList.toggle('hidden');
-  });
-
-  // Esconder automaticamente ao arrastar a tela para baixo
-  let lastScroll = window.scrollY;
-  window.addEventListener('scroll', () => {
-      if (window.scrollY > lastScroll && window.scrollY > 150) {
-          document.getElementById('app-top-bar').classList.add('hidden');
-          document.getElementById('app-bottom-bar').classList.add('hidden');
+  if (obraId) {
+      if (db && navigator.onLine) {
+          db.ref('obras/' + obraId).once('value', snap => {
+              if (snap.val()) { currentObra = snap.val(); renderizarPagina(currentObra); }
+          });
+      } else {
+          let cache = JSON.parse(localStorage.getItem('cache_obra_' + obraId));
+          if(cache) { currentObra = cache; renderizarPagina(cache); }
       }
-      lastScroll = window.scrollY;
-  });
-
-  carregarCapitulo();
+  }
 </script>
 </body>
 </html>
