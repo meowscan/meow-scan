@@ -25,6 +25,13 @@
   html, body { width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
   body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Outfit', sans-serif; -webkit-user-select: none; user-select: none; }
 
+  /* BARRAS OFFLINE */
+  #offline-banner {
+      display: none; background: var(--warning); color: #000; font-weight: 800;
+      text-align: center; padding: 12px; font-size: 14px; text-transform: uppercase;
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 9999; box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4);
+  }
+
   .icon-btn {
     width: 42px; height: 42px; border-radius: 50%;
     background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
@@ -83,13 +90,30 @@
   .badge-lido { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(0, 245, 212, 0.15); color: var(--success); }
   .badge-lendo { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(244, 114, 182, 0.2); color: var(--accent-color); }
   .badge-final { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(255, 42, 85, 0.2); color: var(--danger); font-weight: 900; }
+  .badge-offline { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(255, 183, 3, 0.2); color: var(--warning); font-weight: 900; }
 
   /* LEITOR */
   #view-leitor { display: none; background: #000; min-height: 100vh; position: absolute; top: 0; left: 0; width: 100%; z-index: 2000; }
   .reader-bar { position: fixed; top: 0; width: 100%; background: linear-gradient(rgba(0,0,0,0.9), transparent); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 2100; transition: 0.3s; }
   .reader-title { font-size: 15px; font-weight: 700; text-align: center; flex: 1; margin: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 1px 1px 5px #000; }
 
-  #leitor-imagens { display: flex; flex-direction: column; width: 100%; align-items: stretch; margin: 0; padding: 0; }
+  #leitor-conteudo { display: flex; flex-direction: column; width: 100%; align-items: stretch; margin: 0; padding: 0; min-height: 100vh;}
+  
+  /* ESTILOS PROFISSIONAIS PARA NOVELS */
+  .novel-reader {
+      padding: 80px 20px 100px 20px;
+      font-size: 18px;
+      line-height: 1.8;
+      color: #E2E8F0;
+      background: #0a0a0e;
+      text-align: justify;
+      user-select: text;
+      -webkit-user-select: text;
+  }
+  .novel-reader p { margin-bottom: 20px; }
+  .novel-reader h1, .novel-reader h2, .novel-reader h3 { color: var(--accent-color); margin-top: 30px; margin-bottom: 15px; font-weight: 800; }
+  .novel-reader strong { color: #fff; }
+
   .img-leitor {
       width: 100% !important; height: auto !important;
       display: block !important; margin: 0 !important; padding: 0 !important;
@@ -124,6 +148,7 @@
 </head>
 <body oncontextmenu="return false;">
 
+<div id="offline-banner">⚠️ Você está sem internet - Modo Offline Ativo</div>
 <div id="toast-container"></div>
 
 <div id="view-detalhes">
@@ -139,7 +164,7 @@
     <div style="width:36px;"></div> 
   </div>
 
-  <div id="leitor-imagens"></div>
+  <div id="leitor-conteudo"></div>
   <div id="loading-infinito" style="display:none; padding:40px; text-align:center;"><div class="spinner"></div></div>
 
   <div class="bottom-controls">
@@ -184,11 +209,26 @@
   let globalAllKeys = []; 
   
   let capAtualLendoId = null; 
-  let leitorInfinitoAtivo = false; // Desligado por padrão para evitar bugs
+  let leitorInfinitoAtivo = false; 
   let carregandoProximo = false;
 
   const iconDL = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
   const iconCheck = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
+  /* MONITORAMENTO DE REDE (SISTEMA OFFLINE) */
+  window.addEventListener('online', atualizarStatusRede);
+  window.addEventListener('offline', atualizarStatusRede);
+
+  function atualizarStatusRede() {
+      const banner = document.getElementById('offline-banner');
+      if (!navigator.onLine) {
+          banner.style.display = 'block';
+          if(!currentObra) inicializarAppOffline();
+      } else {
+          banner.style.display = 'none';
+          if(!currentObra && obraId) inicializarAppOnline();
+      }
+  }
 
   function showToast(msg) {
     const c = document.getElementById('toast-container');
@@ -229,11 +269,10 @@
     let progressoSalvo = JSON.parse(localStorage.getItem('progresso_leitura') || '{}')[obraId] || {};
     let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}')[obraId] || {};
 
-    // Agrupar Capítulos por Volume / Temporada Real
     let grupos = {};
     globalAllKeys.forEach((k) => {
         let c = globalCapsObj[k];
-        let numVol = c.volume || c.temporada || 1; // Pega o volume cadastrado no banco ou padrão 1
+        let numVol = c.volume || c.temporada || 1; 
         let nomeGrupo = `${nomeGrupoPadrao} ${numVol}`;
         if (!grupos[nomeGrupo]) grupos[nomeGrupo] = [];
         grupos[nomeGrupo].push(k);
@@ -249,14 +288,20 @@
             let nomeCap = c.nomeCap || `Capítulo ${c.numero || '?'}`;
             let badgeHtml = progressoSalvo[k] === 'lido' ? `<span class="badge-lido">Lido</span>` : (progressoSalvo[k] === 'lendo' ? `<span class="badge-lendo">Lendo</span>` : '');
             let badgeFinal = (k === globalAllKeys[0] && statusObra.includes('completo')) ? `<span class="badge-final">Último Cap</span>` : '';
-
+            
             let isB = !!offlineDb[k];
+            let badgeOffline = isB ? `<span class="badge-offline">Baixado</span>` : '';
+
+            // Bloquear acesso se estiver offline e não tiver baixado
+            let onclickAction = (!navigator.onLine && !isB) ? `showToast('Capítulo não baixado para leitura offline.')` : `abrirLeitor('${k}')`;
+            let opacity = (!navigator.onLine && !isB) ? '0.4' : '1';
+
             capsHtmlInterno += `
-            <div class="chapter-item item-busca-cap" data-nome="${nomeCap}">
-                <div class="chapter-link-area" onclick="abrirLeitor('${k}')">
+            <div class="chapter-item item-busca-cap" data-nome="${nomeCap}" style="opacity: ${opacity}">
+                <div class="chapter-link-area" onclick="${onclickAction}">
                     <img src="${obra.capaUrl}" class="chapter-thumb">
                     <div class="chapter-info">
-                        <span class="chapter-number">${nomeCap} ${badgeHtml} ${badgeFinal}</span>
+                        <span class="chapter-number">${nomeCap} ${badgeHtml} ${badgeFinal} ${badgeOffline}</span>
                         <span class="chapter-date">${new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR')}</span>
                     </div>
                 </div>
@@ -266,7 +311,6 @@
             </div>`;
         });
 
-        // O primeiro grupo abre aberto, os demais recolhidos para não poluir
         let displayStyle = gIndex === 0 ? 'flex' : 'none';
         htmlGrupos += `
         <div class="grupo-bloco">
@@ -320,20 +364,18 @@
     document.getElementById('view-detalhes').innerHTML = html;
   }
 
-  function extrairImagensHtml(urls) {
-      let htmlOut = "";
-      if (!urls) return "<p style='color:#fff; text-align:center; padding:50px;'>Capítulo sem imagens.</p>";
+  function extrairUrls(urls) {
+      let arrayLinks = [];
+      if (!urls) return arrayLinks;
       if (urls.includes('|||')) {
-           urls.split('|||').forEach(u => htmlOut += `<img src="${u}" class="img-leitor" loading="lazy">`);
+           arrayLinks = urls.split('|||');
       } else if (urls.toLowerCase().includes('<img')) {
             let temp = document.createElement('div'); temp.innerHTML = urls;
-            temp.querySelectorAll('img').forEach(img => {
-                img.className = 'img-leitor'; htmlOut += img.outerHTML;
-            });
+            temp.querySelectorAll('img').forEach(img => arrayLinks.push(img.src));
       } else {
-            urls.split('\n').forEach(u => { if(u.trim()) htmlOut += `<img src="${u.trim()}" class="img-leitor" loading="lazy">`; });
+            urls.split('\n').forEach(u => { if(u.trim()) arrayLinks.push(u.trim()); });
       }
-      return htmlOut;
+      return arrayLinks;
   }
 
   function abrirLeitor(capKey, manterScroll = false) {
@@ -343,19 +385,37 @@
     document.getElementById('view-detalhes').style.display = 'none';
     document.getElementById('view-leitor').style.display = 'block';
     
+    let leitorContainer = document.getElementById('leitor-conteudo');
     if(!manterScroll) {
         window.scrollTo(0, 0); 
-        document.getElementById('leitor-imagens').innerHTML = ""; 
+        leitorContainer.innerHTML = ""; 
     }
 
-    let cap = globalCapsObj[capKey];
+    // Pega o capítulo online ou do cache offline
+    let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
+    let cap = (!navigator.onLine && offlineDb[obraId] && offlineDb[obraId][capKey]) ? offlineDb[obraId][capKey].data : globalCapsObj[capKey];
+    
     document.getElementById('leitor-titulo').innerText = cap.nomeCap || `Capítulo ${cap.numero}`;
     
-    let imgHtml = extrairImagensHtml(cap.url || cap.imagens || "");
+    let renderHtml = "";
+    
+    // SISTEMA DE NOVEL: Verifica se é formato texto
+    if (cap.formato === 'novel_texto') {
+        renderHtml = `<div class="novel-reader">${cap.url}</div>`;
+    } 
+    // SISTEMA DE MANGÁ/MANHWA: Carrega Imagens
+    else {
+        let linksImagens = extrairUrls(cap.url || cap.imagens || "");
+        linksImagens.forEach(link => {
+            renderHtml += `<img src="${link}" class="img-leitor" loading="lazy">`;
+        });
+        if(linksImagens.length === 0) renderHtml = "<p style='color:#fff; text-align:center; padding:50px;'>Capítulo sem imagens.</p>";
+    }
+
     if(manterScroll) {
-        document.getElementById('leitor-imagens').innerHTML += `<div class="cap-divider">${cap.nomeCap || 'Capítulo ' + cap.numero}</div>` + imgHtml;
+        leitorContainer.innerHTML += `<div class="cap-divider">${cap.nomeCap || 'Capítulo ' + cap.numero}</div>` + renderHtml;
     } else {
-        document.getElementById('leitor-imagens').innerHTML = imgHtml;
+        leitorContainer.innerHTML = renderHtml;
     }
 
     salvarProgresso(capKey, 'lendo');
@@ -377,12 +437,18 @@
   function navegarCapLeitor(direcao) {
       if(!capAtualLendoId) return;
       let indexAtual = globalAllKeys.indexOf(capAtualLendoId);
-      // Array decrescente: prêmio -1, anterior +1
       let novoIndex = indexAtual - direcao;
       
+      let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}')[obraId] || {};
+      
       if (novoIndex >= 0 && novoIndex < globalAllKeys.length) {
+          let proxKey = globalAllKeys[novoIndex];
+          if (!navigator.onLine && !offlineDb[proxKey]) {
+              showToast("Este capítulo não foi baixado para leitura offline.");
+              return;
+          }
           salvarProgresso(capAtualLendoId, 'lido');
-          abrirLeitor(globalAllKeys[novoIndex]);
+          abrirLeitor(proxKey);
       } else {
           showToast(direcao > 0 ? "Você já está no último capítulo!" : "Este é o primeiro capítulo!");
       }
@@ -394,7 +460,14 @@
       let indexAtual = globalAllKeys.indexOf(capAtualLendoId);
       let proxCapKey = globalAllKeys[indexAtual - 1]; 
       
+      let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}')[obraId] || {};
+
       if (proxCapKey) {
+          if (!navigator.onLine && !offlineDb[proxCapKey]) {
+              showToast("Próximo capítulo não baixado. Leitura contínua pausada.");
+              return;
+          }
+
           carregandoProximo = true;
           document.getElementById('loading-infinito').style.display = 'block';
           
@@ -414,7 +487,6 @@
           let rbar = document.getElementById('r-bar');
           rbar.style.transform = window.scrollY > 150 ? 'translateY(-100%)' : 'translateY(0)';
           
-          // Marca LIDO apenas se chegar nos últimos 95% da página real
           let scrollBottom = window.innerHeight + window.scrollY;
           let pageHeight = document.body.offsetHeight;
           
@@ -434,7 +506,6 @@
   function salvarProgresso(key, status) {
       let p = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
       if (!p[obraId]) p[obraId] = {};
-      // Se já tá lido, não sobrescreve pra 'lendo' por engano
       if (p[obraId][key] === 'lido' && status === 'lendo') return;
       p[obraId][key] = status;
       localStorage.setItem('progresso_leitura', JSON.stringify(p));
@@ -469,27 +540,78 @@
   }
 
   function baixarCapApp(capKey, btnElement) {
+    if (!navigator.onLine) {
+        showToast("Você precisa de internet para baixar um capítulo.");
+        return;
+    }
+    
     event.stopPropagation(); 
     let dbO = JSON.parse(localStorage.getItem('meow_offline') || '{}');
+    if (!dbO[obraId]) dbO[obraId] = {};
     
-    if (dbO[obraId] && dbO[obraId][capKey]) {
+    if (dbO[obraId][capKey]) {
         delete dbO[obraId][capKey];
         localStorage.setItem('meow_offline', JSON.stringify(dbO));
-        btnElement.innerHTML = iconDL; showToast("Apagado."); return;
+        btnElement.innerHTML = iconDL; showToast("Apagado do dispositivo."); 
+        renderizarDetalhes(currentObra);
+        return;
     }
+    
     btnElement.innerHTML = `<div class="spinner" style="width:18px; height:18px; border-width:2px;"></div>`;
+    
+    let capData = globalCapsObj[capKey];
+    
+    // SISTEMA REAL DE CACHE DE IMAGENS
+    if (capData.formato !== 'novel_texto') {
+        let urls = extrairUrls(capData.url);
+        urls.forEach(u => {
+            let img = new Image();
+            img.src = u; // Isso força o navegador a salvar a imagem no cache invisível
+        });
+    }
+
     setTimeout(() => {
-        if(!dbO[obraId]) dbO[obraId] = {};
-        dbO[obraId][capKey] = { salvoEm: Date.now() };
+        dbO[obraId][capKey] = { salvoEm: Date.now(), data: capData };
         localStorage.setItem('meow_offline', JSON.stringify(dbO));
-        btnElement.innerHTML = iconCheck; showToast("Baixado com sucesso!");
-    }, 1000);
+        btnElement.innerHTML = iconCheck; 
+        showToast("Baixado para leitura Offline!");
+        renderizarDetalhes(currentObra);
+    }, 1500);
   }
 
+  /* INICIALIZAÇÃO DEPENDENDO DA INTERNET */
+  function inicializarAppOnline() {
+      db.ref('obras/' + obraId).on('value', snap => {
+        if (snap.exists()) {
+            let obra = snap.val();
+            // Salva a Obra no Cache Central para acesso offline
+            let cacheObras = JSON.parse(localStorage.getItem('meow_cache_obras') || '{}');
+            cacheObras[obraId] = obra;
+            localStorage.setItem('meow_cache_obras', JSON.stringify(cacheObras));
+            
+            renderizarDetalhes(obra);
+        }
+      });
+  }
+
+  function inicializarAppOffline() {
+      let cacheObras = JSON.parse(localStorage.getItem('meow_cache_obras') || '{}');
+      if (cacheObras[obraId]) {
+          showToast("Obra carregada do Cache Local (Offline)");
+          renderizarDetalhes(cacheObras[obraId]);
+      } else {
+          document.getElementById('view-detalhes').innerHTML = `<h2 style='text-align:center; padding:50px; color:var(--text-main); margin-top:50px;'>Você está offline e esta obra ainda não foi aberta nenhuma vez para ser salva no cache.</h2>`;
+      }
+  }
+
+  // Executa ao abrir a página
   if (obraId) {
-    db.ref('obras/' + obraId).on('value', snap => {
-      if (snap.exists()) renderizarDetalhes(snap.val());
-    });
+      if (navigator.onLine) {
+          inicializarAppOnline();
+      } else {
+          document.getElementById('offline-banner').style.display = 'block';
+          inicializarAppOffline();
+      }
   }
 </script>
 </body>
