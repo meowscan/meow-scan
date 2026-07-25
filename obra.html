@@ -141,6 +141,12 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* ANIMAÇÃO DE GIRAR DO BOTÃO DE DOWNLOAD */
+  @keyframes girarMeow { 
+    0% { transform: rotate(0deg); } 
+    100% { transform: rotate(360deg); } 
+  }
+
   .premium-glass {
     background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
     border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
@@ -600,26 +606,115 @@
       btn.style.display = 'none';
   }
 
-  window.baixarCapitulo = function(event, capKey, capNome) {
+  // ==========================================
+  // BANCO DE DADOS OFFLINE (INDEXED DB)
+  // ==========================================
+  const initDB = () => {
+      return new Promise((resolve, reject) => {
+          const request = indexedDB.open('MeowScanOfflineDB', 1);
+          request.onupgradeneeded = (e) => {
+              const db = e.target.result;
+              if (!db.objectStoreNames.contains('capitulos_imagens')) {
+                  db.createObjectStore('capitulos_imagens', { keyPath: 'id' });
+              }
+          };
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+      });
+  };
+
+  const salvarImagensIndexedDB = async (id, imagensBase64) => {
+      const db = await initDB();
+      return new Promise((resolve, reject) => {
+          const tx = db.transaction('capitulos_imagens', 'readwrite');
+          const store = tx.objectStore('capitulos_imagens');
+          store.put({ id: id, imagens: imagensBase64 });
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+      });
+  };
+
+  const urlToBase64 = async (url) => {
+      try {
+          const response = await fetch(url);
+          const blob = await response.blob();
+          return new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+          });
+      } catch (e) {
+          console.warn("Erro ao baixar imagem (CORS/Offline):", url);
+          return null;
+      }
+  };
+
+  // ==========================================
+  // NOVA LÓGICA DE DOWNLOAD (COR DINÂMICA)
+  // ==========================================
+  window.baixarCapitulo = async function(event, capKey, capNome) {
       event.preventDefault();
       event.stopPropagation();
       
-      let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
-      if(!offlineDb[obraId]) offlineDb[obraId] = {};
-      
-      offlineDb[obraId][capKey] = {
-          data: globalCapsObj[capKey],
-          salvoEm: Date.now()
-      };
-      localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
-      
-      alert(`✅ Download de "${capNome}" concluído com sucesso!\n\nAs páginas e imagens agora estão disponíveis para leitura offline com ou sem Wi-Fi.`);
-      
       let btn = event.currentTarget;
-      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado`;
-      btn.style.background = 'var(--success)';
-      btn.style.color = '#000';
-      btn.style.borderColor = 'var(--success)';
+      let textoOriginal = btn.innerHTML;
+      
+      // Salva as cores originais para não quebrar o layout se der erro
+      let corFundoOriginal = btn.style.background || getComputedStyle(btn).background;
+      let corTextoOriginal = btn.style.color || getComputedStyle(btn).color;
+      
+      // Visual de "Carregando": Usa 'currentColor' e transparência
+      btn.innerHTML = `<span style="display:inline-block; width:14px; height:14px; border:2px solid transparent; border-top-color: currentColor; border-radius:50%; animation: girarMeow 1s linear infinite; vertical-align: middle; margin-right: 5px;"></span> Baixando...`;
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '0.6'; 
+
+      try {
+          let capData = globalCapsObj[capKey];
+          // Adapte caso os links do seu banco tenham outro nome
+          let urlsImagens = capData.paginas || capData.imagens || capData.urls || []; 
+          
+          if (urlsImagens.length > 0) {
+              let imagensBase64 = [];
+              for (let url of urlsImagens) {
+                  let base64 = await urlToBase64(url);
+                  if (base64) imagensBase64.push(base64);
+              }
+              const uniqueID = `${obraId}_${capKey}`;
+              await salvarImagensIndexedDB(uniqueID, imagensBase64);
+          }
+
+          let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
+          if(!offlineDb[obraId]) offlineDb[obraId] = {};
+          
+          offlineDb[obraId][capKey] = {
+              data: capData,
+              salvoEm: Date.now(),
+              temImagensOffline: urlsImagens.length > 0
+          };
+          localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
+          
+          alert(`✅ Download de "${capNome}" concluído com sucesso!\n\nAs páginas agora estão disponíveis para leitura offline com ou sem Wi-Fi.`);
+          
+          // Visual de Sucesso
+          btn.innerHTML = `<svg style="vertical-align: middle; margin-right: 5px;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado`;
+          btn.style.opacity = '1';
+          btn.style.background = 'var(--success)';
+          btn.style.color = '#000'; // Mantido texto preto pois o fundo default de --success é ciano forte, facilitando a leitura
+          btn.style.borderColor = 'var(--success)';
+
+      } catch (erro) {
+          console.error(erro);
+          alert("Ocorreu um erro ao tentar baixar as imagens. Verifique sua conexão.");
+          
+          // Restaura o botão exatamente como era antes se der erro
+          btn.innerHTML = textoOriginal;
+          btn.style.background = corFundoOriginal;
+          btn.style.color = corTextoOriginal;
+          btn.style.opacity = '1';
+      } finally {
+          btn.style.pointerEvents = 'auto';
+      }
   }
 
   function gerarHtmlCapitulos(searchTerm = '') {
@@ -692,8 +787,8 @@
               
               let jaBaixado = !!offlineObra[k];
               let btnDownloadHtml = jaBaixado 
-                  ? `<button class="btn-download-cap" style="background:var(--success); color:#000; border-color:var(--success);" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Atualizar Download"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado</button>`
-                  : `<button class="btn-download-cap" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Baixar para ler offline"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar</button>`;
+                  ? `<button class="btn-download-cap" style="background:var(--success); color:#000; border-color:var(--success);" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Atualizar Download"><svg style="vertical-align:middle; margin-right:4px;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado</button>`
+                  : `<button class="btn-download-cap" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Baixar para ler offline"><svg style="vertical-align:middle; margin-right:4px;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar</button>`;
 
               html += `
               <div class="chapter-item-wrapper ${extraClass}" ${isHiddenStyle}>
@@ -755,8 +850,8 @@
                   
                   let jaBaixado = !!offlineObra[k];
                   let btnDownloadHtml = jaBaixado 
-                      ? `<button class="btn-download-cap" style="background:var(--success); color:#000; border-color:var(--success);" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Atualizar Download"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado</button>`
-                      : `<button class="btn-download-cap" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Baixar para ler offline"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar</button>`;
+                      ? `<button class="btn-download-cap" style="background:var(--success); color:#000; border-color:var(--success);" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Atualizar Download"><svg style="vertical-align:middle; margin-right:4px;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Baixado</button>`
+                      : `<button class="btn-download-cap" onclick="baixarCapitulo(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')" title="Baixar para ler offline"><svg style="vertical-align:middle; margin-right:4px;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar</button>`;
 
                   html += `
                   <div class="chapter-item-wrapper ${extraClass}" style="margin-bottom: 12px;" ${isHiddenStyle}>
@@ -877,7 +972,6 @@
         statusBadge = `<span class="status-andamento">Em Andamento</span>`;
     }
 
-    // Identificador dinâmico caso esteja rodando totalmente offline
     const isOffline = !db || !navigator.onLine;
     const offlineBadgeHtml = isOffline ? `<span class="badge-adulto" style="background: rgba(255, 0, 60, 0.15); color: var(--danger); border-color: var(--danger); animation: none;">🔌 MODO OFFLINE</span>` : '';
 
