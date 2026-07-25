@@ -6,14 +6,12 @@
 <title>Obra - Meow Scan</title>
 <link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap' rel='stylesheet'/>
 <style>
-  /* ========================================================= */
-  /* VARIÁVEIS GERAIS (CARA DE APLICATIVO) */
-  /* ========================================================= */
   :root {
     --accent-color: #f472b6;
     --accent-dark: #d946ef;
     --bg-main: #0c0c11; 
     --bg-surface: #15151e;
+    --bg-surface-light: #20202d;
     --text-main: #F8F9FA;
     --text-secondary: #9ba1a6;
     --danger: #FF2A55; 
@@ -25,17 +23,11 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
-  body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Outfit', sans-serif; }
+  body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Outfit', sans-serif; -webkit-user-select: none; user-select: none; }
 
-  /* Impede seleção de texto na página toda para evitar cópias */
-  body { -webkit-user-select: none; user-select: none; }
-
-  /* ========================================================= */
-  /* COMPONENTES GERAIS */
-  /* ========================================================= */
   .icon-btn {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
+    width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
     display: flex; justify-content: center; align-items: center;
     color: #fff; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;
   }
@@ -45,9 +37,7 @@
   .tags-scroll::-webkit-scrollbar { display: none; }
   .tag-pill { background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase;}
   
-  /* ========================================================= */
-  /* TELA DE DETALHES DA OBRA */
-  /* ========================================================= */
+  /* TELA DETALHES */
   .app-bar { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; z-index: 1000; background: linear-gradient(to bottom, rgba(12,12,17,0.9) 0%, transparent 100%); transition: 0.3s; }
   .app-bar.scrolled { background: rgba(12, 12, 17, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
 
@@ -61,7 +51,6 @@
 
   .app-body { padding: 20px; background: var(--bg-main); border-radius: 30px 30px 0 0; margin-top: -20px; position: relative; z-index: 3; }
   
-  /* Botão Lindo */
   .btn-primary { 
       width: 100%; background: linear-gradient(135deg, var(--accent-color), var(--accent-dark)); 
       color: #fff; font-weight: 800; font-size: 16px; border-radius: var(--radius-lg); border: none; 
@@ -72,56 +61,57 @@
 
   .synopsis-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .synopsis-text.expanded { -webkit-line-clamp: unset; }
-  .btn-expand { background: none; border: none; color: var(--accent-color); font-size: 13px; font-weight: 800; cursor: pointer; padding: 10px 0; display: block;}
+  .btn-expand { background: none; border: none; color: var(--accent-color); font-size: 13px; font-weight: 800; cursor: pointer; padding: 10px 0; display: block; margin-bottom: 20px;}
 
-  /* Search e Lista */
   .search-box { width: 100%; background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.05); padding: 14px 20px; border-radius: 100px; color: #fff; font-family: 'Outfit'; font-size: 14px; margin-bottom: 20px; outline: none; }
   .search-box:focus { border-color: var(--accent-color); }
 
-  .season-header { background: var(--bg-surface); padding: 16px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.02); }
-  .season-content { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; transition: 0.3s;}
+  /* GRUPOS DE VOLUMES / TEMPORADAS PROFISSIONAIS */
+  .grupo-bloco { background: var(--bg-surface); border-radius: var(--radius-lg); margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.03); overflow: hidden; }
+  .grupo-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 15px; cursor: pointer; background: rgba(255,255,255,0.02); }
+  .grupo-header:active { background: rgba(255,255,255,0.05); }
+  .grupo-lista { display: flex; flex-direction: column; padding: 5px 10px 10px 10px; gap: 4px; }
   
-  .chapter-item { display: flex; align-items: center; padding: 10px; background: transparent; border-radius: var(--radius-md); transition: 0.2s; }
+  .chapter-item { display: flex; align-items: center; padding: 10px; border-radius: var(--radius-md); transition: 0.2s; }
   .chapter-item:active { background: rgba(255,255,255,0.05); }
   .chapter-link-area { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
-  .chapter-thumb { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
+  .chapter-thumb { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
   .chapter-info { display: flex; flex-direction: column; gap: 2px; flex: 1; }
   .chapter-number { font-size: 14px; font-weight: 700; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-  .chapter-date { font-size: 12px; color: var(--text-secondary); font-weight: 500;}
+  .chapter-date { font-size: 11px; color: var(--text-secondary); font-weight: 500;}
 
-  /* Badges */
   .badge-lido { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(0, 245, 212, 0.15); color: var(--success); }
   .badge-lendo { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(244, 114, 182, 0.2); color: var(--accent-color); }
   .badge-final { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(255, 42, 85, 0.2); color: var(--danger); font-weight: 900; }
 
-  /* ========================================================= */
-  /* LEITOR PROFISSIONAL */
-  /* ========================================================= */
+  /* LEITOR */
   #view-leitor { display: none; background: #000; min-height: 100vh; position: absolute; top: 0; left: 0; width: 100%; z-index: 2000; }
-  
   .reader-bar { position: fixed; top: 0; width: 100%; background: linear-gradient(rgba(0,0,0,0.9), transparent); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 2100; transition: 0.3s; }
   .reader-title { font-size: 15px; font-weight: 700; text-align: center; flex: 1; margin: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 1px 1px 5px #000; }
-  
-  /* IMAGENS GRUDADAS E BLINDADAS */
+
   #leitor-imagens { display: flex; flex-direction: column; width: 100%; align-items: stretch; margin: 0; padding: 0; }
   .img-leitor {
       width: 100% !important; height: auto !important;
       display: block !important; margin: 0 !important; padding: 0 !important;
-      pointer-events: none; /* BLOQUEIA CLIQUE/DOWNLOAD/ZOOM NATIVO */
-      -webkit-user-drag: none; -webkit-touch-callout: none; object-fit: cover;
+      pointer-events: none; -webkit-user-drag: none; -webkit-touch-callout: none; object-fit: cover;
   }
   .cap-divider { padding: 40px 20px; text-align: center; background: #0c0c11; font-weight: 800; font-size: 18px; color: var(--accent-color); border-top: 1px solid #222; border-bottom: 1px solid #222;}
 
-  /* Botões Flutuantes Leitor */
-  .bottom-controls { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(20,20,25,0.95); backdrop-filter: blur(15px); padding: 12px 25px; border-radius: 100px; display: flex; align-items: center; gap: 20px; z-index: 2100; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9); }
-  .btn-reader-action { background: transparent; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 5px; transition: 0.2s;}
+  /* BARRA DE CONTROLES FLUTUANTE PREMIUM */
+  .bottom-controls { 
+      position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
+      background: rgba(20,20,25,0.92); backdrop-filter: blur(15px); 
+      padding: 10px 20px; border-radius: 100px; display: flex; align-items: center; gap: 18px; 
+      z-index: 2100; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
+  }
+  .btn-reader-action { background: transparent; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 6px; transition: 0.2s;}
   .btn-reader-action:active { color: var(--accent-color); transform: scale(0.9); }
+  .btn-reader-action.ativo { color: var(--accent-color); background: rgba(244, 114, 182, 0.15); border-radius: 50%; }
 
-  /* Lista de Caps Modal no Leitor */
+  /* MODAL LISTA DE CAPITULOS NO LEITOR */
   #modal-lista-caps { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; backdrop-filter: blur(5px); }
-  .modal-content { position: absolute; bottom: 0; width: 100%; max-height: 70vh; background: var(--bg-main); border-radius: 30px 30px 0 0; padding: 20px; overflow-y: auto; }
+  .modal-content { position: absolute; bottom: 0; width: 100%; max-height: 70vh; background: var(--bg-main); border-radius: 30px 30px 0 0; padding: 25px; overflow-y: auto; }
   
-  /* Toast */
   #toast-container { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
   .toast { background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 25px; border-radius: 100px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: toastFade 3s forwards; }
   @keyframes toastFade { 0% { opacity: 0; transform: translateY(20px); } 10%, 90% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
@@ -132,20 +122,14 @@
   @media (min-width: 768px) { #main-obra, #view-leitor { max-width: 600px; margin: 0 auto; position: relative; } }
 </style>
 </head>
-<body oncontextmenu="return false;"> <!-- TRAVA BOTÃO DIREITO -->
+<body oncontextmenu="return false;">
 
 <div id="toast-container"></div>
 
-<!-- ============================================== -->
-<!-- TELA 1: DETALHES -->
-<!-- ============================================== -->
 <div id="view-detalhes">
   <div style="height: 100vh; display: flex; align-items:center; justify-content:center;"><div class="spinner"></div></div>
 </div>
 
-<!-- ============================================== -->
-<!-- TELA 2: LEITOR -->
-<!-- ============================================== -->
 <div id="view-leitor">
   <div class="reader-bar" id="r-bar">
     <button class="icon-btn" style="width:36px; height:36px;" onclick="fecharLeitor()">
@@ -159,20 +143,23 @@
   <div id="loading-infinito" style="display:none; padding:40px; text-align:center;"><div class="spinner"></div></div>
 
   <div class="bottom-controls">
-    <button class="btn-reader-action" onclick="mudarZoom(-10)">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-    </button>
-    
-    <button class="btn-reader-action" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius:50%;" onclick="abrirListaReader()">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <button class="btn-reader-action" onclick="navegarCapLeitor(-1)" title="Capítulo Anterior">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="4" x2="5" y2="20"/></svg>
     </button>
 
-    <button class="btn-reader-action" onclick="mudarZoom(10)">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+    <button class="btn-reader-action" onclick="abrirListaReader()" title="Índice">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    </button>
+
+    <button class="btn-reader-action" id="btn-infinito-toggle" onclick="toggleLeitorInfinito()" title="Ativar/Desativar Leitura Contínua">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+    </button>
+
+    <button class="btn-reader-action" onclick="navegarCapLeitor(1)" title="Próximo Capítulo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="4" x2="19" y2="20"/></svg>
     </button>
   </div>
 
-  <!-- Modal Lista Capítulos Leitor -->
   <div id="modal-lista-caps" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
       <h3 style="margin-bottom:15px; font-weight:800;">Lista de Capítulos</h3>
@@ -196,12 +183,10 @@
   let globalCapsObj = {};
   let globalAllKeys = []; 
   
-  // Controle Leitor
   let capAtualLendoId = null; 
-  let currentZoom = 100;
+  let leitorInfinitoAtivo = false; // Desligado por padrão para evitar bugs
   let carregandoProximo = false;
 
-  // Icone Download Offline
   const iconDL = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
   const iconCheck = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
@@ -211,9 +196,6 @@
     c.appendChild(t); setTimeout(() => t.remove(), 3000);
   }
 
-  // ==========================================
-  // BUSCA / FILTRO DE CAPÍTULOS
-  // ==========================================
   function filtrarCaps(termo) {
       termo = termo.toLowerCase();
       document.querySelectorAll('.item-busca-cap').forEach(item => {
@@ -222,22 +204,16 @@
       });
   }
 
-  // ==========================================
-  // RENDERIZAR DETALHES
-  // ==========================================
   function renderizarDetalhes(obra) {
     currentObra = obra;
     globalCapsObj = obra.capitulos || {};
-    globalAllKeys = Object.keys(globalCapsObj).sort((a,b) => parseFloat(globalCapsObj[b].numero || 0) - parseFloat(globalCapsObj[a].numero || 0)); // Maior pro Menor
+    globalAllKeys = Object.keys(globalCapsObj).sort((a,b) => parseFloat(globalCapsObj[b].numero || 0) - parseFloat(globalCapsObj[a].numero || 0));
     
     let isNovel = (String(obra.tipo||'').toLowerCase() === 'novel');
-    let agrupadorTexto = isNovel ? 'Volume' : 'Temporada';
+    let nomeGrupoPadrao = isNovel ? 'Volume' : 'Temporada';
 
-    // Construir Selos (Tags)
     let tagsHtml = '';
     if(obra.tipo) tagsHtml += `<span class="tag-pill">📚 ${obra.tipo}</span>`;
-    
-    // Status e Selos Vermelhos
     let statusObra = obra.status ? obra.status.toLowerCase() : '';
     tagsHtml += statusObra.includes('completo') ? `<span class="tag-pill" style="color:var(--success); border-color:var(--success)">Completo</span>` : `<span class="tag-pill" style="color:var(--accent-color); border-color:var(--accent-color)">Em Andamento</span>`;
     
@@ -245,7 +221,6 @@
     if (obra.adulto || obra.classificacao === '+18') tagsHtml += `<span class="tag-pill" style="color:var(--danger); border-color:var(--danger)">🔞 +18</span>`;
     if (obra.sensivel) tagsHtml += `<span class="tag-pill" style="color:var(--warning); border-color:var(--warning)">⚠️ Sensível</span>`;
     
-    // Generos
     if (obra.generos) {
         obra.generos.split(',').forEach(g => { tagsHtml += `<span class="tag-pill">${g.trim()}</span>`; });
     }
@@ -254,47 +229,57 @@
     let progressoSalvo = JSON.parse(localStorage.getItem('progresso_leitura') || '{}')[obraId] || {};
     let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}')[obraId] || {};
 
-    let htmlCaps = '';
-    
-    globalAllKeys.forEach((k, index) => {
+    // Agrupar Capítulos por Volume / Temporada Real
+    let grupos = {};
+    globalAllKeys.forEach((k) => {
         let c = globalCapsObj[k];
-        let nomeCap = c.nomeCap || `Capítulo ${c.numero || '?'}`;
-        
-        let badgeHtml = progressoSalvo[k] === 'lido' ? `<span class="badge-lido">Lido</span>` : (progressoSalvo[k] === 'lendo' ? `<span class="badge-lendo">Lendo</span>` : '');
-        let badgeFinal = (index === 0 && statusObra.includes('completo')) ? `<span class="badge-final">Último Cap</span>` : '';
-
-        // Separador de Temporada/Volume
-        if (index === 0 || (c.encerramento && c.encerramento.toLowerCase().includes('fim'))) {
-            htmlCaps += `
-            <div class="season-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'flex' : 'none'">
-              <span>${agrupadorTexto} • Caps Abaixo</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-            </div>
-            <div class="season-content" style="display: flex;">`;
-        }
-
-        let isB = !!offlineDb[k];
-        htmlCaps += `
-        <div class="chapter-item item-busca-cap" data-nome="${nomeCap}">
-            <div class="chapter-link-area" onclick="abrirLeitor('${k}')">
-                <img src="${obra.capaUrl}" class="chapter-thumb">
-                <div class="chapter-info">
-                    <span class="chapter-number">${nomeCap} ${badgeHtml} ${badgeFinal}</span>
-                    <span class="chapter-date">${new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR')}</span>
-                </div>
-            </div>
-            <button class="icon-btn" style="width:34px; height:34px; background:transparent;" onclick="baixarCapApp('${k}', this)">
-                ${isB ? iconCheck : iconDL}
-            </button>
-        </div>`;
-
-        let prox = globalCapsObj[globalAllKeys[index+1]];
-        if (!prox || (c.encerramento && c.encerramento.toLowerCase().includes('fim'))) htmlCaps += `</div>`;
+        let numVol = c.volume || c.temporada || 1; // Pega o volume cadastrado no banco ou padrão 1
+        let nomeGrupo = `${nomeGrupoPadrao} ${numVol}`;
+        if (!grupos[nomeGrupo]) grupos[nomeGrupo] = [];
+        grupos[nomeGrupo].push(k);
     });
 
-    // Achar último lido
+    let htmlGrupos = '';
+    Object.keys(grupos).forEach((nomeGrupo, gIndex) => {
+        let keysDoGrupo = grupos[nomeGrupo];
+        let capsHtmlInterno = '';
+
+        keysDoGrupo.forEach((k, index) => {
+            let c = globalCapsObj[k];
+            let nomeCap = c.nomeCap || `Capítulo ${c.numero || '?'}`;
+            let badgeHtml = progressoSalvo[k] === 'lido' ? `<span class="badge-lido">Lido</span>` : (progressoSalvo[k] === 'lendo' ? `<span class="badge-lendo">Lendo</span>` : '');
+            let badgeFinal = (k === globalAllKeys[0] && statusObra.includes('completo')) ? `<span class="badge-final">Último Cap</span>` : '';
+
+            let isB = !!offlineDb[k];
+            capsHtmlInterno += `
+            <div class="chapter-item item-busca-cap" data-nome="${nomeCap}">
+                <div class="chapter-link-area" onclick="abrirLeitor('${k}')">
+                    <img src="${obra.capaUrl}" class="chapter-thumb">
+                    <div class="chapter-info">
+                        <span class="chapter-number">${nomeCap} ${badgeHtml} ${badgeFinal}</span>
+                        <span class="chapter-date">${new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                </div>
+                <button class="icon-btn" style="width:34px; height:34px; background:transparent;" onclick="baixarCapApp('${k}', this)">
+                    ${isB ? iconCheck : iconDL}
+                </button>
+            </div>`;
+        });
+
+        // O primeiro grupo abre aberto, os demais recolhidos para não poluir
+        let displayStyle = gIndex === 0 ? 'flex' : 'none';
+        htmlGrupos += `
+        <div class="grupo-bloco">
+            <div class="grupo-header" onclick="let l = this.nextElementSibling; l.style.display = l.style.display === 'none' ? 'flex' : 'none';">
+                <span>📂 ${nomeGrupo}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="grupo-lista" style="display: ${displayStyle};">${capsHtmlInterno}</div>
+        </div>`;
+    });
+
     let txtBotao = "Começar Leitura";
-    let capLerBotao = globalAllKeys[globalAllKeys.length - 1]; // Padrão: Cap 1
+    let capLerBotao = globalAllKeys[globalAllKeys.length - 1]; 
     for (let i = globalAllKeys.length - 1; i >= 0; i--) {
         if (progressoSalvo[globalAllKeys[i]] === 'lendo' || progressoSalvo[globalAllKeys[i]] === 'lido') {
             capLerBotao = globalAllKeys[i];
@@ -328,18 +313,16 @@
         <button class="btn-expand" onclick="document.getElementById('sinopse').classList.toggle('expanded')">Ler mais / menos</button>
 
         <input type="text" class="search-box" placeholder="Pesquisar capítulo..." oninput="filtrarCaps(this.value)">
-        <div id="lista-caps-container">${htmlCaps || '<p>Nenhum capítulo.</p>'}</div>
+        <div id="lista-caps-container">${htmlGrupos || '<p>Nenhum capítulo.</p>'}</div>
       </div>
     `;
     
     document.getElementById('view-detalhes').innerHTML = html;
   }
 
-  // ==========================================
-  // LEITOR E INFINITO (AUTO CARREGAR)
-  // ==========================================
   function extrairImagensHtml(urls) {
       let htmlOut = "";
+      if (!urls) return "<p style='color:#fff; text-align:center; padding:50px;'>Capítulo sem imagens.</p>";
       if (urls.includes('|||')) {
            urls.split('|||').forEach(u => htmlOut += `<img src="${u}" class="img-leitor" loading="lazy">`);
       } else if (urls.toLowerCase().includes('<img')) {
@@ -362,77 +345,97 @@
     
     if(!manterScroll) {
         window.scrollTo(0, 0); 
-        document.getElementById('leitor-imagens').innerHTML = ""; // Limpa tudo se for inicio novo
+        document.getElementById('leitor-imagens').innerHTML = ""; 
     }
 
     let cap = globalCapsObj[capKey];
     document.getElementById('leitor-titulo').innerText = cap.nomeCap || `Capítulo ${cap.numero}`;
     
-    // Adiciona o capítulo no container de imagens
     let imgHtml = extrairImagensHtml(cap.url || cap.imagens || "");
     if(manterScroll) {
-        // Se for infinito, bota divisor
         document.getElementById('leitor-imagens').innerHTML += `<div class="cap-divider">${cap.nomeCap || 'Capítulo ' + cap.numero}</div>` + imgHtml;
     } else {
         document.getElementById('leitor-imagens').innerHTML = imgHtml;
     }
 
-    // Salva Progresso inicial
     salvarProgresso(capKey, 'lendo');
     gerarListaModalLeitor();
   }
 
+  function toggleLeitorInfinito() {
+      leitorInfinitoAtivo = !leitorInfinitoAtivo;
+      let btn = document.getElementById('btn-infinito-toggle');
+      if (leitorInfinitoAtivo) {
+          btn.classList.add('ativo');
+          showToast("Leitura Contínua (Infinito) Ativada");
+      } else {
+          btn.classList.remove('ativo');
+          showToast("Leitura Contínua Desativada");
+      }
+  }
+
+  function navegarCapLeitor(direcao) {
+      if(!capAtualLendoId) return;
+      let indexAtual = globalAllKeys.indexOf(capAtualLendoId);
+      // Array decrescente: prêmio -1, anterior +1
+      let novoIndex = indexAtual - direcao;
+      
+      if (novoIndex >= 0 && novoIndex < globalAllKeys.length) {
+          salvarProgresso(capAtualLendoId, 'lido');
+          abrirLeitor(globalAllKeys[novoIndex]);
+      } else {
+          showToast(direcao > 0 ? "Você já está no último capítulo!" : "Este é o primeiro capítulo!");
+      }
+  }
+
   function carregarProximoInfinito() {
-      if(!capAtualLendoId || carregandoProximo) return;
+      if(!capAtualLendoId || carregandoProximo || !leitorInfinitoAtivo) return;
       
       let indexAtual = globalAllKeys.indexOf(capAtualLendoId);
-      let proxCapKey = globalAllKeys[indexAtual - 1]; // Array descrescente. O próx é -1
+      let proxCapKey = globalAllKeys[indexAtual - 1]; 
       
       if (proxCapKey) {
           carregandoProximo = true;
           document.getElementById('loading-infinito').style.display = 'block';
           
           setTimeout(() => {
-              // Marca o atual como lido já que rolou até o fim
               salvarProgresso(capAtualLendoId, 'lido'); 
-              
-              abrirLeitor(proxCapKey, true); // true = append, keep scroll
-              
+              abrirLeitor(proxCapKey, true); 
               document.getElementById('loading-infinito').style.display = 'none';
               carregandoProximo = false;
-          }, 800);
+          }, 600);
       } else {
-          showToast("Fim da obra!");
           salvarProgresso(capAtualLendoId, 'lido');
       }
   }
 
-  // Verifica Rolagem Infinita e TopBar Fade
   window.addEventListener('scroll', () => {
       if (document.getElementById('view-leitor').style.display === 'block') {
-          // TopBar fade away scroll down, appear scroll up
           let rbar = document.getElementById('r-bar');
           rbar.style.transform = window.scrollY > 150 ? 'translateY(-100%)' : 'translateY(0)';
           
-          // Logica Infinito
+          // Marca LIDO apenas se chegar nos últimos 95% da página real
           let scrollBottom = window.innerHeight + window.scrollY;
           let pageHeight = document.body.offsetHeight;
-          if (scrollBottom >= pageHeight - 300) {
-              carregarProximoInfinito();
+          
+          if (scrollBottom >= pageHeight - 150) {
+              if(leitorInfinitoAtivo) {
+                  carregarProximoInfinito();
+              } else {
+                  salvarProgresso(capAtualLendoId, 'lido');
+              }
           }
       } else {
-          // Tela Detalhes Header Effect
           const bar = document.getElementById('app-top-bar');
           if(bar) bar.className = window.scrollY > 50 ? 'app-bar scrolled' : 'app-bar';
       }
   });
 
-  // ==========================================
-  // UTILITARIOS E ESTETICA LEITOR
-  // ==========================================
   function salvarProgresso(key, status) {
       let p = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
       if (!p[obraId]) p[obraId] = {};
+      // Se já tá lido, não sobrescreve pra 'lendo' por engano
+      if (p[obraId][key] === 'lido' && status === 'lendo') return;
       p[obraId][key] = status;
       localStorage.setItem('progresso_leitura', JSON.stringify(p));
   }
@@ -441,16 +444,7 @@
     document.getElementById('view-leitor').style.display = 'none';
     document.getElementById('view-detalhes').style.display = 'block';
     capAtualLendoId = null;
-    if (currentObra) renderizarDetalhes(currentObra); // Atualiza os check marks
-  }
-
-  function mudarZoom(valor) {
-    currentZoom += valor;
-    if(currentZoom < 60) currentZoom = 60;
-    if(currentZoom > 200) currentZoom = 200;
-    document.getElementById('leitor-imagens').style.width = currentZoom + '%';
-    document.getElementById('leitor-imagens').style.margin = '0 auto'; // Centraliza
-    showToast(`Zoom: ${currentZoom}%`);
+    if (currentObra) renderizarDetalhes(currentObra); 
   }
 
   function abrirListaReader() {
@@ -466,7 +460,7 @@
           let check = p[k] === 'lido' ? '✅' : (p[k] === 'lendo' ? '⏳' : '');
           let isAtivo = k === capAtualLendoId ? 'color: var(--accent-color); font-weight:900;' : 'color: white;';
           
-          html += `<div style="padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.05); ${isAtivo}" 
+          html += `<div style="padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.05); ${isAtivo}" 
                     onclick="document.getElementById('modal-lista-caps').style.display='none'; abrirLeitor('${k}')">
                     ${nome} <span style="float:right;">${check}</span>
                    </div>`;
@@ -492,7 +486,6 @@
     }, 1000);
   }
 
-  // INICIAR
   if (obraId) {
     db.ref('obras/' + obraId).on('value', snap => {
       if (snap.exists()) renderizarDetalhes(snap.val());
