@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title id="app-document-title">Meow Scan - App</title>
   
   <!-- ================= SUPORTE PWA ================= -->
@@ -10,6 +10,7 @@
   <meta name="theme-color" content="#0f0c1b"> 
   <meta name="apple-mobile-web-app-capable" content="yes"> 
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -36,11 +37,39 @@
       background-position: center;
       color: var(--text-color);
       font-family: var(--font-family);
-      padding-bottom: 80px;
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
       user-select: none;
       transition: all 0.3s ease;
       min-height: 100vh;
     }
+
+    /* ================= AVISO OFFLINE ================= */
+    #offline-banner {
+      display: none;
+      background: #e63946;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 9999;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      animation: slideDown 0.3s ease;
+    }
+    @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+
+    /* ================= SKELETON LOADING (Fim da tela feia) ================= */
+    .skeleton {
+      background: linear-gradient(90deg, #1a1625 25%, #2a2438 50%, #1a1625 75%);
+      background-size: 200% 100%;
+      animation: loading-skeleton 1.5s infinite;
+      border-radius: 16px;
+    }
+    @keyframes loading-skeleton { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
     /* ================= HEADER ================= */
     header {
@@ -49,6 +78,7 @@
       padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      margin-top: env(safe-area-inset-top); /* Para o notch do iPhone */
     }
     .brand-title { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; }
     .brand-title img { width: 35px; height: 35px; border-radius: 8px; object-fit: cover; }
@@ -73,23 +103,29 @@
       position: relative; overflow: hidden; cursor: pointer;
       background: #111; display: flex; align-items: flex-end;
       border-radius: 0 0 24px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transition: all 0.5s ease;
     }
-    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: opacity 0.5s ease; }
+    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: opacity 0.5s ease; opacity: 0; }
     .banner-overlay {
       position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 20px 20px;
       background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.5), transparent); z-index: 2;
+      opacity: 0; transition: opacity 0.5s ease;
     }
     .banner-title { font-size: 1.4rem; font-weight: 800; color: #fff; text-shadow: 2px 2px 8px rgba(0,0,0,0.9); line-height: 1.2; }
     
+    /* Quando o banner carregar, removemos o skeleton */
+    #banner-destaque.loaded { background: #000; animation: none; }
+    #banner-destaque.loaded .banner-img { opacity: 1; }
+    #banner-destaque.loaded .banner-overlay { opacity: 1; }
+
     /* ================= GRIDS & TOP 10 ================= */
-    .grid-obras { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .grid-obras { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; min-height: 200px; }
     @media (min-width: 768px) { .grid-obras { grid-template-columns: repeat(4, 1fr); } }
 
     .scroll-horizontal { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 15px; scroll-snap-type: x mandatory; }
     .scroll-horizontal::-webkit-scrollbar { display: none; }
-    .scroll-horizontal .card-obra { scroll-snap-align: start; flex: 0 0 auto; width: 140px; }
     
-    .top-card { width: 120px; min-width: 120px; position: relative; border-radius: 12px; overflow: visible !important; }
+    .top-card { width: 120px; min-width: 120px; position: relative; border-radius: 12px; overflow: visible !important; scroll-snap-align: start; flex: 0 0 auto; }
     .top-card .capa-wrapper { padding-top: 140%; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
     .rank-badge { position: absolute; top: -10px; left: -10px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 16px; z-index: 10; border: 3px solid var(--bg-color); box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
     .top-card .badge-views { bottom: 8px; top: auto; left: 8px; font-size: 10px; background: rgba(0,0,0,0.8); }
@@ -129,7 +165,7 @@
     .nav-item.active { color: var(--primary); text-shadow: 0 0 10px rgba(157,78,221,0.5); }
     .nav-item.active i { transform: translateY(-4px); }
 
-    /* ================= SISTEMA DE CONTAS ELEGANTE ================= */
+    /* ================= SISTEMA DE CONTAS ================= */
     .auth-container { max-width: 400px; margin: 20px auto; background: var(--card-bg); padding: 30px 25px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); }
     .auth-tabs { display: flex; background: rgba(0,0,0,0.4); border-radius: 12px; margin-bottom: 25px; padding: 6px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); }
     .auth-tabs button { flex: 1; background: transparent; border: none; color: #888; padding: 12px; font-family: var(--font-family); font-weight: 700; font-size: 14px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
@@ -150,9 +186,14 @@
 
     /* ================= PERFIL E CUSTOMIZAÇÃO ================= */
     #profile-info { display: none; text-align: center; padding-top: 20px; }
-    .profile-header { position: relative; display: inline-block; margin-bottom: 15px; }
-    .profile-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; box-shadow: 0 8px 25px rgba(157, 78, 221, 0.4); }
+    .profile-header { position: relative; display: inline-block; margin-bottom: 10px; }
+    .profile-avatar { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; box-shadow: 0 8px 25px rgba(157, 78, 221, 0.4); }
     
+    .profile-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 25px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+    .stat-item { text-align: center; }
+    .stat-item strong { display: block; font-size: 20px; color: var(--primary); }
+    .stat-item small { color: #aaa; font-size: 11px; text-transform: uppercase; font-weight: 600; }
+
     .edit-profile-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; margin-bottom: 25px; text-align: left; }
     .edit-profile-box h4 { margin-bottom: 15px; color: var(--primary); font-size: 14px; display: flex; align-items: center; gap: 8px; }
 
@@ -169,10 +210,10 @@
 
     .color-picker { background: transparent; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; height: 35px; width: 45px; border-radius: 8px; }
 
+    /* Admin Panel só aparece para o ADM */
     #admin-panel { display: none; background: rgba(157, 78, 221, 0.05); border: 1px solid var(--primary); padding: 20px; border-radius: 16px; margin-top: 20px; box-shadow: 0 5px 20px rgba(157,78,221,0.1); }
-    #nav-parceiros { display: none; }
     
-    /* ================= MODAL NOTIFICAÇÕES (O SININHO ELEGANTE) ================= */
+    /* ================= MODAL NOTIFICAÇÕES ================= */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1001; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
     .modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: 24px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 15px 40px rgba(0,0,0,0.5); position: relative; max-height: 80vh; overflow-y: auto; }
     .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; width: 30px; height: 30px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
@@ -184,8 +225,8 @@
     .notif-text { font-size: 13px; color: #ddd; line-height: 1.4; }
     .notif-time { font-size: 10px; color: #888; margin-top: 5px; }
 
-    /* ================= TOAST NOTIFICATIONS (MENSAGENS BONITAS) ================= */
-    #toast-container { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; pointer-events: none; }
+    /* ================= TOAST NOTIFICATIONS ================= */
+    #toast-container { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; pointer-events: none; }
     .toast-msg { background: rgba(30, 25, 45, 0.95); backdrop-filter: blur(10px); color: #fff; padding: 15px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-left: 4px solid var(--primary); animation: slideUpToast 0.4s ease forwards, fadeOutToast 0.4s ease 3.5s forwards; }
     .toast-msg i { font-size: 18px; }
     .toast-msg.error { border-left-color: #ff477e; }
@@ -195,13 +236,18 @@
     @keyframes slideUpToast { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOutToast { from { opacity: 1; } to { opacity: 0; } }
 
-    .empty-library { text-align: center; color: #888; padding: 40px 20px; font-size: 14px; }
+    .empty-library { text-align: center; color: #888; padding: 40px 20px; font-size: 14px; width: 100%; grid-column: 1 / -1; }
     .empty-library i { font-size: 40px; color: var(--primary); margin-bottom: 15px; opacity: 0.5; }
   </style>
 </head>
 <body>
 
-  <!-- ================= CONTAINER DE MENSAGENS (TOASTS) ================= -->
+  <!-- ================= AVISO DE OFFLINE AUTOMÁTICO ================= -->
+  <div id="offline-banner">
+    <i class="fa-solid fa-wifi-slash"></i> Sem conexão com a internet. Lendo da Biblioteca Offline.
+  </div>
+
+  <!-- ================= CONTAINER DE TOASTS ================= -->
   <div id="toast-container"></div>
 
   <header>
@@ -221,7 +267,6 @@
       <button class="modal-close" onclick="fecharModalNotificacoes(event)"><i class="fa-solid fa-xmark"></i></button>
       <h3 style="margin-bottom: 15px; font-size: 1.2rem; color: var(--primary);"><i class="fa-solid fa-bell"></i> Avisos e Mensagens</h3>
       <div id="lista-notificacoes-content">
-        <!-- Notificações vão aparecer aqui -->
         <p style="color:#666; font-size:12px; text-align:center; padding: 20px;">Você não tem nenhuma notificação nova.</p>
       </div>
     </div>
@@ -229,18 +274,27 @@
 
   <!-- ABA INÍCIO -->
   <div id="view-inicio" class="view-section active">
-    <div id="banner-destaque" onclick="irParaDestaque()">
-      <img id="banner-img" src="https://via.placeholder.com/600x300" class="banner-img">
+    <!-- Banner elegante com skeleton loading ativado por padrão -->
+    <div id="banner-destaque" class="skeleton" onclick="irParaDestaque()">
+      <img id="banner-img" src="" class="banner-img">
       <div class="banner-overlay">
-        <div id="banner-titulo" class="banner-title">Carregando Obras...</div>
+        <div id="banner-titulo" class="banner-title"></div>
       </div>
     </div>
 
-    <div class="section-title" id="top-section-title"><i class="fa-solid fa-fire" style="color: #ff477e;"></i> Top 10 Mais Lidos</div>
-    <div id="grid-top" class="scroll-horizontal" style="margin-bottom: 15px;"></div>
+    <div class="section-title" id="top-section-title" style="display: none;"><i class="fa-solid fa-fire" style="color: #ff477e;"></i> Top 10 Mais Lidos</div>
+    <div id="grid-top" class="scroll-horizontal" style="margin-bottom: 15px;">
+      <!-- Skeletons enquanto carrega o top 10 -->
+    </div>
     
     <div class="section-title"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Últimas Atualizações</div>
-    <div id="grid-inicio" class="grid-obras"></div>
+    <div id="grid-inicio" class="grid-obras">
+      <!-- Skeleton Cards iniciais -->
+      <div class="card-obra skeleton" style="height: 180px;"></div>
+      <div class="card-obra skeleton" style="height: 180px;"></div>
+      <div class="card-obra skeleton" style="height: 180px;"></div>
+      <div class="card-obra skeleton" style="height: 180px;"></div>
+    </div>
   </div>
 
   <!-- ABA BUSCA -->
@@ -257,21 +311,27 @@
     <div id="grid-busca" class="grid-obras"></div>
   </div>
 
-  <!-- ABA BIBLIOTECA -->
+  <!-- ABA BIBLIOTECA (FUNCIONA OFFLINE) -->
   <div id="view-biblioteca" class="view-section">
     <div class="section-title"><i class="fa-solid fa-book-bookmark" style="color: var(--primary);"></i> Minha Biblioteca Offline</div>
-    <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">As obras salvas aqui podem ser acessadas mesmo sem internet.</p>
+    <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">As obras salvas aqui podem ser lidas mesmo sem internet (Modo Avião).</p>
     <div id="grid-biblioteca" class="grid-obras"></div>
   </div>
 
-  <!-- ABA PARCEIROS & ADMIN -->
+  <!-- ABA PARCEIROS (AGORA APARECE PRA TODO MUNDO) -->
   <div id="view-parceiros" class="view-section">
     <div class="section-title"><i class="fa-solid fa-handshake"></i> Nossos Parceiros</div>
-    <a href="parceiros.html" class="meow-btn" style="text-decoration:none; margin-bottom: 20px;">
+    <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Conheça os projetos incríveis que apoiam a Meow Scan.</p>
+    
+    <a href="parceiros.html" class="meow-btn" style="text-decoration:none; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff;">
       <i class="fa-solid fa-server"></i> Nossas Hospedagens
     </a>
-    <div id="lista-parceiros" class="grid-obras"></div>
     
+    <div id="lista-parceiros" class="grid-obras">
+      <div class="empty-library"><i class="fa-solid fa-spinner fa-spin"></i><p>Carregando parceiros...</p></div>
+    </div>
+    
+    <!-- ÁREA DO ADMIN - SÓ APARECE PARA O DONO (ADMIN) -->
     <div id="admin-panel">
       <h4 style="margin-bottom: 15px; color: var(--primary); font-size: 18px;"><i class="fa-solid fa-shield-halved"></i> Área Restrita (ADM)</h4>
       
@@ -284,7 +344,7 @@
       <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
         <h5 style="margin-bottom: 10px; color: #fff;">Adicionar Parceiro</h5>
         <input type="text" id="nome-parceiro" class="meow-input" placeholder="Nome do Parceiro">
-        <input type="text" id="link-github-parceiro" class="meow-input" placeholder="Link do Parceiro (Ex: Github/Site)">
+        <input type="text" id="link-github-parceiro" class="meow-input" placeholder="Link (Ex: https://site.com)">
         <button onclick="adicionarParceiro()" class="meow-btn" style="margin-bottom: 0;">Salvar Parceiro</button>
       </div>
     </div>
@@ -301,7 +361,7 @@
         <button id="tab-register" onclick="switchAuthTab('register')">Cadastrar</button>
       </div>
 
-      <!-- Formulário de Login -->
+      <!-- Formulários (Iguais, já estavam ótimos) -->
       <div id="form-login" class="auth-form active">
         <button id="btn-google-login" class="meow-btn meow-btn-google">
           <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" width="20" alt="Google"> Continuar com Google
@@ -313,7 +373,6 @@
         <p class="forgot-pass" onclick="switchAuthTab('recover')">Esqueceu sua senha?</p>
       </div>
 
-      <!-- Formulário de Cadastro -->
       <div id="form-register" class="auth-form">
         <input type="text" id="reg-name" class="meow-input" placeholder="Como devemos te chamar?">
         <input type="email" id="reg-email" class="meow-input" placeholder="Seu melhor e-mail">
@@ -321,33 +380,40 @@
         <button id="btn-register" class="meow-btn">Criar Minha Conta</button>
       </div>
 
-      <!-- Formulário de Recuperação -->
       <div id="form-recover" class="auth-form">
-        <p style="font-size: 13px; color: #aaa; text-align: center; margin-bottom: 15px;">Enviaremos um link seguro para você redefinir sua senha.</p>
+        <p style="font-size: 13px; color: #aaa; text-align: center; margin-bottom: 15px;">Enviaremos um link para redefinir sua senha.</p>
         <input type="email" id="rec-email" class="meow-input" placeholder="Digite seu e-mail cadastrado">
         <button id="btn-recover" class="meow-btn">Enviar Link de Recuperação</button>
         <p class="forgot-pass" onclick="switchAuthTab('login')"><i class="fa-solid fa-arrow-left"></i> Voltar para o Login</p>
       </div>
     </div>
 
-    <!-- Perfil Logado -->
+    <!-- Perfil Logado Turbinado -->
     <div id="profile-info">
       <div class="profile-header">
         <img id="user-avatar" src="https://via.placeholder.com/150" class="profile-avatar">
       </div>
       <h2 id="user-name" style="margin-bottom: 5px;">Nome do Leitor</h2>
-      <p style="color: #aaa; font-size: 13px; margin-bottom: 25px;">Membro da Meow Scan</p>
+      <p id="user-bio" style="color: #aaa; font-size: 13px; margin-bottom: 25px; font-style: italic;">"Amo ler mangás na Meow Scan!"</p>
       
-      <!-- Edição de Perfil -->
+      <!-- Contadores de Leitura -->
+      <div class="profile-stats">
+        <div class="stat-item"><strong id="stat-lidas">0</strong><small>Obras Lidas</small></div>
+        <div class="stat-item"><strong id="stat-salvas">0</strong><small>Na Biblioteca</small></div>
+      </div>
+      
+      <!-- Edição de Perfil Melhorada -->
       <div class="edit-profile-box">
-        <h4><i class="fa-solid fa-pen"></i> Personalizar Perfil</h4>
-        <p style="font-size: 11px; color: #888; margin-bottom: 10px;">Deixe o perfil com a sua cara!</p>
+        <h4><i class="fa-solid fa-pen"></i> Editar Perfil</h4>
         <input type="text" id="edit-nome" class="meow-input" placeholder="Seu novo nome de exibição">
-        <input type="text" id="edit-foto" class="meow-input" placeholder="Cole aqui o link (URL) de uma imagem">
+        <input type="text" id="edit-bio" class="meow-input" placeholder="Sua frase de status (Bio)">
+        <input type="text" id="edit-foto" class="meow-input" placeholder="Cole o link (URL) de uma foto sua">
         <button onclick="salvarAlteracoesPerfil()" class="meow-btn" style="padding: 12px; font-size: 14px; margin-bottom: 0;">Salvar Alterações</button>
       </div>
 
-      <div class="section-title" style="text-align: left;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Leitura</div>
+      <div class="section-title" style="text-align: left; justify-content: space-between;">
+        <span><i class="fa-solid fa-clock-rotate-left"></i> Histórico</span>
+      </div>
       <div id="history-grid" class="scroll-horizontal" style="margin-bottom: 30px;"></div>
       
       <button id="btn-logout" class="meow-btn" style="background: rgba(230, 57, 70, 0.1); color: #e63946; border: 1px solid rgba(230, 57, 70, 0.3); box-shadow: none;"><i class="fa-solid fa-right-from-bracket"></i> Sair da Conta</button>
@@ -388,7 +454,8 @@
     <button class="nav-item active" onclick="switchTab('inicio', this)"><i class="fa-solid fa-house"></i> Início</button>
     <button class="nav-item" onclick="switchTab('busca', this)"><i class="fa-solid fa-magnifying-glass"></i> Busca</button>
     <button class="nav-item" onclick="switchTab('biblioteca', this); renderBiblioteca();"><i class="fa-solid fa-book-bookmark"></i> Biblioteca</button>
-    <button class="nav-item" id="nav-parceiros" onclick="switchTab('parceiros', this)"><i class="fa-solid fa-shield-halved"></i> Admin</button>
+    <!-- Parceiros sempre vísivel agora! -->
+    <button class="nav-item" id="nav-parceiros" onclick="switchTab('parceiros', this)"><i class="fa-solid fa-handshake"></i> Parceiros</button>
     <button class="nav-item" onclick="switchTab('perfil', this)"><i class="fa-solid fa-user"></i> Perfil</button>
     <button class="nav-item" onclick="switchTab('config', this)"><i class="fa-solid fa-gear"></i> Config</button>
   </nav>
@@ -399,23 +466,35 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    /* ================= 0. SISTEMA DE TOAST (MENSAGENS BONITAS) ================= */
+    /* ================= OFFLINE DETECTOR (Funciona Sozinho) ================= */
+    window.addEventListener('offline', () => {
+      document.getElementById('offline-banner').style.display = 'block';
+      showToast('Sem internet! Mas sua Biblioteca está liberada.', 'error');
+    });
+    window.addEventListener('online', () => {
+      document.getElementById('offline-banner').style.display = 'none';
+      showToast('Conexão restaurada com sucesso!', 'success');
+      // Tenta recarregar dados se voltou a internet
+      if(todasObras.length === 0 && db) db.ref('obras').once('value', snap => {
+         // forçando atualização leve
+      });
+    });
+    // Verifica logo que entra
+    if (!navigator.onLine) { document.getElementById('offline-banner').style.display = 'block'; }
+
+    /* ================= SISTEMA DE TOAST ================= */
     function showToast(mensagem, tipo = 'success') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
       toast.className = `toast-msg ${tipo}`;
-      
       const icone = tipo === 'success' ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation"></i>';
       toast.innerHTML = `${icone} <span>${mensagem}</span>`;
-      
       container.appendChild(toast);
-      
-      // Remove do DOM após a animação (4 segundos)
       setTimeout(() => { toast.remove(); }, 4000);
     }
 
-    /* ================= 1. CONFIGURAÇÕES LOCAIS ================= */
-    const settings = JSON.parse(localStorage.getItem('meowSettings')) || { show18: false, showSensitive: false, bgColor: '#0f0c1b', textColor: '#ffffff', bgImage: '', ageVerified: false };
+    /* ================= CONFIGURAÇÕES LOCAIS ================= */
+    const settings = JSON.parse(localStorage.getItem('meowSettings')) || { show18: false, showSensitive: false, bgColor: '#0f0c1b', textColor: '#ffffff', bgImage: '', ageVerified: false, bio: '"Amo ler mangás na Meow Scan!"' };
 
     function applySettings() {
       document.documentElement.style.setProperty('--bg-color', settings.bgColor);
@@ -425,6 +504,7 @@
       document.getElementById('toggle-sensitive').checked = settings.showSensitive;
       document.getElementById('cfg-bg').value = settings.bgColor;
       document.getElementById('cfg-text').value = settings.textColor;
+      if(document.getElementById('user-bio')) document.getElementById('user-bio').innerText = settings.bio || '"Amo ler mangás na Meow Scan!"';
     }
     applySettings();
 
@@ -447,7 +527,7 @@
         reader.onload = function(event) {
           settings.bgImage = event.target.result;
           saveSettings(); applySettings();
-          showToast("Imagem de fundo aplicada com sucesso!");
+          showToast("Imagem de fundo aplicada!");
         };
         reader.readAsDataURL(file);
       }
@@ -466,7 +546,7 @@
 
     function saveSettings() { localStorage.setItem('meowSettings', JSON.stringify(settings)); }
 
-    /* ================= 2. NAVEGAÇÃO ================= */
+    /* ================= NAVEGAÇÃO ================= */
     function switchTab(tabId, btn) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.getElementById(`view-${tabId}`).classList.add('active');
@@ -475,7 +555,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* ================= 3. FIREBASE ================= */
+    /* ================= FIREBASE ================= */
     const firebaseConfig = {
       apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
       authDomain: "meow-scan-ffff0.firebaseapp.com",
@@ -496,13 +576,19 @@
     let isAdmin = false;
     const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3"; 
 
+    // Ouve as mudanças no banco e remove os Skeletons
     db.ref('obras').on('value', snap => {
       todasObras = [];
       if(snap.exists()){ snap.forEach(child => { todasObras.push({ id: child.key, ...child.val() }); }); }
+      
+      // Remove efeito visual do carregamento do banner principal
+      document.getElementById('banner-destaque').classList.add('loaded');
+      document.getElementById('banner-destaque').classList.remove('skeleton');
+
       renderObras(); iniciarDestaqueRotativo(); renderBiblioteca(); 
     });
 
-    /* ================= 4. RENDERIZAÇÃO DE OBRAS ================= */
+    /* ================= RENDERIZAÇÃO E HTML DOS CARDS ================= */
     function createTop10CardHTML(obra, ranking) {
       const views = obra.views || 0; 
       return `
@@ -553,12 +639,17 @@
 
     function registrarClique(id) {
       let history = JSON.parse(localStorage.getItem('meowHistory')) || [];
-      if(!history.includes(id)) { history.unshift(id); }
-      if(history.length > 15) history.pop(); 
+      // Remove se já existe para colocar no topo
+      history = history.filter(item => item !== id);
+      history.unshift(id);
+      if(history.length > 20) history.pop(); 
       localStorage.setItem('meowHistory', JSON.stringify(history));
+      updateProfileStats();
     }
 
     function renderObras() {
+      if(todasObras.length === 0) return; // Se não tiver nada, mantém os skeletons
+
       let obrasFiltradas = todasObras.filter(o => {
         if(o.adulto && !settings.show18) return false;
         if(o.sensivel && !settings.showSensitive) return false;
@@ -570,10 +661,10 @@
       const gridTop = document.getElementById('grid-top');
 
       if(topObras.length > 0) {
-        topSectionTitle.style.display = 'flex'; gridTop.style.display = 'flex';
+        topSectionTitle.style.display = 'flex'; 
         gridTop.innerHTML = topObras.map((o, index) => createTop10CardHTML(o, index + 1)).join('');
       } else {
-        topSectionTitle.style.display = 'none'; gridTop.style.display = 'none';
+        topSectionTitle.style.display = 'none'; gridTop.innerHTML = '';
       }
 
       const obrasAtualizadas = [...obrasFiltradas].reverse(); 
@@ -586,8 +677,10 @@
         const matchesStatus = currentFiltro === 'Todos' || status.includes(currentFiltro.toLowerCase());
         return matchesSearch && matchesStatus;
       });
-      document.getElementById('grid-busca').innerHTML = obrasBusca.map(o => createNormalCardHTML(o)).join('');
+      document.getElementById('grid-busca').innerHTML = obrasBusca.length > 0 ? obrasBusca.map(o => createNormalCardHTML(o)).join('') : '<p style="color:#aaa; text-align:center; width: 100%; grid-column: span 2;">Nenhuma obra encontrada.</p>';
+      
       renderHistorico();
+      updateProfileStats();
     }
 
     document.getElementById('search-input').addEventListener('input', renderObras);
@@ -605,28 +698,40 @@
     };
 
     window.confirmarSalvar = function(id) {
-      if(confirm('Deseja salvar esta obra na sua Biblioteca para ler offline?')) { salvarObraPeloId(id); }
+      if(confirm('Deseja salvar esta obra na sua Biblioteca para ler sem internet?')) { salvarObraPeloId(id); }
     };
 
     window.salvarNaBiblioteca = function(obraObj) {
       let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
       if(!bib.find(o => o.id === obraObj.id)) {
-        bib.push(obraObj); localStorage.setItem('meowBiblioteca', JSON.stringify(bib)); showToast("Obra salva na Biblioteca!");
+        bib.push(obraObj); localStorage.setItem('meowBiblioteca', JSON.stringify(bib)); 
+        showToast("Obra salva na Biblioteca Offline!");
+        updateProfileStats();
       } else { showToast("Esta obra já está salva.", "error"); }
     };
 
     window.removerDaBiblioteca = function(id) {
       let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
-      bib = bib.filter(o => o.id !== id); localStorage.setItem('meowBiblioteca', JSON.stringify(bib)); renderBiblioteca(); showToast("Obra removida.");
+      bib = bib.filter(o => o.id !== id); localStorage.setItem('meowBiblioteca', JSON.stringify(bib)); 
+      renderBiblioteca(); showToast("Obra removida.");
+      updateProfileStats();
     };
 
     function renderBiblioteca() {
       const bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
       const grid = document.getElementById('grid-biblioteca');
       if(bib.length === 0) {
-        grid.innerHTML = `<div class="empty-library" style="grid-column: span 2;"><i class="fa-solid fa-box-open"></i><p>Sua biblioteca está vazia.</p></div>`; return;
+        grid.innerHTML = `<div class="empty-library"><i class="fa-solid fa-box-open"></i><p>Sua biblioteca está vazia. Salve obras para ler offline!</p></div>`; return;
       }
       grid.innerHTML = bib.map(o => createNormalCardHTML(o, false, true)).join('');
+    }
+    
+    // Contadores de perfil
+    function updateProfileStats() {
+      const hist = JSON.parse(localStorage.getItem('meowHistory')) || [];
+      const bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
+      if(document.getElementById('stat-lidas')) document.getElementById('stat-lidas').innerText = hist.length;
+      if(document.getElementById('stat-salvas')) document.getElementById('stat-salvas').innerText = bib.length;
     }
 
     /* ================= DESTAQUE ROTATIVO ================= */
@@ -647,11 +752,13 @@
       
       obraDestaqueAtual = obrasValidas[Math.floor(Math.random() * obrasValidas.length)];
       const bannerImg = document.getElementById('banner-img');
-      bannerImg.style.opacity = 0; 
+      const bannerOverlay = document.querySelector('.banner-overlay');
+      
+      bannerImg.style.opacity = 0; bannerOverlay.style.opacity = 0;
       setTimeout(() => {
         bannerImg.src = obraDestaqueAtual.capaUrl || 'https://via.placeholder.com/800x400';
         document.getElementById('banner-titulo').innerText = obraDestaqueAtual.nome;
-        bannerImg.style.opacity = 1; 
+        bannerImg.style.opacity = 1; bannerOverlay.style.opacity = 1;
       }, 400);
     }
 
@@ -659,7 +766,7 @@
       if(obraDestaqueAtual) { registrarClique(obraDestaqueAtual.id); window.location.href = `obra.html?obra=${obraDestaqueAtual.id}`; }
     }
 
-    /* ================= AUTHENTICAÇÃO E PERFIL (EM PORTUGUÊS) ================= */
+    /* ================= AUTHENTICAÇÃO E PERFIL ================= */
     window.switchAuthTab = function(tabName) {
       document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.auth-tabs button').forEach(el => el.classList.remove('active'));
@@ -667,7 +774,6 @@
       if(tabName !== 'recover') { document.getElementById('tab-' + tabName).classList.add('active'); }
     };
 
-    // CORREÇÃO DO LOGIN GOOGLE NO CELULAR
     auth.getRedirectResult().then(result => {
       if (result.user) { showToast(`Bem-vindo(a), ${result.user.displayName}!`); }
     }).catch(err => {
@@ -679,7 +785,6 @@
       auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
     });
     
-    // LOGIN POR E-MAIL
     document.getElementById('btn-login-email').addEventListener('click', () => {
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
@@ -690,20 +795,9 @@
              showToast("Sua conta ainda não foi confirmada. Olhe seu e-mail!", "error");
              auth.signOut();
          } else { showToast("Você entrou com sucesso!"); }
-      }).catch(err => {
-         switch (err.code) {
-           case 'auth/user-not-found':
-           case 'auth/wrong-password':
-           case 'auth/invalid-credential':
-           case 'auth/invalid-login-credentials': showToast("E-mail ou senha incorretos. Verifique seus dados.", "error"); break;
-           case 'auth/invalid-email': showToast("O formato do e-mail não é válido.", "error"); break;
-           case 'auth/too-many-requests': showToast("Muitas tentativas. Espere um pouco e tente de novo.", "error"); break;
-           default: showToast("Ocorreu um erro ao tentar entrar.", "error");
-         }
-      });
+      }).catch(err => showToast("Dados incorretos ou erro ao entrar.", "error"));
     });
 
-    // CADASTRO POR E-MAIL
     document.getElementById('btn-register').addEventListener('click', () => {
       const name = document.getElementById('reg-name').value.trim();
       const email = document.getElementById('reg-email').value.trim();
@@ -714,24 +808,16 @@
          cred.user.updateProfile({ displayName: name });
          return cred.user.sendEmailVerification();
       }).then(() => {
-         showToast("Conta criada! Enviamos um link de confirmação para o seu e-mail.");
+         showToast("Conta criada! Confirme seu e-mail.");
          auth.signOut(); switchAuthTab('login');
-      }).catch(err => {
-         switch (err.code) {
-           case 'auth/email-already-in-use': showToast("Este e-mail já está em uso! Vá em 'Entrar' e recupere a senha.", "error"); break;
-           case 'auth/weak-password': showToast("Essa senha é muito fraca. Digite pelo menos 6 caracteres.", "error"); break;
-           case 'auth/invalid-email': showToast("Esse e-mail não é válido.", "error"); break;
-           default: showToast("Erro ao criar conta. Tente de novo.", "error");
-         }
-      });
+      }).catch(err => showToast("Erro ao criar conta. O e-mail já existe ou senha é fraca.", "error"));
     });
 
-    // RECUPERAR SENHA
     document.getElementById('btn-recover').addEventListener('click', () => {
       const email = document.getElementById('rec-email').value;
       if(!email) return showToast("Digite seu e-mail para receber o link.", "error");
       auth.sendPasswordResetEmail(email).then(() => {
-         showToast("Link de recuperação enviado para o seu e-mail!"); switchAuthTab('login');
+         showToast("Link de recuperação enviado!"); switchAuthTab('login');
       }).catch(err => showToast("Não encontramos esse e-mail.", "error"));
     });
     
@@ -739,29 +825,40 @@
       auth.signOut(); showToast("Você saiu da conta.");
     });
 
-    // ALTERAR NOME E FOTO DO PERFIL
+    // EDIÇÃO DE PERFIL E BIO (O que você pediu de funções legais!)
     window.salvarAlteracoesPerfil = function() {
       if(!currentUser) return;
       const novoNome = document.getElementById('edit-nome').value.trim();
       const novaFoto = document.getElementById('edit-foto').value.trim();
+      const novaBio = document.getElementById('edit-bio').value.trim();
       
       let updates = {};
       if(novoNome) updates.displayName = novoNome;
       if(novaFoto) updates.photoURL = novaFoto;
 
-      if(Object.keys(updates).length === 0) return showToast("Nenhuma alteração foi digitada.", "error");
+      if(novaBio) {
+        settings.bio = novaBio;
+        saveSettings();
+        document.getElementById('user-bio').innerText = novaBio;
+      }
 
-      currentUser.updateProfile(updates).then(() => {
-        if(novoNome) document.getElementById('user-name').innerText = novoNome;
-        if(novaFoto) document.getElementById('user-avatar').src = novaFoto;
-        showToast("Perfil atualizado com sucesso!");
-        
-        document.getElementById('edit-nome').value = '';
-        document.getElementById('edit-foto').value = '';
-      }).catch(err => showToast("Erro ao atualizar o perfil.", "error"));
+      if(Object.keys(updates).length === 0 && !novaBio) return showToast("Nenhuma alteração foi digitada.", "error");
+
+      if(Object.keys(updates).length > 0) {
+        currentUser.updateProfile(updates).then(() => {
+          if(novoNome) document.getElementById('user-name').innerText = novoNome;
+          if(novaFoto) document.getElementById('user-avatar').src = novaFoto;
+          showToast("Perfil atualizado com sucesso!");
+          document.getElementById('edit-nome').value = '';
+          document.getElementById('edit-foto').value = '';
+          document.getElementById('edit-bio').value = '';
+        }).catch(err => showToast("Erro ao atualizar o perfil.", "error"));
+      } else {
+         showToast("Bio atualizada com sucesso!");
+         document.getElementById('edit-bio').value = '';
+      }
     };
 
-    // CONTROLE DE ESTADO DO USUÁRIO
     auth.onAuthStateChanged(user => {
       currentUser = user;
       if (user && (user.emailVerified || user.providerData.some(p => p.providerId === 'google.com'))) {
@@ -769,19 +866,21 @@
         document.getElementById('profile-info').style.display = 'block';
         document.getElementById('user-name').innerText = user.displayName || 'Leitor(a)';
         document.getElementById('user-avatar').src = user.photoURL || 'https://via.placeholder.com/150';
-
-        escutarNotificacoesGlobais(); // Ativa escuta das mensagens do ADM
+        updateProfileStats();
+        escutarNotificacoesGlobais(); 
 
         if (user.uid === ADMIN_UID) {
           isAdmin = true;
-          document.getElementById('nav-parceiros').style.display = 'flex';
-          document.getElementById('admin-panel').style.display = 'block';
+          document.getElementById('admin-panel').style.display = 'block'; // Mostra painel secreto na aba parceiros
+        } else {
+          isAdmin = false;
+          document.getElementById('admin-panel').style.display = 'none';
         }
       } else {
         document.getElementById('auth-box').style.display = 'block';
         document.getElementById('profile-info').style.display = 'none';
-        document.getElementById('nav-parceiros').style.display = 'none';
         isAdmin = false;
+        document.getElementById('admin-panel').style.display = 'none';
         switchAuthTab('login');
         if(user && !user.emailVerified && !user.providerData.some(p => p.providerId === 'google.com')) { auth.signOut(); }
       }
@@ -792,13 +891,12 @@
       const historyObras = historyIds.map(id => todasObras.find(o => o.id === id)).filter(Boolean);
       document.getElementById('history-grid').innerHTML = historyObras.length > 0 
         ? historyObras.map(o => createNormalCardHTML(o)).join('') 
-        : '<p style="color:#666; text-align:center; width:100%; font-size:12px; margin-top:20px;">Você ainda não leu nenhuma obra.</p>';
+        : '<div class="empty-library"><i class="fa-solid fa-clock-rotate-left"></i><p>Você ainda não leu nenhuma obra.</p></div>';
     }
 
-    /* ================= MODAL E NOTIFICAÇÕES GLOBAIS (ADM + COMENTÁRIOS) ================= */
+    /* ================= NOTIFICAÇÕES GLOBAIS ================= */
     let notificacoesArray = [];
 
-    // O ADM envia uma mensagem para a tabela "notificacoes_globais"
     window.enviarNotificacaoGlobal = function() {
       if(!isAdmin) return;
       const texto = document.getElementById('admin-notif-texto').value.trim();
@@ -809,22 +907,19 @@
       }
     };
 
-    // Lê os avisos da database
     function escutarNotificacoesGlobais() {
       db.ref('notificacoes_globais').limitToLast(10).on('value', snap => {
         notificacoesArray = [];
         if(snap.exists()) {
           snap.forEach(child => { notificacoesArray.push(child.val()); });
-          notificacoesArray.reverse(); // Mais novas primeiro
+          notificacoesArray.reverse();
           document.querySelector('.notification-bell').classList.add('has-news');
         }
         renderListaNotificacoes();
       });
     }
 
-    // Modal Bonitão
     window.abrirModalNotificacoes = function() {
-      if(!currentUser) return showToast("Entre na sua conta para ver suas notificações.", "error");
       document.getElementById('modal-notificacoes').style.display = 'flex';
       document.querySelector('.notification-bell').classList.remove('has-news');
     };
@@ -836,24 +931,11 @@
 
     function renderListaNotificacoes() {
       const container = document.getElementById('lista-notificacoes-content');
-      
-      // Exemplo fixo de notificação de comentário (para ficar completo como você pediu)
-      let htmlFixaComentario = `
-        <div class="notif-item">
-          <div class="notif-icon"><i class="fa-solid fa-comment-dots"></i></div>
-          <div>
-            <div class="notif-text"><strong>Alice</strong> respondeu ao seu comentário: "Também achei esse capítulo incrível!"</div>
-            <div class="notif-time">Agora mesmo</div>
-          </div>
-        </div>
-      `;
-
       if(notificacoesArray.length === 0) {
-        container.innerHTML = htmlFixaComentario + `<p style="color:#666; font-size:12px; text-align:center; padding: 15px;">Sem avisos novos da equipe no momento.</p>`;
+        container.innerHTML = `<p style="color:#666; font-size:12px; text-align:center; padding: 15px;">Sem avisos novos da equipe no momento.</p>`;
         return;
       }
-
-      let htmlNotifs = notificacoesArray.map(n => {
+      container.innerHTML = notificacoesArray.map(n => {
         const date = new Date(n.data).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
         return `
           <div class="notif-item">
@@ -865,11 +947,9 @@
           </div>
         `;
       }).join('');
-
-      container.innerHTML = htmlFixaComentario + htmlNotifs;
     }
 
-    /* ================= ADMIN PARCEIROS ================= */
+    /* ================= PARCEIROS (PÚBLICO) ================= */
     window.adicionarParceiro = function() {
       if(!isAdmin) return;
       const nome = document.getElementById('nome-parceiro').value;
@@ -881,15 +961,20 @@
       }
     };
 
+    // Parceiros carregam para todos verem!
     db.ref('parceiros').on('value', snap => {
       let html = '';
       if(snap.exists()){
         snap.forEach(child => {
           html += `<a href="${child.val().link}" target="_blank" class="card-obra" style="padding: 20px; text-align: center; justify-content: center;"><i class="fa-solid fa-link" style="font-size: 28px; margin-bottom: 10px; color: var(--primary);"></i><div style="font-weight: 800; font-size: 13px;">${child.val().nome}</div></a>`;
         });
-      } else { html = '<p style="color:#666; font-size: 12px; grid-column: span 2;">Nenhum parceiro adicionado ainda.</p>'; }
+      } else { html = '<div class="empty-library"><i class="fa-solid fa-handshake-angle"></i><p>Nenhum parceiro adicionado ainda.</p></div>'; }
       document.getElementById('lista-parceiros').innerHTML = html;
     });
+    
+    // Inicia os renders offline base
+    renderBiblioteca();
+    renderHistorico();
 
   </script>
 </body>
