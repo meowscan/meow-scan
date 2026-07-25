@@ -10,168 +10,174 @@
   /* VARIÁVEIS GERAIS (CARA DE APLICATIVO) */
   /* ========================================================= */
   :root {
-    --accent-gradient: linear-gradient(135deg, #f472b6, #ff69b4);
     --accent-color: #f472b6;
+    --accent-dark: #d946ef;
     --bg-main: #0c0c11; 
     --bg-surface: #15151e;
-    --bg-surface-light: #20202d;
     --text-main: #F8F9FA;
     --text-secondary: #9ba1a6;
     --danger: #FF2A55; 
     --warning: #FFB703;
     --success: #00F5D4;
-    --radius-xl: 32px;
-    --radius-lg: 24px;
-    --radius-md: 16px;
-    --radius-sm: 12px;
+    --radius-lg: 20px;
+    --radius-md: 14px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+  body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Outfit', sans-serif; }
 
-  body { 
-    background-color: var(--bg-main); 
-    color: var(--text-main); 
-    font-family: 'Outfit', sans-serif; 
-    line-height: 1.5;
-  }
+  /* Impede seleção de texto na página toda para evitar cópias */
+  body { -webkit-user-select: none; user-select: none; }
 
   /* ========================================================= */
-  /* APP BAR E HERO (DETALHES) */
+  /* COMPONENTES GERAIS */
   /* ========================================================= */
-  .app-bar {
-    position: fixed; top: 0; left: 0; width: 100%;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 20px; z-index: 1000;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
-    transition: 0.3s;
-  }
-  .app-bar.scrolled {
-    background: rgba(12, 12, 17, 0.95);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
   .icon-btn {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
     display: flex; justify-content: center; align-items: center;
-    color: #fff; text-decoration: none; border: none; cursor: pointer; transition: 0.2s;
+    color: #fff; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s;
   }
-  .icon-btn:active { transform: scale(0.9); }
-
-  .hero-header { position: relative; width: 100%; height: 55vh; min-height: 400px; display: flex; flex-direction: column; justify-content: flex-end; }
-  .hero-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
-  .hero-gradient { position: absolute; bottom: 0; left: 0; width: 100%; height: 85%; background: linear-gradient(to top, var(--bg-main) 0%, rgba(12,12,17,0.8) 50%, transparent 100%); z-index: -1; }
+  .icon-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
   
-  .hero-content { padding: 0 20px 20px 20px; z-index: 2; }
-  .obra-titulo { font-size: 32px; font-weight: 900; line-height: 1.1; margin-bottom: 5px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-  .obra-autores { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 500; }
-
-  .tags-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; flex-wrap: wrap; }
+  .tags-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; flex-wrap: wrap; margin-bottom: 15px;}
   .tags-scroll::-webkit-scrollbar { display: none; }
-  .tag-pill { background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.05);}
-  .tag-pill.accent { background: rgba(244, 114, 182, 0.15); color: var(--accent-color); border-color: rgba(244, 114, 182, 0.3); }
-  .tag-pill.success { background: rgba(0, 245, 212, 0.15); color: var(--success); }
-  .tag-pill.warning { background: rgba(255, 183, 3, 0.15); color: var(--warning); }
-  .tag-pill.danger { background: rgba(255, 42, 85, 0.15); color: var(--danger); border-color: rgba(255, 42, 85, 0.3); }
-  .tag-pill.scan { background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.3); }
-
+  .tag-pill { background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase;}
+  
   /* ========================================================= */
-  /* CORPO E CAPÍTULOS */
+  /* TELA DE DETALHES DA OBRA */
   /* ========================================================= */
-  .app-body { padding: 20px; background: var(--bg-main); }
-  .action-buttons { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; margin-bottom: 25px; }
-  .btn-primary { background: var(--accent-color); color: #000; font-weight: 800; font-size: 15px; border-radius: var(--radius-lg); border: none; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px; cursor: pointer; text-decoration: none; box-shadow: 0 4px 20px rgba(244, 114, 182, 0.4); }
-  .btn-square { width: 56px; height: 56px; background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-lg); display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-main); font-size: 10px; font-weight: 600; cursor: pointer; }
-  .btn-square.active { background: rgba(244, 114, 182, 0.15); color: var(--accent-color); border-color: var(--accent-color); }
+  .app-bar { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; z-index: 1000; background: linear-gradient(to bottom, rgba(12,12,17,0.9) 0%, transparent 100%); transition: 0.3s; }
+  .app-bar.scrolled { background: rgba(12, 12, 17, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-  .synopsis-text { font-size: 14px; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .hero-header { position: relative; width: 100%; height: 50vh; min-height: 400px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .hero-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+  .hero-gradient { position: absolute; bottom: 0; left: 0; width: 100%; height: 90%; background: linear-gradient(to top, var(--bg-main) 0%, rgba(12,12,17,0.7) 60%, transparent 100%); z-index: -1; }
+  
+  .hero-content { padding: 0 20px; z-index: 2; }
+  .obra-titulo { font-size: 28px; font-weight: 900; line-height: 1.2; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+  .obra-autores { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 500; }
+
+  .app-body { padding: 20px; background: var(--bg-main); border-radius: 30px 30px 0 0; margin-top: -20px; position: relative; z-index: 3; }
+  
+  /* Botão Lindo */
+  .btn-primary { 
+      width: 100%; background: linear-gradient(135deg, var(--accent-color), var(--accent-dark)); 
+      color: #fff; font-weight: 800; font-size: 16px; border-radius: var(--radius-lg); border: none; 
+      display: flex; justify-content: center; align-items: center; gap: 10px; padding: 18px; 
+      cursor: pointer; box-shadow: 0 8px 25px rgba(244, 114, 182, 0.4); text-transform: uppercase; margin-bottom: 25px;
+  }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .synopsis-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .synopsis-text.expanded { -webkit-line-clamp: unset; }
-  .btn-expand { background: none; border: none; color: var(--accent-color); font-size: 13px; font-weight: 700; cursor: pointer; padding: 8px 0; margin-bottom: 20px;}
+  .btn-expand { background: none; border: none; color: var(--accent-color); font-size: 13px; font-weight: 800; cursor: pointer; padding: 10px 0; display: block;}
 
-  .season-header { background: var(--bg-surface); padding: 16px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 10px; cursor: pointer; }
-  .season-content { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  /* Search e Lista */
+  .search-box { width: 100%; background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.05); padding: 14px 20px; border-radius: 100px; color: #fff; font-family: 'Outfit'; font-size: 14px; margin-bottom: 20px; outline: none; }
+  .search-box:focus { border-color: var(--accent-color); }
+
+  .season-header { background: var(--bg-surface); padding: 16px 20px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.02); }
+  .season-content { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; transition: 0.3s;}
   
-  .chapter-item { display: flex; align-items: center; padding: 12px; background: var(--bg-surface); border-radius: var(--radius-md); }
-  .chapter-link-area { display: flex; align-items: center; gap: 15px; flex: 1; text-decoration: none; color: white; cursor: pointer; }
-  .chapter-thumb { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
-  .chapter-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .chapter-item { display: flex; align-items: center; padding: 10px; background: transparent; border-radius: var(--radius-md); transition: 0.2s; }
+  .chapter-item:active { background: rgba(255,255,255,0.05); }
+  .chapter-link-area { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
+  .chapter-thumb { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
+  .chapter-info { display: flex; flex-direction: column; gap: 2px; flex: 1; }
   .chapter-number { font-size: 14px; font-weight: 700; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-  .chapter-date { font-size: 12px; color: var(--text-secondary); }
+  .chapter-date { font-size: 12px; color: var(--text-secondary); font-weight: 500;}
 
-  /* Botões Offline */
-  .chapter-action-area { padding-left: 15px; border-left: 1px solid rgba(255,255,255,0.05); }
-  .btn-dl-app { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.05); border: none; color: var(--text-secondary); display: flex; justify-content: center; align-items: center; cursor: pointer; }
-  .btn-dl-app.downloaded { background: rgba(0, 245, 212, 0.15); color: var(--success); }
-
-  /* Badges de Leitura */
-  .badge-lido { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(0, 245, 212, 0.15); color: var(--success); text-transform: uppercase; }
-  .badge-lendo { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(244, 114, 182, 0.2); color: var(--accent-color); text-transform: uppercase; }
-  .badge-final { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(255, 42, 85, 0.2); color: var(--danger); text-transform: uppercase; font-weight: 900; }
+  /* Badges */
+  .badge-lido { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(0, 245, 212, 0.15); color: var(--success); }
+  .badge-lendo { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(244, 114, 182, 0.2); color: var(--accent-color); }
+  .badge-final { font-size: 9px; padding: 3px 6px; border-radius: 6px; background: rgba(255, 42, 85, 0.2); color: var(--danger); font-weight: 900; }
 
   /* ========================================================= */
-  /* VISUALIZADOR DE CAPÍTULO (LEITOR) */
+  /* LEITOR PROFISSIONAL */
   /* ========================================================= */
-  #view-leitor { display: none; background: #000; min-height: 100vh; position: absolute; top: 0; left: 0; width: 100%; z-index: 2000; text-align: center; }
-  .reader-bar { position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); padding: 15px; display: flex; justify-content: space-between; align-items: center; z-index: 2100; box-sizing: border-box; border-bottom: 1px solid #222;}
-  .reader-bar h3 { margin: 0; font-size: 16px; font-weight: bold; color: #fff;}
-  .btn-back-reader { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px;}
+  #view-leitor { display: none; background: #000; min-height: 100vh; position: absolute; top: 0; left: 0; width: 100%; z-index: 2000; }
   
-  #leitor-imagens { margin-top: 60px; padding-bottom: 120px; width: 100%; display: flex; flex-direction: column; align-items: center; transition: width 0.3s ease; margin-left: auto; margin-right: auto;}
-  .img-leitor { width: 100%; max-width: 800px; display: block; margin: 0; object-fit: contain; }
-
-  .bottom-controls { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(20,20,25,0.95); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 30px; display: flex; gap: 15px; z-index: 2100; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #333;}
-  .control-btn { background: var(--accent-color); color: #000; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-  .control-btn:active { transform: scale(0.9); }
-
-  .reader-end-box { margin-top: 40px; padding: 20px; background: #111; border-radius: 16px; width: 90%; max-width: 500px; display: inline-block; border: 1px solid #333; }
-  .btn-prox-grande { display: block; width: 100%; background: var(--accent-color); color: #000; padding: 15px; border-radius: 12px; font-weight: 800; text-transform: uppercase; margin-top: 15px; border: none; cursor: pointer; }
-
-  /* Toasts e Spinners */
-  #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
-  .toast { background: rgba(21, 21, 30, 0.95); color: #fff; padding: 14px 20px; border-radius: 100px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastFade 3s forwards; border-left: 4px solid var(--accent-color); }
-  @keyframes toastFade { 0% { opacity: 0; transform: translateY(20px); } 10% { opacity: 1; transform: translateY(0); } 90% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
+  .reader-bar { position: fixed; top: 0; width: 100%; background: linear-gradient(rgba(0,0,0,0.9), transparent); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 2100; transition: 0.3s; }
+  .reader-title { font-size: 15px; font-weight: 700; text-align: center; flex: 1; margin: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 1px 1px 5px #000; }
   
-  .loading-container { height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff;}
-  .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; }
+  /* IMAGENS GRUDADAS E BLINDADAS */
+  #leitor-imagens { display: flex; flex-direction: column; width: 100%; align-items: stretch; margin: 0; padding: 0; }
+  .img-leitor {
+      width: 100% !important; height: auto !important;
+      display: block !important; margin: 0 !important; padding: 0 !important;
+      pointer-events: none; /* BLOQUEIA CLIQUE/DOWNLOAD/ZOOM NATIVO */
+      -webkit-user-drag: none; -webkit-touch-callout: none; object-fit: cover;
+  }
+  .cap-divider { padding: 40px 20px; text-align: center; background: #0c0c11; font-weight: 800; font-size: 18px; color: var(--accent-color); border-top: 1px solid #222; border-bottom: 1px solid #222;}
+
+  /* Botões Flutuantes Leitor */
+  .bottom-controls { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(20,20,25,0.95); backdrop-filter: blur(15px); padding: 12px 25px; border-radius: 100px; display: flex; align-items: center; gap: 20px; z-index: 2100; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+  .btn-reader-action { background: transparent; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 5px; transition: 0.2s;}
+  .btn-reader-action:active { color: var(--accent-color); transform: scale(0.9); }
+
+  /* Lista de Caps Modal no Leitor */
+  #modal-lista-caps { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; backdrop-filter: blur(5px); }
+  .modal-content { position: absolute; bottom: 0; width: 100%; max-height: 70vh; background: var(--bg-main); border-radius: 30px 30px 0 0; padding: 20px; overflow-y: auto; }
+  
+  /* Toast */
+  #toast-container { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+  .toast { background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 25px; border-radius: 100px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: toastFade 3s forwards; }
+  @keyframes toastFade { 0% { opacity: 0; transform: translateY(20px); } 10%, 90% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
+
+  .spinner { width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: auto;}
   @keyframes spin { to { transform: rotate(360deg); } }
   
-  @media (min-width: 768px) { #main-obra { max-width: 800px; margin: 0 auto; } }
+  @media (min-width: 768px) { #main-obra, #view-leitor { max-width: 600px; margin: 0 auto; position: relative; } }
 </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- TRAVA BOTÃO DIREITO -->
 
 <div id="toast-container"></div>
 
 <!-- ============================================== -->
-<!-- TELA 1: DETALHES DA OBRA -->
+<!-- TELA 1: DETALHES -->
 <!-- ============================================== -->
 <div id="view-detalhes">
-  <div class="loading-container"><div class="spinner"></div></div>
+  <div style="height: 100vh; display: flex; align-items:center; justify-content:center;"><div class="spinner"></div></div>
 </div>
 
 <!-- ============================================== -->
-<!-- TELA 2: LEITOR DE CAPÍTULOS (Oculto por padrão) -->
+<!-- TELA 2: LEITOR -->
 <!-- ============================================== -->
 <div id="view-leitor">
-  <div class="reader-bar">
-    <button class="btn-back-reader" onclick="fecharLeitor()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-      Voltar
+  <div class="reader-bar" id="r-bar">
+    <button class="icon-btn" style="width:36px; height:36px;" onclick="fecharLeitor()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
-    <h3 id="leitor-titulo">Capítulo</h3>
-    <div style="width: 70px;"></div> <!-- Espaçador para centralizar título -->
+    <div class="reader-title" id="leitor-titulo">Capítulo</div>
+    <div style="width:36px;"></div> 
   </div>
 
-  <div id="leitor-imagens" style="width: 100%;">
-      <!-- As imagens entram aqui via JS -->
-  </div>
+  <div id="leitor-imagens"></div>
+  <div id="loading-infinito" style="display:none; padding:40px; text-align:center;"><div class="spinner"></div></div>
 
   <div class="bottom-controls">
-    <button class="control-btn" onclick="mudarZoom(-10)">➖</button>
-    <button class="control-btn" onclick="navegarCap(-1)">⏮️</button>
-    <button class="control-btn" onclick="navegarCap(1)">⏭️</button>
-    <button class="control-btn" onclick="mudarZoom(10)">➕</button>
+    <button class="btn-reader-action" onclick="mudarZoom(-10)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+    </button>
+    
+    <button class="btn-reader-action" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius:50%;" onclick="abrirListaReader()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    </button>
+
+    <button class="btn-reader-action" onclick="mudarZoom(10)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+    </button>
+  </div>
+
+  <!-- Modal Lista Capítulos Leitor -->
+  <div id="modal-lista-caps" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 style="margin-bottom:15px; font-weight:800;">Lista de Capítulos</h3>
+      <div id="reader-lista-container"></div>
+    </div>
   </div>
 </div>
 
@@ -179,180 +185,150 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-  // CONFIGURAÇÃO FIREBASE
-  const firebaseConfig = {
-    apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo",
-    projectId: "meow-scan-ffff0",
-    databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com"
-  };
+  const firebaseConfig = { apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo", projectId: "meow-scan-ffff0", databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com" };
   if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
   const urlParams = new URLSearchParams(window.location.search);
   const obraId = urlParams.get('obra'); 
 
-  // VARIÁVEIS GLOBAIS
   let currentObra = null;
   let globalCapsObj = {};
-  let globalAllKeys = [];
+  let globalAllKeys = []; 
+  
+  // Controle Leitor
   let capAtualLendoId = null; 
   let currentZoom = 100;
+  let carregandoProximo = false;
 
-  // ÍCONES SVG
-  const iconDL = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
-  const iconCheck = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-  
+  // Icone Download Offline
+  const iconDL = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+  const iconCheck = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
   function showToast(msg) {
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = msg;
-    container.appendChild(toast);
-    setTimeout(() => { if(toast.parentNode) toast.remove(); }, 3000);
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = msg;
+    c.appendChild(t); setTimeout(() => t.remove(), 3000);
   }
 
   // ==========================================
-  // FUNÇÕES DE LIDO / LENDO E SCROLL NO LEITOR
+  // BUSCA / FILTRO DE CAPÍTULOS
   // ==========================================
-  window.addEventListener('scroll', () => {
-    // Só calcula progresso se o leitor estiver aberto
-    if (document.getElementById('view-leitor').style.display === 'block' && capAtualLendoId) {
-      let scrollTop = window.scrollY;
-      let docHeight = document.body.offsetHeight;
-      let winHeight = window.innerHeight;
-      let percentual = scrollTop / (docHeight - winHeight);
-      
-      let progressoObj = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
-      if (!progressoObj[obraId]) progressoObj[obraId] = {};
-      
-      // Passou de 90% da página? Marca como Lido. Senão, Lendo.
-      progressoObj[obraId][capAtualLendoId] = (percentual > 0.90 || isNaN(percentual)) ? 'lido' : 'lendo';
-      localStorage.setItem('progresso_leitura', JSON.stringify(progressoObj));
-    }
-  });
+  function filtrarCaps(termo) {
+      termo = termo.toLowerCase();
+      document.querySelectorAll('.item-busca-cap').forEach(item => {
+          let nome = item.getAttribute('data-nome').toLowerCase();
+          item.style.display = nome.includes(termo) ? 'flex' : 'none';
+      });
+  }
 
   // ==========================================
-  // RENDERIZAR PÁGINA DE DETALHES
+  // RENDERIZAR DETALHES
   // ==========================================
   function renderizarDetalhes(obra) {
     currentObra = obra;
     globalCapsObj = obra.capitulos || {};
-    
-    // Organiza chaves decrescente (Maior cap em cima)
-    globalAllKeys = Object.keys(globalCapsObj).sort((a,b) => parseFloat(globalCapsObj[b].numero || 0) - parseFloat(globalCapsObj[a].numero || 0));
+    globalAllKeys = Object.keys(globalCapsObj).sort((a,b) => parseFloat(globalCapsObj[b].numero || 0) - parseFloat(globalCapsObj[a].numero || 0)); // Maior pro Menor
     
     let isNovel = (String(obra.tipo||'').toLowerCase() === 'novel');
     let agrupadorTexto = isNovel ? 'Volume' : 'Temporada';
 
     // Construir Selos (Tags)
     let tagsHtml = '';
-    tagsHtml += obra.tipo ? `<span class="tag-pill" style="background:#333;">📚 ${obra.tipo}</span>` : '';
-    tagsHtml += obra.status?.toLowerCase().includes('completo') ? `<span class="tag-pill success">Completo</span>` : (obra.status?.toLowerCase().includes('pausa') ? `<span class="tag-pill warning">Em Pausa</span>` : `<span class="tag-pill accent">Em Andamento</span>`);
+    if(obra.tipo) tagsHtml += `<span class="tag-pill">📚 ${obra.tipo}</span>`;
     
-    // Hospedagem: Só mostra se for diferente de Meow Scan
-    if (obra.hospedagem && obra.hospedagem.trim() !== "" && obra.hospedagem.trim().toLowerCase() !== "meow scan") {
-        tagsHtml += `<span class="tag-pill scan">🌐 Hospedagem: ${obra.hospedagem}</span>`;
+    // Status e Selos Vermelhos
+    let statusObra = obra.status ? obra.status.toLowerCase() : '';
+    tagsHtml += statusObra.includes('completo') ? `<span class="tag-pill" style="color:var(--success); border-color:var(--success)">Completo</span>` : `<span class="tag-pill" style="color:var(--accent-color); border-color:var(--accent-color)">Em Andamento</span>`;
+    
+    if (obra.hospedagem && obra.hospedagem !== "Meow Scan") tagsHtml += `<span class="tag-pill" style="color:#c084fc;">🌐 ${obra.hospedagem}</span>`;
+    if (obra.adulto || obra.classificacao === '+18') tagsHtml += `<span class="tag-pill" style="color:var(--danger); border-color:var(--danger)">🔞 +18</span>`;
+    if (obra.sensivel) tagsHtml += `<span class="tag-pill" style="color:var(--warning); border-color:var(--warning)">⚠️ Sensível</span>`;
+    
+    // Generos
+    if (obra.generos) {
+        obra.generos.split(',').forEach(g => { tagsHtml += `<span class="tag-pill">${g.trim()}</span>`; });
     }
-    if (obra.adulto || obra.classificacao === '+18') tagsHtml += `<span class="tag-pill danger">🔞 +18</span>`;
-    if (obra.sensivel) tagsHtml += `<span class="tag-pill warning">⚠️ Sensível</span>`;
 
-    // Autores
-    let autoresText = '';
-    if (obra.autor) autoresText += `✍️ Autor: ${obra.autor}`;
-    if (obra.artista && !isNovel) autoresText += ` | 🎨 Artista: ${obra.artista}`;
-
-    // Progresso salvo
+    let autoresText = (obra.autor ? `✍️ ${obra.autor}` : '') + (obra.artista && !isNovel ? ` | 🎨 ${obra.artista}` : '');
     let progressoSalvo = JSON.parse(localStorage.getItem('progresso_leitura') || '{}')[obraId] || {};
     let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}')[obraId] || {};
 
     let htmlCaps = '';
-    let temporador = 1; // Contador visual de temporadas
-
-    // Criar lista de capítulos
+    
     globalAllKeys.forEach((k, index) => {
         let c = globalCapsObj[k];
         let nomeCap = c.nomeCap || `Capítulo ${c.numero || '?'}`;
-        let dataCap = new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR');
         
-        // Status Lendo/Lido
-        let status = progressoSalvo[k];
-        let badgeHtml = status === 'lido' ? `<span class="badge-lido">Lido</span>` : (status === 'lendo' ? `<span class="badge-lendo">Lendo</span>` : '');
-        
-        // É o último capítulo? (Se for o de maior número / primeiro do array)
-        let badgeFinal = (index === 0 && obra.status?.toLowerCase().includes('completo')) || c.encerramento?.toUpperCase() === 'FIM' ? `<span class="badge-final">Último Cap</span>` : '';
+        let badgeHtml = progressoSalvo[k] === 'lido' ? `<span class="badge-lido">Lido</span>` : (progressoSalvo[k] === 'lendo' ? `<span class="badge-lendo">Lendo</span>` : '');
+        let badgeFinal = (index === 0 && statusObra.includes('completo')) ? `<span class="badge-final">Último Cap</span>` : '';
 
-        // Separador de Temporada/Volume (Quebra a cada 50 caps ou quando acha encerramento)
+        // Separador de Temporada/Volume
         if (index === 0 || (c.encerramento && c.encerramento.toLowerCase().includes('fim'))) {
             htmlCaps += `
             <div class="season-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'flex' : 'none'">
               <span>${agrupadorTexto} • Caps Abaixo</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </div>
             <div class="season-content" style="display: flex;">`;
         }
 
-        let isBaixado = !!offlineDb[k];
-        let btnDlHtml = `<button id="btn-dl-${k}" class="btn-dl-app ${isBaixado?'downloaded':''}" onclick="baixarCapApp('${k}')">${isBaixado ? iconCheck : iconDL}</button>`;
-
+        let isB = !!offlineDb[k];
         htmlCaps += `
-        <div class="chapter-item">
+        <div class="chapter-item item-busca-cap" data-nome="${nomeCap}">
             <div class="chapter-link-area" onclick="abrirLeitor('${k}')">
                 <img src="${obra.capaUrl}" class="chapter-thumb">
                 <div class="chapter-info">
                     <span class="chapter-number">${nomeCap} ${badgeHtml} ${badgeFinal}</span>
-                    <span class="chapter-date">${dataCap}</span>
+                    <span class="chapter-date">${new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR')}</span>
                 </div>
             </div>
-            <div class="chapter-action-area">${btnDlHtml}</div>
+            <button class="icon-btn" style="width:34px; height:34px; background:transparent;" onclick="baixarCapApp('${k}', this)">
+                ${isB ? iconCheck : iconDL}
+            </button>
         </div>`;
 
-        // Fecha a div season-content se for o último ou se tiver um separador no próximo
         let prox = globalCapsObj[globalAllKeys[index+1]];
-        if (!prox || (c.encerramento && c.encerramento.toLowerCase().includes('fim'))) {
-            htmlCaps += `</div>`;
-        }
+        if (!prox || (c.encerramento && c.encerramento.toLowerCase().includes('fim'))) htmlCaps += `</div>`;
     });
 
-    // Botão Principal (Começar ou Continuar)
-    let btnPrincipalKey = globalAllKeys[globalAllKeys.length - 1]; // Pega o cap 1 (menor número)
+    // Achar último lido
     let txtBotao = "Começar Leitura";
-    // Tentar achar onde ele parou
+    let capLerBotao = globalAllKeys[globalAllKeys.length - 1]; // Padrão: Cap 1
     for (let i = globalAllKeys.length - 1; i >= 0; i--) {
-        if (progressoSalvo[globalAllKeys[i]] === 'lendo') {
-            btnPrincipalKey = globalAllKeys[i];
-            txtBotao = "Continuar Leitura";
+        if (progressoSalvo[globalAllKeys[i]] === 'lendo' || progressoSalvo[globalAllKeys[i]] === 'lido') {
+            capLerBotao = globalAllKeys[i];
+            txtBotao = "Continuar Lendo";
             break;
         }
     }
 
     const html = `
-      <div id="main-obra">
-          <div id="app-top-bar" class="app-bar">
-            <a href="index.html" class="icon-btn">🔙</a>
-          </div>
+      <div id="app-top-bar" class="app-bar">
+        <a href="index.html" class="icon-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></a>
+      </div>
 
-          <div class="hero-header">
-            <img src="${obra.capaUrl}" class="hero-bg-img">
-            <div class="hero-gradient"></div>
-            <div class="hero-content">
-              <h1 class="obra-titulo">${obra.nome}</h1>
-              ${autoresText ? `<div class="obra-autores">${autoresText}</div>` : ''}
-              <div class="tags-scroll">${tagsHtml}</div>
-            </div>
-          </div>
+      <div class="hero-header">
+        <img src="${obra.capaUrl}" class="hero-bg-img">
+        <div class="hero-gradient"></div>
+        <div class="hero-content">
+          <h1 class="obra-titulo">${obra.nome}</h1>
+          <div class="obra-autores">${autoresText}</div>
+          <div class="tags-scroll">${tagsHtml}</div>
+        </div>
+      </div>
 
-          <div class="app-body">
-            <div class="action-buttons">
-              <button class="btn-primary" onclick="abrirLeitor('${btnPrincipalKey}')">📖 ${txtBotao}</button>
-            </div>
+      <div class="app-body">
+        <button class="btn-primary" onclick="abrirLeitor('${capLerBotao}')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          ${txtBotao}
+        </button>
 
-            <div style="font-weight: 800; font-size:18px; margin-bottom:10px;">Sobre a obra</div>
-            <p class="synopsis-text" id="sinopse">${obra.sinopse || 'Sem descrição.'}</p>
-            <button class="btn-expand" onclick="document.getElementById('sinopse').classList.toggle('expanded')">Ler mais / menos</button>
+        <p class="synopsis-text" id="sinopse">${obra.sinopse || 'Sem descrição.'}</p>
+        <button class="btn-expand" onclick="document.getElementById('sinopse').classList.toggle('expanded')">Ler mais / menos</button>
 
-            <div style="font-weight: 800; font-size:18px; margin-top:10px; margin-bottom:15px;">Capítulos</div>
-            ${htmlCaps || '<p>Nenhum capítulo disponível.</p>'}
-          </div>
+        <input type="text" class="search-box" placeholder="Pesquisar capítulo..." oninput="filtrarCaps(this.value)">
+        <div id="lista-caps-container">${htmlCaps || '<p>Nenhum capítulo.</p>'}</div>
       </div>
     `;
     
@@ -360,147 +336,168 @@
   }
 
   // ==========================================
-  // FUNÇÕES DO LEITOR (ABRIR / FECHAR / NAVEGAR)
+  // LEITOR E INFINITO (AUTO CARREGAR)
   // ==========================================
-  function abrirLeitor(capKey) {
-    if (!globalCapsObj[capKey]) return showToast("Capítulo não encontrado.");
+  function extrairImagensHtml(urls) {
+      let htmlOut = "";
+      if (urls.includes('|||')) {
+           urls.split('|||').forEach(u => htmlOut += `<img src="${u}" class="img-leitor" loading="lazy">`);
+      } else if (urls.toLowerCase().includes('<img')) {
+            let temp = document.createElement('div'); temp.innerHTML = urls;
+            temp.querySelectorAll('img').forEach(img => {
+                img.className = 'img-leitor'; htmlOut += img.outerHTML;
+            });
+      } else {
+            urls.split('\n').forEach(u => { if(u.trim()) htmlOut += `<img src="${u.trim()}" class="img-leitor" loading="lazy">`; });
+      }
+      return htmlOut;
+  }
+
+  function abrirLeitor(capKey, manterScroll = false) {
+    if (!globalCapsObj[capKey]) return;
     
     capAtualLendoId = capKey;
     document.getElementById('view-detalhes').style.display = 'none';
     document.getElementById('view-leitor').style.display = 'block';
-    window.scrollTo(0, 0); // Vai pro topo
     
+    if(!manterScroll) {
+        window.scrollTo(0, 0); 
+        document.getElementById('leitor-imagens').innerHTML = ""; // Limpa tudo se for inicio novo
+    }
+
     let cap = globalCapsObj[capKey];
     document.getElementById('leitor-titulo').innerText = cap.nomeCap || `Capítulo ${cap.numero}`;
     
-    let container = document.getElementById('leitor-imagens');
-    container.innerHTML = "<p style='color:#fff; padding:50px;'>Carregando imagens...</p>";
+    // Adiciona o capítulo no container de imagens
+    let imgHtml = extrairImagensHtml(cap.url || cap.imagens || "");
+    if(manterScroll) {
+        // Se for infinito, bota divisor
+        document.getElementById('leitor-imagens').innerHTML += `<div class="cap-divider">${cap.nomeCap || 'Capítulo ' + cap.numero}</div>` + imgHtml;
+    } else {
+        document.getElementById('leitor-imagens').innerHTML = imgHtml;
+    }
 
-    // Pega as URLs. Verifica se é offline ou online
-    let urls = cap.url || cap.imagens || "";
-    
-    // Renderiza
-    setTimeout(() => {
-        container.innerHTML = "";
-        
-        if (urls.includes('|||')) {
-           urls.split('|||').forEach(u => container.innerHTML += `<img src="${u}" class="img-leitor" loading="lazy">`);
-        } else if (urls.toLowerCase().includes('<img')) {
-            container.innerHTML = urls;
-            container.querySelectorAll('img').forEach(img => img.className = 'img-leitor');
-        } else {
-            urls.split('\n').forEach(u => {
-                if(u.trim()) container.innerHTML += `<img src="${u.trim()}" class="img-leitor" loading="lazy">`;
-            });
-        }
+    // Salva Progresso inicial
+    salvarProgresso(capKey, 'lendo');
+    gerarListaModalLeitor();
+  }
 
-        // Acha qual é o próximo (Lembre que a array principal está descrescente)
-        // Então o próximo capítulo (maior número) é o index anterior (-1) na array!
-        let indexAtualArray = globalAllKeys.indexOf(capKey);
-        let proxCapKey = globalAllKeys[indexAtualArray - 1]; 
-        
-        if (proxCapKey) {
-            container.innerHTML += `
-            <div class="reader-end-box">
-                <h2>Fim do Capítulo</h2>
-                <button onclick="abrirLeitor('${proxCapKey}')" class="btn-prox-grande">Ler Próximo Capítulo</button>
-            </div>`;
-        } else {
-            container.innerHTML += `<div class="reader-end-box"><h2>🏁 Fim da Obra</h2><p>Você chegou ao último capítulo lançado!</p></div>`;
-        }
-    }, 300);
+  function carregarProximoInfinito() {
+      if(!capAtualLendoId || carregandoProximo) return;
+      
+      let indexAtual = globalAllKeys.indexOf(capAtualLendoId);
+      let proxCapKey = globalAllKeys[indexAtual - 1]; // Array descrescente. O próx é -1
+      
+      if (proxCapKey) {
+          carregandoProximo = true;
+          document.getElementById('loading-infinito').style.display = 'block';
+          
+          setTimeout(() => {
+              // Marca o atual como lido já que rolou até o fim
+              salvarProgresso(capAtualLendoId, 'lido'); 
+              
+              abrirLeitor(proxCapKey, true); // true = append, keep scroll
+              
+              document.getElementById('loading-infinito').style.display = 'none';
+              carregandoProximo = false;
+          }, 800);
+      } else {
+          showToast("Fim da obra!");
+          salvarProgresso(capAtualLendoId, 'lido');
+      }
+  }
+
+  // Verifica Rolagem Infinita e TopBar Fade
+  window.addEventListener('scroll', () => {
+      if (document.getElementById('view-leitor').style.display === 'block') {
+          // TopBar fade away scroll down, appear scroll up
+          let rbar = document.getElementById('r-bar');
+          rbar.style.transform = window.scrollY > 150 ? 'translateY(-100%)' : 'translateY(0)';
+          
+          // Logica Infinito
+          let scrollBottom = window.innerHeight + window.scrollY;
+          let pageHeight = document.body.offsetHeight;
+          if (scrollBottom >= pageHeight - 300) {
+              carregarProximoInfinito();
+          }
+      } else {
+          // Tela Detalhes Header Effect
+          const bar = document.getElementById('app-top-bar');
+          if(bar) bar.className = window.scrollY > 50 ? 'app-bar scrolled' : 'app-bar';
+      }
+  });
+
+  // ==========================================
+  // UTILITARIOS E ESTETICA LEITOR
+  // ==========================================
+  function salvarProgresso(key, status) {
+      let p = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
+      if (!p[obraId]) p[obraId] = {};
+      p[obraId][key] = status;
+      localStorage.setItem('progresso_leitura', JSON.stringify(p));
   }
 
   function fecharLeitor() {
     document.getElementById('view-leitor').style.display = 'none';
     document.getElementById('view-detalhes').style.display = 'block';
     capAtualLendoId = null;
-    
-    // Atualiza a tela de detalhes para mostrar as tags Lido/Lendo novas
-    if (currentObra) renderizarDetalhes(currentObra);
+    if (currentObra) renderizarDetalhes(currentObra); // Atualiza os check marks
   }
 
   function mudarZoom(valor) {
     currentZoom += valor;
-    if (currentZoom < 50) currentZoom = 50;
-    if (currentZoom > 200) currentZoom = 200;
+    if(currentZoom < 60) currentZoom = 60;
+    if(currentZoom > 200) currentZoom = 200;
     document.getElementById('leitor-imagens').style.width = currentZoom + '%';
+    document.getElementById('leitor-imagens').style.margin = '0 auto'; // Centraliza
     showToast(`Zoom: ${currentZoom}%`);
   }
 
-  function navegarCap(direcao) {
-    if(!capAtualLendoId) return;
-    let indexAtual = globalAllKeys.indexOf(capAtualLendoId);
-    
-    // Na nossa array globalAllKeys, o [0] é o cap mais recente (ex: Cap 10)
-    // Se direcao for +1 (Próximo Cap, ou seja, Cap 11), precisamos ir para o index -1
-    // Se direcao for -1 (Cap Anterior, ou seja, Cap 9), precisamos ir para o index +1
-    let novoIndex = indexAtual - direcao; 
-    
-    if (novoIndex >= 0 && novoIndex < globalAllKeys.length) {
-      abrirLeitor(globalAllKeys[novoIndex]);
-    } else {
-      showToast(direcao > 0 ? "Você já está no último capítulo!" : "Este é o primeiro capítulo!");
-    }
+  function abrirListaReader() {
+      document.getElementById('modal-lista-caps').style.display = 'block';
   }
 
-  // ==========================================
-  // FUNÇÃO DE DOWNLOAD OFFLINE (SIMPLIFICADA)
-  // ==========================================
-  function baixarCapApp(capKey) {
-    // Evita abrir o leitor quando clica no botão de download
-    event.stopPropagation(); 
-    
-    let btn = document.getElementById(`btn-dl-${capKey}`);
-    let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
-    
-    if (offlineDb[obraId] && offlineDb[obraId][capKey]) {
-        if(confirm("Apagar este capítulo dos downloads?")) {
-            delete offlineDb[obraId][capKey];
-            localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
-            btn.innerHTML = iconDL;
-            btn.classList.remove('downloaded');
-            showToast("Apagado do dispositivo.");
-        }
-        return;
-    }
+  function gerarListaModalLeitor() {
+      let html = '';
+      let p = JSON.parse(localStorage.getItem('progresso_leitura') || '{}')[obraId] || {};
+      
+      globalAllKeys.forEach(k => {
+          let nome = globalCapsObj[k].nomeCap || `Capítulo ${globalCapsObj[k].numero}`;
+          let check = p[k] === 'lido' ? '✅' : (p[k] === 'lendo' ? '⏳' : '');
+          let isAtivo = k === capAtualLendoId ? 'color: var(--accent-color); font-weight:900;' : 'color: white;';
+          
+          html += `<div style="padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.05); ${isAtivo}" 
+                    onclick="document.getElementById('modal-lista-caps').style.display='none'; abrirLeitor('${k}')">
+                    ${nome} <span style="float:right;">${check}</span>
+                   </div>`;
+      });
+      document.getElementById('reader-lista-container').innerHTML = html;
+  }
 
-    if (!navigator.onLine) return showToast("Precisa de internet para baixar!");
+  function baixarCapApp(capKey, btnElement) {
+    event.stopPropagation(); 
+    let dbO = JSON.parse(localStorage.getItem('meow_offline') || '{}');
     
-    btn.innerHTML = `<div class="spinner" style="width:20px; height:20px; border-width:2px;"></div>`;
-    
+    if (dbO[obraId] && dbO[obraId][capKey]) {
+        delete dbO[obraId][capKey];
+        localStorage.setItem('meow_offline', JSON.stringify(dbO));
+        btnElement.innerHTML = iconDL; showToast("Apagado."); return;
+    }
+    btnElement.innerHTML = `<div class="spinner" style="width:18px; height:18px; border-width:2px;"></div>`;
     setTimeout(() => {
-        if(!offlineDb[obraId]) offlineDb[obraId] = {};
-        offlineDb[obraId][capKey] = { salvoEm: Date.now() }; // Salva referência
-        localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
-        
-        btn.innerHTML = iconCheck;
-        btn.classList.add('downloaded');
-        showToast("Baixado com sucesso!");
+        if(!dbO[obraId]) dbO[obraId] = {};
+        dbO[obraId][capKey] = { salvoEm: Date.now() };
+        localStorage.setItem('meow_offline', JSON.stringify(dbO));
+        btnElement.innerHTML = iconCheck; showToast("Baixado com sucesso!");
     }, 1000);
   }
 
-  // ==========================================
-  // INICIALIZAR DADOS
-  // ==========================================
+  // INICIAR
   if (obraId) {
     db.ref('obras/' + obraId).on('value', snap => {
       if (snap.exists()) renderizarDetalhes(snap.val());
-      else document.getElementById('view-detalhes').innerHTML = "<h2 style='color:white; text-align:center; margin-top:50px;'>Obra não encontrada.</h2>";
     });
-  } else {
-    document.getElementById('view-detalhes').innerHTML = "<h2 style='color:white; text-align:center; margin-top:50px;'>ID não informado.</h2>";
   }
-
-  // Efeito de escurecer o topo quando rola a página de detalhes
-  window.addEventListener('scroll', () => {
-      const bar = document.getElementById('app-top-bar');
-      if(bar && document.getElementById('view-detalhes').style.display !== 'none') {
-        if (window.scrollY > 50) bar.classList.add('scrolled');
-        else bar.classList.remove('scrolled');
-      }
-  });
-
 </script>
 </body>
 </html>
