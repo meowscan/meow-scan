@@ -1,706 +1,846 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Detalhes da Obra - Meow Scan</title>
-<link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap' rel='stylesheet'/>
-<style>
-  /* ========================================================= */
-  /* VARIÁVEIS GERAIS (CARA DE APLICATIVO) */
-  /* ========================================================= */
-  :root {
-    --accent-gradient: linear-gradient(135deg, #f472b6, #ff69b4);
-    --accent-color: #f472b6;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title id="app-document-title">Meow Scan - App</title>
+  
+  <!-- ================= SUPORTE PWA ================= -->
+  <link rel="manifest" href="./manifest.json"> 
+  <meta name="theme-color" content="#0f0c1b"> 
+  <meta name="apple-mobile-web-app-capable" content="yes"> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- ================= FIM DO SUPORTE PWA ================= -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ================= VARIÁVEIS E TEMAS ================= */
+    :root {
+      --bg-color: #0f0c1b;
+      --card-bg: #1a1625;
+      --text-color: #ffffff;
+      --primary: #9d4edd;
+      --accent: #ff477e;
+      --font-family: 'Poppins', sans-serif;
+      --bg-image: none;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     
-    --bg-main: #0c0c11; 
-    --bg-surface: #15151e;
-    --bg-surface-light: #20202d;
+    body {
+      background-color: var(--bg-color);
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      color: var(--text-color);
+      font-family: var(--font-family);
+      padding-bottom: 80px;
+      user-select: none;
+      transition: all 0.3s ease;
+      min-height: 100vh;
+    }
+
+    /* ================= HEADER ================= */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15, 12, 27, 0.95); backdrop-filter: blur(15px);
+      padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .brand-title { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; }
+    .brand-title img { width: 35px; height: 35px; border-radius: 8px; object-fit: cover; }
     
-    --text-main: #F8F9FA;
-    --text-secondary: #9ba1a6;
+    .notification-bell { font-size: 1.4rem; position: relative; color: #ccc; cursor: pointer; transition: 0.2s; }
+    .notification-bell:active { transform: scale(0.9); }
+    .notification-bell .badge { 
+      display: none; position: absolute; top: -3px; right: -3px; 
+      background: var(--accent); width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--bg-color);
+    }
+    .notification-bell.has-news .badge { display: block; }
+
+    /* ================= ESTRUTURA DE ABAS ================= */
+    .view-section { display: none; padding: 0 15px 15px 15px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+    .view-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; margin-top: 15px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+
+    /* ================= DESTAQUE ROTATIVO GRUDADO ================= */
+    #banner-destaque {
+      width: calc(100% + 30px); margin-left: -15px; height: 240px; margin-bottom: 20px;
+      position: relative; overflow: hidden; cursor: pointer;
+      background: #111; display: flex; align-items: flex-end;
+      border-radius: 0 0 24px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: opacity 0.5s ease; }
+    .banner-overlay {
+      position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 20px 20px;
+      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.5), transparent); z-index: 2;
+    }
+    .banner-title { font-size: 1.4rem; font-weight: 800; color: #fff; text-shadow: 2px 2px 8px rgba(0,0,0,0.9); line-height: 1.2; }
     
-    --danger: #FF2A55; 
-    --warning: #FFB703;
-    --success: #00F5D4;
+    /* ================= GRIDS & TOP 10 HORIZONTAL ================= */
+    .grid-obras { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    @media (min-width: 768px) { .grid-obras { grid-template-columns: repeat(4, 1fr); } }
+
+    /* Horizontal Scroll */
+    .scroll-horizontal { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 15px; scroll-snap-type: x mandatory; }
+    .scroll-horizontal::-webkit-scrollbar { display: none; }
+    .scroll-horizontal .card-obra { scroll-snap-align: start; flex: 0 0 auto; width: 140px; }
     
-    --radius-xl: 32px;
-    --radius-lg: 24px;
-    --radius-md: 16px;
-    --radius-sm: 12px;
-  }
+    /* Top 10 Específico */
+    .top-card { width: 120px; min-width: 120px; position: relative; border-radius: 12px; overflow: visible !important; }
+    .top-card .capa-wrapper { padding-top: 140%; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+    .rank-badge {
+      position: absolute; top: -10px; left: -10px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;
+      width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+      font-weight: 900; font-size: 16px; z-index: 10; border: 3px solid var(--bg-color); box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+    .top-card .badge-views { bottom: 8px; top: auto; left: 8px; font-size: 10px; background: rgba(0,0,0,0.8); }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+    /* Cards Padrão */
+    .card-obra {
+      background: var(--card-bg); border-radius: 16px; overflow: hidden;
+      text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s;
+    }
+    .card-obra:active { transform: scale(0.97); }
+    .capa-wrapper { position: relative; width: 100%; padding-top: 135%; background: #222; overflow: hidden; }
+    .capa-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    
+    .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+    .badge-caps { position: absolute; bottom: 8px; left: 8px; background: var(--primary); padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .badge-18 { position: absolute; bottom: 8px; right: 8px; background: var(--accent); padding: 4px 6px; border-radius: 8px; font-size: 10px; font-weight: 900; z-index: 10;}
+    .badge-novo { background: #00e676; color: #000; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 800; margin-left: 5px; }
 
-  body { 
-    background-color: var(--bg-main); 
-    color: var(--text-main); 
-    font-family: 'Outfit', sans-serif; 
-    line-height: 1.5;
-  }
+    .btn-save-lib { position: absolute; top: 8px; right: 8px; background: rgba(157, 78, 221, 0.9); color: white; border: none; border-radius: 8px; padding: 6px 8px; z-index: 20; cursor: pointer; font-size: 12px; transition: 0.2s; }
+    .btn-save-lib:active { transform: scale(0.9); }
 
-  /* ========================================================= */
-  /* APP BAR (TOPO NATIVO) */
-  /* ========================================================= */
-  .app-bar {
-    position: fixed;
-    top: 0; left: 0; width: 100%;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 20px;
-    z-index: 1000;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
-    transition: background 0.3s, backdrop-filter 0.3s;
-  }
-  .app-bar.scrolled {
-    background: rgba(12, 12, 17, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
+    .info-obra { padding: 12px 10px; }
+    .titulo-obra { font-size: 13px; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 10px; }
+    .chapter-row { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; color: #ccc; }
+    .chapter-row i { color: var(--primary); font-size: 12px; margin-right: 5px; }
 
-  .icon-btn {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(10px);
-    display: flex; justify-content: center; align-items: center;
-    color: #fff; text-decoration: none; border: none; cursor: pointer;
-    transition: 0.2s;
-  }
-  .icon-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
+    /* ================= BARRA DE BUSCA E FILTROS ================= */
+    .search-container { position: sticky; top: 60px; background: var(--bg-color); z-index: 90; padding: 15px 0 5px 0; margin-bottom: 10px;}
+    .search-bar { width: 100%; padding: 14px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: var(--card-bg); color: var(--text-color); font-family: var(--font-family); font-size: 14px; outline: none; transition: border 0.3s; }
+    .search-bar:focus { border-color: var(--primary); }
+    .filters-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
+    .filters-scroll::-webkit-scrollbar { display: none; }
+    .filter-btn { background: rgba(255,255,255,0.08); border: 1px solid transparent; color: #aaa; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.3s; }
+    .filter-btn.active { background: rgba(157, 78, 221, 0.15); color: var(--primary); border-color: var(--primary); font-weight: 700; }
 
-  /* ========================================================= */
-  /* CAPA FULL-SCREEN (HERO) */
-  /* ========================================================= */
-  .hero-header {
-    position: relative;
-    width: 100%;
-    height: 55vh; /* Ocupa mais da metade da tela */
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-  .hero-bg-img {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    object-fit: cover;
-    z-index: -2;
-  }
-  .hero-gradient {
-    position: absolute;
-    bottom: 0; left: 0; width: 100%; height: 80%;
-    background: linear-gradient(to top, var(--bg-main) 0%, rgba(12,12,17,0.8) 40%, transparent 100%);
-    z-index: -1;
-  }
+    /* ================= MENU INFERIOR ================= */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 14, 25, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; font-size: 10px; text-decoration: none; background: none; border: none; cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: 0.3s; width: 20%; }
+    .nav-item i { font-size: 20px; margin-bottom: 5px; transition: 0.3s; }
+    .nav-item.active { color: var(--primary); }
+    .nav-item.active i { transform: translateY(-3px); }
 
-  /* Títulos e Status em cima da capa */
-  .hero-content {
-    padding: 0 20px 20px 20px;
-    z-index: 2;
-  }
-  .obra-titulo {
-    font-size: 32px;
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-  }
-  
-  /* ========================================================= */
-  /* STATUS HORIZONTAL SCROLL (PÍLULAS) */
-  /* ========================================================= */
-  .tags-scroll {
-    display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;
-    scrollbar-width: none; /* Firefox */
-  }
-  .tags-scroll::-webkit-scrollbar { display: none; }
-  
-  .tag-pill {
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-    display: flex; align-items: center; gap: 6px;
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-  .tag-pill.accent { background: rgba(244, 114, 182, 0.15); color: var(--accent-color); border-color: rgba(244, 114, 182, 0.3); }
-  .tag-pill.success { background: rgba(0, 245, 212, 0.15); color: var(--success); }
-  .tag-pill.warning { background: rgba(255, 183, 3, 0.15); color: var(--warning); }
-  .tag-pill.danger { background: rgba(255, 42, 85, 0.15); color: var(--danger); border-color: rgba(255, 42, 85, 0.3); }
+    /* ================= SISTEMA DE CONTAS INTELIGENTE ================= */
+    .auth-container { max-width: 400px; margin: 20px auto; background: var(--card-bg); padding: 30px 20px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .auth-tabs { display: flex; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 25px; padding: 5px; }
+    .auth-tabs button { flex: 1; background: transparent; border: none; color: #888; padding: 10px; font-family: var(--font-family); font-weight: 700; font-size: 14px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .auth-tabs button.active { background: var(--primary); color: #fff; }
+    
+    .auth-form { display: none; animation: fadeIn 0.3s ease; }
+    .auth-form.active { display: block; }
+    
+    .meow-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.4); color: white; margin-bottom: 15px; font-family: var(--font-family); font-size: 14px; outline: none; transition: 0.3s; }
+    .meow-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); }
+    
+    .meow-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; background: var(--primary); color: white; font-family: var(--font-family); font-size: 15px; transition: 0.2s; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3); }
+    .meow-btn:active { transform: scale(0.98); }
+    .meow-btn-google { background: #fff; color: #000; box-shadow: 0 4px 15px rgba(255,255,255,0.1); }
+    
+    .forgot-pass { text-align: center; font-size: 12px; color: var(--primary); font-weight: 600; cursor: pointer; margin-top: 5px; }
+    .forgot-pass:hover { text-decoration: underline; }
 
-  /* ========================================================= */
-  /* CONTEÚDO PRINCIPAL (APP SURFACE) */
-  /* ========================================================= */
-  .app-body {
-    padding: 20px;
-    background: var(--bg-main);
-  }
+    #profile-info { display: none; text-align: center; padding-top: 20px; }
+    .profile-avatar { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(157, 78, 221, 0.4); }
 
-  .action-buttons {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 12px;
-    margin-bottom: 25px;
-  }
-  
-  .btn-primary {
-    background: var(--accent-color);
-    color: #000;
-    font-weight: 800;
-    font-size: 15px;
-    border-radius: var(--radius-lg);
-    border: none;
-    display: flex; justify-content: center; align-items: center; gap: 8px;
-    padding: 16px;
-    text-decoration: none;
-    box-shadow: 0 4px 20px rgba(244, 114, 182, 0.4);
-    transition: 0.2s;
-  }
-  .btn-primary:active { transform: scale(0.97); }
+    /* ================= CONFIGURAÇÕES E FORMULÁRIOS ================= */
+    .config-box { background: var(--card-bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); }
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 14px; font-weight: 600; }
+    
+    .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(24px); }
 
-  .btn-square {
-    width: 56px; height: 56px;
-    background: var(--bg-surface);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: var(--radius-lg);
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    color: var(--text-main); font-size: 10px; font-weight: 600; gap: 4px;
-    cursor: pointer; transition: 0.2s;
-  }
-  .btn-square.active {
-    background: rgba(244, 114, 182, 0.15);
-    color: var(--accent-color);
-    border-color: var(--accent-color);
-  }
+    .color-picker { background: transparent; border: none; cursor: pointer; height: 35px; width: 45px; border-radius: 8px; }
 
-  /* Sinopse */
-  .synopsis-box { margin-bottom: 30px; }
-  .synopsis-text {
-    font-size: 14px; color: var(--text-secondary); line-height: 1.6;
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  .synopsis-text.expanded { -webkit-line-clamp: unset; }
-  .btn-expand {
-    background: none; border: none; color: var(--accent-color);
-    font-size: 13px; font-weight: 700; margin-top: 8px; cursor: pointer; padding: 0;
-  }
-
-  /* ========================================================= */
-  /* LISTA DE CAPÍTULOS (ESTILO NATIVO) */
-  /* ========================================================= */
-  .section-title {
-    font-size: 18px; font-weight: 800; margin-bottom: 15px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  
-  .search-input {
-    width: 100%; background: var(--bg-surface); border: none;
-    color: #fff; padding: 14px 20px; border-radius: 50px;
-    font-size: 14px; margin-bottom: 20px; outline: none;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-  }
-  .search-input:focus { border: 1px solid var(--accent-color); }
-
-  .season-header {
-    background: var(--bg-surface);
-    padding: 16px 20px; border-radius: var(--radius-md);
-    display: flex; justify-content: space-between; align-items: center;
-    font-weight: 700; margin-bottom: 10px; cursor: pointer;
-  }
-  .season-content { display: none; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-
-  /* ITEM DO CAPÍTULO - 100% ISOLADO */
-  .chapter-item {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    background: var(--bg-surface);
-    border-radius: var(--radius-md);
-    transition: 0.2s;
-  }
-  
-  /* Área clicável do Link (Abre a leitura) */
-  .chapter-link-area {
-    display: flex; align-items: center; gap: 15px; flex: 1;
-    text-decoration: none; color: white; min-width: 0;
-  }
-  
-  .chapter-thumb {
-    width: 55px; height: 55px; border-radius: 10px; object-fit: cover;
-  }
-  
-  .chapter-info { display: flex; flex-direction: column; flex: 1; overflow: hidden; gap: 4px; }
-  .chapter-number { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .chapter-date { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
-
-  /* Área clicável do Download (Baixa o cap) - SEPARADA */
-  .chapter-action-area {
-    padding-left: 15px;
-    border-left: 1px solid rgba(255,255,255,0.05);
-  }
-  
-  /* Botão circular nativo de Download */
-  .btn-dl-app {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    border: none; color: var(--text-secondary);
-    display: flex; justify-content: center; align-items: center;
-    cursor: pointer; transition: 0.3s;
-  }
-  .btn-dl-app:active { transform: scale(0.85); background: rgba(255,255,255,0.1); }
-  
-  /* Estado de Sucesso */
-  .btn-dl-app.downloaded {
-    background: rgba(0, 245, 212, 0.15);
-    color: var(--success);
-  }
-
-  /* Animação Spinner Download */
-  @keyframes spinApp { 100% { transform: rotate(360deg); } }
-  .spinner-icon {
-    width: 20px; height: 20px;
-    border: 2px solid transparent; border-top-color: var(--accent-color); border-left-color: var(--accent-color);
-    border-radius: 50%; animation: spinApp 0.8s linear infinite;
-  }
-
-  /* Badges */
-  .badge-lido { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; }
-  .badge-lendo { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(244, 114, 182, 0.2); color: var(--accent-color); }
-  
-  .loading-container { height: 100vh; display: flex; justify-content: center; align-items: center; }
-
-  @media (min-width: 768px) {
-    .hero-header { height: 40vh; }
-    #main-obra { max-width: 800px; margin: 0 auto; }
-    .app-body { padding: 40px; border-radius: 24px 24px 0 0; margin-top: -20px; z-index: 10; position: relative; }
-  }
-</style>
+    /* ADMIN */
+    #admin-panel { display: none; background: rgba(157, 78, 221, 0.05); border: 1px solid var(--primary); padding: 20px; border-radius: 16px; margin-top: 20px; }
+    #nav-parceiros { display: none; }
+    
+    /* BIBLIOTECA VAZIA */
+    .empty-library { text-align: center; color: #888; padding: 40px 20px; font-size: 14px; }
+    .empty-library i { font-size: 40px; color: var(--primary); margin-bottom: 15px; opacity: 0.5; }
+  </style>
 </head>
 <body>
 
-<div id="main-obra">
-  <div class="loading-container">
-      <div class="spinner-icon" style="width: 40px; height: 40px; border-width: 4px;"></div>
+  <header>
+    <div class="brand-title">
+      <img id="header-logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png" alt="Logo">
+      <span id="header-title">MEOW SCAN</span>
+    </div>
+    <div class="notification-bell" onclick="abrirNotificacoes()">
+      <i class="fa-regular fa-bell"></i>
+      <span class="badge"></span>
+    </div>
+  </header>
+
+  <!-- ABA INÍCIO -->
+  <div id="view-inicio" class="view-section active">
+    
+    <!-- Destaque Grudado -->
+    <div id="banner-destaque" onclick="irParaDestaque()">
+      <img id="banner-img" src="https://via.placeholder.com/600x300" class="banner-img">
+      <div class="banner-overlay">
+        <div id="banner-titulo" class="banner-title">Carregando Obras...</div>
+      </div>
+    </div>
+
+    <div class="section-title" id="top-section-title"><i class="fa-solid fa-fire" style="color: #ff477e;"></i> Top 10 Mais Lidos</div>
+    <div id="grid-top" class="scroll-horizontal" style="margin-bottom: 15px;"></div>
+    
+    <div class="section-title"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Últimas Atualizações</div>
+    <div id="grid-inicio" class="grid-obras"></div>
   </div>
-</div>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <!-- ABA BUSCA -->
+  <div id="view-busca" class="view-section">
+    <div class="search-container">
+      <input type="text" id="search-input" class="search-bar" placeholder="🔍 Qual obra você quer ler hoje?">
+      <div class="filters-scroll" style="margin-top: 15px;">
+        <button class="filter-btn active" data-status="Todos">Todos</button>
+        <button class="filter-btn" data-status="Em Andamento">Em Andamento</button>
+        <button class="filter-btn" data-status="Completo">Completo</button>
+        <button class="filter-btn" data-status="Em Pausa">Em Pausa</button>
+      </div>
+    </div>
+    <div id="grid-busca" class="grid-obras"></div>
+  </div>
 
-<script>
-  // ==========================================
-  // CONFIGURAÇÃO FIREBASE
-  // ==========================================
-  const firebaseConfig = {
-    apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo",
-    authDomain: "meow-scan-ffff0.firebaseapp.com",
-    projectId: "meow-scan-ffff0",
-    databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com",
-    storageBucket: "meow-scan-ffff0.firebasestorage.app",
-    messagingSenderId: "76129834936",
-    appId: "1:76129834936:web:9927218dee30b1f069e14d"
-  };
+  <!-- ABA BIBLIOTECA -->
+  <div id="view-biblioteca" class="view-section">
+    <div class="section-title"><i class="fa-solid fa-book-bookmark" style="color: var(--primary);"></i> Minha Biblioteca Offline</div>
+    <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">As obras salvas aqui podem ser acessadas mesmo sem internet.</p>
+    <div id="grid-biblioteca" class="grid-obras">
+      <!-- Obras da biblioteca aparecerão aqui -->
+    </div>
+  </div>
 
-  let db = null;
-  try {
-      if (typeof window.firebase !== 'undefined') {
-          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-          db = firebase.database();
-      }
-  } catch (error) { 
-      console.warn("Firebase falhou, rodando puramente offline."); 
-  }
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const obraId = urlParams.get('obra'); 
-
-  let currentObra = null;
-  let globalSeasons = [];
-  let globalCapsObj = {};
-  let globalAllKeys = [];
-  let currentSearchTerm = '';
-
-  // Header Scroll Effect
-  window.addEventListener('scroll', () => {
-    const bar = document.getElementById('app-top-bar');
-    if(bar) {
-      if (window.scrollY > 50) bar.classList.add('scrolled');
-      else bar.classList.remove('scrolled');
-    }
-  });
-
-  function expandirSinopse() {
-      const p = document.getElementById('sinopse-text');
-      const btn = document.getElementById('btn-ler-mais');
-      if (p.classList.contains('expanded')) {
-          p.classList.remove('expanded');
-          btn.innerText = "Ler mais ▼";
-      } else {
-          p.classList.add('expanded');
-          btn.innerText = "Recolher ▲";
-      }
-  }
-
-  function registrarLeitura(capKey) {
-    if(!obraId) return;
-    if (db && navigator.onLine) {
-        db.ref(`obras/${obraId}/stats/total_cliques_ler`).transaction(c => (c||0)+1).catch(() => {});
-        db.ref(`obras/${obraId}/capitulos/${capKey}/cliques`).transaction(c => (c||0)+1).catch(() => {});
-    }
-    let progresso = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
-    if (!progresso[obraId]) progresso[obraId] = { lidos: [], lendo: null };
+  <!-- ABA PARCEIROS -->
+  <div id="view-parceiros" class="view-section">
+    <div class="section-title"><i class="fa-solid fa-handshake"></i> Nossos Parceiros</div>
     
-    let lendoAnterior = progresso[obraId].lendo;
-    if (lendoAnterior && lendoAnterior !== capKey && !progresso[obraId].lidos.includes(lendoAnterior)) {
-        progresso[obraId].lidos.push(lendoAnterior);
+    <!-- Link principal para a página Parceiros -->
+    <a href="parceiros.html" class="meow-btn" style="text-decoration:none; margin-bottom: 20px;">
+      <i class="fa-solid fa-server"></i> Nossas Hospedagens
+    </a>
+
+    <div id="lista-parceiros" class="grid-obras"></div>
+    
+    <div id="admin-panel">
+      <h4 style="margin-bottom: 15px; color: var(--primary);"><i class="fa-solid fa-shield-halved"></i> Área do ADM</h4>
+      <input type="text" id="link-github-parceiro" class="meow-input" placeholder="Link do Parceiro (Ex: Github/Site)">
+      <input type="text" id="nome-parceiro" class="meow-input" placeholder="Nome do Parceiro">
+      <button onclick="adicionarParceiro()" class="meow-btn">Adicionar Parceiro</button>
+    </div>
+  </div>
+
+  <!-- ABA PERFIL -->
+  <div id="view-perfil" class="view-section">
+    
+    <!-- Sistema de Contas Moderno -->
+    <div id="auth-box" class="auth-container">
+      <h2 style="text-align: center; margin-bottom: 25px; font-size: 1.5rem;">Sua próxima leitura te aguarda</h2>
+      
+      <div class="auth-tabs">
+        <button id="tab-login" class="active" onclick="switchAuthTab('login')">Entrar</button>
+        <button id="tab-register" onclick="switchAuthTab('register')">Cadastrar</button>
+      </div>
+
+      <!-- Formulário de Login -->
+      <div id="form-login" class="auth-form active">
+        <button id="btn-google-login" class="meow-btn meow-btn-google">
+          <i class="fa-brands fa-google" style="color: #ea4335; font-size: 18px;"></i> Continuar com Google
+        </button>
+        <div style="text-align: center; margin: 20px 0; color: #666; font-size: 12px; text-transform: uppercase; font-weight: 700;">ou use seu e-mail</div>
+        <input type="email" id="login-email" class="meow-input" placeholder="E-mail">
+        <input type="password" id="login-pass" class="meow-input" placeholder="Senha">
+        <button id="btn-login-email" class="meow-btn">Fazer Login</button>
+        <p class="forgot-pass" onclick="switchAuthTab('recover')">Esqueceu sua senha?</p>
+      </div>
+
+      <!-- Formulário de Cadastro -->
+      <div id="form-register" class="auth-form">
+        <input type="text" id="reg-name" class="meow-input" placeholder="Como devemos te chamar?">
+        <input type="email" id="reg-email" class="meow-input" placeholder="Seu melhor e-mail">
+        <input type="password" id="reg-pass" class="meow-input" placeholder="Crie uma senha forte">
+        <button id="btn-register" class="meow-btn">Criar Minha Conta</button>
+      </div>
+
+      <!-- Formulário de Recuperação -->
+      <div id="form-recover" class="auth-form">
+        <p style="font-size: 13px; color: #aaa; text-align: center; margin-bottom: 15px;">Enviaremos um link seguro para você redefinir sua senha.</p>
+        <input type="email" id="rec-email" class="meow-input" placeholder="Digite seu e-mail cadastrado">
+        <button id="btn-recover" class="meow-btn">Enviar Link de Recuperação</button>
+        <p class="forgot-pass" onclick="switchAuthTab('login')">Voltar para o Login</p>
+      </div>
+    </div>
+
+    <!-- Perfil Logado -->
+    <div id="profile-info">
+      <img id="user-avatar" src="https://via.placeholder.com/150" class="profile-avatar">
+      <h2 id="user-name" style="margin-bottom: 5px;">Nome do Leitor</h2>
+      <p style="color: #888; font-size: 12px; margin-bottom: 25px;">Membro da Meow Scan</p>
+      
+      <div class="section-title" style="text-align: left;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Leitura</div>
+      <div id="history-grid" class="scroll-horizontal" style="margin-bottom: 30px;"></div>
+      
+      <button id="btn-logout" class="meow-btn" style="background: rgba(230, 57, 70, 0.1); color: #e63946; border: 1px solid rgba(230, 57, 70, 0.3); box-shadow: none;">Sair da Conta</button>
+    </div>
+  </div>
+
+  <!-- ABA CONFIGURAÇÕES -->
+  <div id="view-config" class="view-section">
+    <div class="section-title"><i class="fa-solid fa-gear"></i> Ajustes do App</div>
+    
+    <div class="config-box">
+      <div class="toggle-row">
+        <span>Conteúdo Adulto (+18) <br><small style="color:#888;font-size:11px;font-weight:400;">Confirmo ser maior de 18 anos</small></span>
+        <label class="switch"><input type="checkbox" id="toggle-18"><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row" style="margin-bottom: 0;">
+        <span>Obras Sensíveis <br><small style="color:#888;font-size:11px;font-weight:400;">Gatilhos e violência</small></span>
+        <label class="switch"><input type="checkbox" id="toggle-sensitive"><span class="slider"></span></label>
+      </div>
+    </div>
+
+    <div class="config-box">
+      <h4 style="margin-bottom: 20px; font-size: 16px;"><i class="fa-solid fa-palette"></i> Personalizar Aparência</h4>
+      <div class="toggle-row">Cor de Fundo <input type="color" id="cfg-bg" class="color-picker" value="#0f0c1b"></div>
+      <div class="toggle-row">Cor do Texto <input type="color" id="cfg-text" class="color-picker" value="#ffffff"></div>
+      
+      <label for="bg-upload" class="meow-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; box-shadow: none; margin-top: 15px;">
+        <i class="fa-regular fa-image"></i> Escolher Fundo da Galeria
+      </label>
+      <input type="file" id="bg-upload" accept="image/*" style="display: none;">
+
+      <button id="btn-salvar-cores" class="meow-btn" style="margin-top: 15px;">Aplicar Novo Tema</button>
+      <button id="btn-reset-cores" class="meow-btn" style="background: transparent; border: 1px solid #555; color: #aaa; box-shadow: none;">Restaurar Padrão</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('inicio', this)">
+      <i class="fa-solid fa-house"></i> Início
+    </button>
+    <button class="nav-item" onclick="switchTab('busca', this)">
+      <i class="fa-solid fa-magnifying-glass"></i> Busca
+    </button>
+    <!-- NOVA ABA DA BIBLIOTECA -->
+    <button class="nav-item" onclick="switchTab('biblioteca', this); renderBiblioteca();">
+      <i class="fa-solid fa-book-bookmark"></i> Biblioteca
+    </button>
+    <button class="nav-item" id="nav-parceiros" onclick="switchTab('parceiros', this)">
+      <i class="fa-solid fa-handshake"></i> Parceiros
+    </button>
+    <button class="nav-item" onclick="switchTab('perfil', this)">
+      <i class="fa-solid fa-user"></i> Perfil
+    </button>
+    <button class="nav-item" onclick="switchTab('config', this)">
+      <i class="fa-solid fa-gear"></i> Config
+    </button>
+  </nav>
+
+  <!-- FIREBASE SCRIPTS -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+  <script>
+    /* ================= 1. CONFIGURAÇÕES LOCAIS ================= */
+    const settings = JSON.parse(localStorage.getItem('meowSettings')) || { 
+      show18: false, showSensitive: false, bgColor: '#0f0c1b', textColor: '#ffffff', bgImage: '', ageVerified: false
+    };
+
+    function applySettings() {
+      document.documentElement.style.setProperty('--bg-color', settings.bgColor);
+      document.documentElement.style.setProperty('--text-color', settings.textColor);
+      document.documentElement.style.setProperty('--bg-image', settings.bgImage ? `url(${settings.bgImage})` : 'none');
+      
+      document.getElementById('toggle-18').checked = settings.show18;
+      document.getElementById('toggle-sensitive').checked = settings.showSensitive;
+      document.getElementById('cfg-bg').value = settings.bgColor;
+      document.getElementById('cfg-text').value = settings.textColor;
     }
-    progresso[obraId].lendo = capKey;
-    progresso[obraId].lidos = progresso[obraId].lidos.filter(id => id !== capKey);
-    localStorage.setItem('progresso_leitura', JSON.stringify(progresso));
-  }
+    applySettings();
 
-  function toggleBiblioteca(id) {
-    const btn = document.getElementById('btn-save');
-    const nome = btn.getAttribute('data-nome');
-    let listaBib = JSON.parse(localStorage.getItem('meow_priv') || '[]');
-    const index = listaBib.findIndex(item => item.id === id);
+    document.getElementById('toggle-18').addEventListener('change', (e) => {
+      if(e.target.checked && !settings.ageVerified) {
+        if(confirm("Você confirma ser maior de 18 anos?")) {
+          settings.ageVerified = true;
+        } else {
+          e.target.checked = false; return;
+        }
+      }
+      settings.show18 = e.target.checked; saveSettings(); renderObras();
+    });
 
-    if (index > -1) {
-      listaBib.splice(index, 1);
-      btn.classList.remove('active');
-      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Salvar`;
-    } else {
-      listaBib.push({ id: id, nome: nome, dataSalvo: Date.now() });
+    document.getElementById('toggle-sensitive').addEventListener('change', (e) => {
+      settings.showSensitive = e.target.checked; saveSettings(); renderObras();
+    });
+
+    document.getElementById('bg-upload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          settings.bgImage = event.target.result;
+          saveSettings(); applySettings();
+          alert("Imagem de fundo aplicada com sucesso!");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('btn-salvar-cores').addEventListener('click', () => {
+      settings.bgColor = document.getElementById('cfg-bg').value;
+      settings.textColor = document.getElementById('cfg-text').value;
+      saveSettings(); applySettings();
+    });
+    
+    document.getElementById('btn-reset-cores').addEventListener('click', () => {
+      settings.bgColor = '#0f0c1b'; settings.textColor = '#ffffff'; settings.bgImage = '';
+      saveSettings(); applySettings();
+    });
+
+    function saveSettings() { localStorage.setItem('meowSettings', JSON.stringify(settings)); }
+
+    /* ================= 2. NAVEGAÇÃO DE ABAS DO APP ================= */
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById(`view-${tabId}`).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
-      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Salvo`;
+      window.scrollTo(0, 0);
     }
-    localStorage.setItem('meow_priv', JSON.stringify(listaBib));
-  }
 
-  window.toggleSeason = function(header) {
-    const chapters = header.nextElementSibling;
-    const icon = header.querySelector('.arrow-icon');
-    if (getComputedStyle(chapters).display === 'none') {
-      chapters.style.display = 'flex';
-      icon.style.transform = 'rotate(180deg)';
-    } else {
-      chapters.style.display = 'none';
-      icon.style.transform = 'rotate(0deg)';
-    }
-  }
-
-  window.filtrarCaps = function(term) {
-      currentSearchTerm = term.toLowerCase();
-      gerarHtmlCapitulos(currentSearchTerm);
-  }
-
-  // ==========================================
-  // DB OFFLINE E DOWNLOAD MELHORADO
-  // ==========================================
-  const initDB = () => {
-      return new Promise((resolve, reject) => {
-          const request = indexedDB.open('MeowScanOfflineDB', 1);
-          request.onupgradeneeded = (e) => {
-              const db = e.target.result;
-              if (!db.objectStoreNames.contains('capitulos_imagens')) {
-                  db.createObjectStore('capitulos_imagens', { keyPath: 'id' });
-              }
-          };
-          request.onsuccess = () => resolve(request.result);
-          request.onerror = () => reject(request.error);
-      });
-  };
-
-  const salvarImagensIndexedDB = async (id, imagensBase64) => {
-      const db = await initDB();
-      return new Promise((resolve, reject) => {
-          const tx = db.transaction('capitulos_imagens', 'readwrite');
-          const store = tx.objectStore('capitulos_imagens');
-          store.put({ id: id, imagens: imagensBase64 });
-          tx.oncomplete = () => resolve();
-          tx.onerror = () => reject(tx.error);
-      });
-  };
-
-  // Convertendo imagem para Base64 com tratamento de erro e controle de cache
-  const urlToBase64 = async (url) => {
-      try {
-          // Tenta baixar forçando o browser a pegar os dados
-          const response = await fetch(url, { mode: 'cors', cache: 'no-cache' });
-          if (!response.ok) throw new Error("Erro na rede ou imagem protegida");
-          
-          const blob = await response.blob();
-          return new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onloadend = () => resolve(reader.result);
-              reader.onerror = reject;
-              reader.readAsDataURL(blob);
-          });
-      } catch (e) {
-          console.error("Falha ao baixar imagem:", url, e);
-          return null; // Retorna null para não quebrar todo o array
-      }
-  };
-
-  // Ícones em SVG
-  const iconeDownload = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
-  const iconeCheck = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-  const iconeSpinner = `<div class="spinner-icon"></div>`;
-
-  window.baixarCapituloApp = async function(capKey) {
-      let btn = document.getElementById(`btn-dl-${capKey}`);
-      
-      // Muda UI para carregando
-      btn.innerHTML = iconeSpinner;
-      btn.style.pointerEvents = 'none';
-
-      try {
-          let capData = globalCapsObj[capKey];
-          // Verifica onde as imagens do Firebase estão guardadas (paginas, imagens ou urls)
-          let urlsImagens = capData.paginas || capData.imagens || capData.urls || []; 
-          
-          if (urlsImagens.length > 0) {
-              let imagensBase64 = [];
-              for (let url of urlsImagens) {
-                  let base64 = await urlToBase64(url);
-                  // Se conseguiu converter, guarda no array
-                  if (base64) imagensBase64.push(base64);
-              }
-              
-              if(imagensBase64.length === 0) {
-                  throw new Error("Não foi possível processar as imagens (CORS ou erro de link).");
-              }
-
-              // Salva no banco de dados offline
-              await salvarImagensIndexedDB(`${obraId}_${capKey}`, imagensBase64);
-          } else {
-              console.warn("Capítulo sem imagens detectadas no banco.");
-          }
-
-          // Salva os dados de texto (nome, número) para carregar sem internet
-          let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
-          if(!offlineDb[obraId]) offlineDb[obraId] = {};
-          offlineDb[obraId][capKey] = { data: capData, salvoEm: Date.now() };
-          localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
-          
-          // UI Sucesso
-          btn.innerHTML = iconeCheck;
-          btn.classList.add('downloaded');
-
-      } catch (erro) {
-          console.error("Erro ao baixar:", erro);
-          alert("Erro ao baixar o capítulo. Verifique sua conexão ou a proteção das imagens.");
-          btn.innerHTML = iconeDownload; // Volta pro estado normal se der erro
-      } finally {
-          btn.style.pointerEvents = 'auto';
-      }
-  }
-
-  function gerarHtmlCapitulos(searchTerm = '') {
-      let html = '';
-      let seasonsToRender = JSON.parse(JSON.stringify(globalSeasons));
-      
-      let progressoObj = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
-      let progressoAtual = progressoObj[obraId] || { lidos: [], lendo: null };
-      
-      let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
-      let offlineObra = offlineDb[obraId] || {};
-
-      // Sempre renderizando decrescente
-      seasonsToRender.reverse();
-      seasonsToRender.forEach(s => s.chapters.reverse());
-
-      seasonsToRender.forEach((season) => {
-          let filtered = season.chapters.filter(k => {
-              let c = globalCapsObj[k];
-              if(!c) return false;
-              let t = String(c.nomeCap || `Capítulo ${c.numero}`).toLowerCase();
-              return t.includes(searchTerm) || String(c.numero).includes(searchTerm);
-          });
-
-          if (filtered.length === 0) return;
-
-          let badgeText = season.type === 'Volume' ? `VOL. ${season.num}` : `TEMP. ${season.num}`;
-
-          html += `
-            <div class="season-header" onclick="toggleSeason(this)">
-              <span>${badgeText} • ${season.chapters.length} Caps</span>
-              <svg class="arrow-icon" style="transition:0.3s;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-            </div>
-            <div class="season-content" style="display: flex;">
-          `;
-
-          filtered.forEach((k) => {
-              let c = globalCapsObj[k];
-              
-              let isLendo = (progressoAtual.lendo === k);
-              let isLido = (progressoAtual.lidos || []).includes(k) && !isLendo;
-              
-              let badgeHtml = '';
-              if (isLendo) badgeHtml = `<span class="badge-lendo">Lendo</span>`;
-              else if (isLido) badgeHtml = `<span class="badge-lido">Lido</span>`;
-
-              let nomeFormatado = (c.nomeCap && c.nomeCap.trim() !== "") ? c.nomeCap : `Capítulo ${c.numero || '?'}`;
-              let dataCap = new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'});
-              
-              let jaBaixado = !!offlineObra[k];
-              let uiBotaoDL = jaBaixado 
-                ? `<button id="btn-dl-${k}" class="btn-dl-app downloaded" onclick="baixarCapituloApp('${k}')">${iconeCheck}</button>`
-                : `<button id="btn-dl-${k}" class="btn-dl-app" onclick="baixarCapituloApp('${k}')">${iconeDownload}</button>`;
-
-              html += `
-              <div class="chapter-item">
-                <a href="Capitulo.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link-area">
-                  <img src="${currentObra.capaUrl || 'https://via.placeholder.com/55'}" class="chapter-thumb" loading="lazy">
-                  <div class="chapter-info">
-                    <span class="chapter-number">${nomeFormatado} ${badgeHtml}</span>
-                    <span class="chapter-date">${dataCap} • ${c.cliques || 0} views</span>
-                  </div>
-                </a>
-                <div class="chapter-action-area">
-                  ${uiBotaoDL}
-                </div>
-              </div>`;
-          });
-          html += `</div>`;
-      });
-
-      if(html === '') html = '<div style="text-align:center; padding:40px; color:var(--text-secondary);">Nenhum capítulo encontrado.</div>';
-      document.getElementById('chapters-container').innerHTML = html;
-  }
-
-  function renderizarPagina(obra) {
-    const nomeObraSafe = String(obra.nome || '').replace(/"/g, '&quot;');
-    const listaBib = JSON.parse(localStorage.getItem('meow_priv') || '[]');
-    const isSaved = listaBib.some(item => item.id === obraId);
+    /* ================= 3. INICIALIZAÇÃO SEGURA DO FIREBASE ================= */
+    const firebaseConfig = {
+      apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
+      authDomain: "meow-scan-ffff0.firebaseapp.com",
+      databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com",
+      projectId: "meow-scan-ffff0",
+      storageBucket: "meow-scan-ffff0.firebasestorage.app",
+      messagingSenderId: "76129834936",
+      appId: "1:76129834936:web:36df84ea0fb31ecc69e14d"
+    };
     
-    globalCapsObj = obra.capitulos || {};
-    globalAllKeys = Object.keys(globalCapsObj);
-    
-    const regularChaptersKeys = globalAllKeys.filter(k => (globalCapsObj[k].tipoLabel || 'Capítulo') === 'Capítulo').sort((a, b) => parseFloat(globalCapsObj[a].numero || 0) - parseFloat(globalCapsObj[b].numero || 0));
+    if (!firebase.apps.length) {
+       firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+    const auth = firebase.auth();
 
-    globalSeasons = [];
-    let seasonNum = 1; let currentSeason = [];
-    const defaultType = (String(obra.tipo||'').toLowerCase().includes('novel') || String(obra.generos||'').toLowerCase().includes('novel')) ? 'Volume' : 'Temporada'; 
+    let todasObras = [];
+    let currentFiltro = 'Todos';
+    let currentUser = null;
+    let isAdmin = false;
+    const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3"; 
 
-    for (const k of regularChaptersKeys) {
-      currentSeason.push(k);
-      const enc = String(globalCapsObj[k].encerramento || '').toLowerCase();
-      if (enc.includes('temporada') || enc.includes('volume') || enc.includes('fim')) {
-        const match = enc.match(/(\d+)/); 
-        let sNum = match ? parseInt(match[1]) : seasonNum;
-        globalSeasons.push({ num: sNum, type: defaultType, chapters: currentSeason });
-        currentSeason = []; seasonNum = sNum + 1;
+    db.ref('obras').on('value', snap => {
+      todasObras = [];
+      if(snap.exists()){
+        snap.forEach(child => {
+          todasObras.push({ id: child.key, ...child.val() });
+        });
       }
-    }
-    if (currentSeason.length > 0) globalSeasons.push({ num: seasonNum, type: defaultType, chapters: currentSeason });
+      renderObras();
+      iniciarDestaqueRotativo();
+      renderBiblioteca(); 
+    });
 
-    let progressoObj = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
-    let progressoAtual = progressoObj[obraId];
-    const sortedForNew = globalAllKeys.sort((a, b) => (globalCapsObj[b].dataPostagem || 0) - (globalCapsObj[a].dataPostagem || 0));
-    
-    let btnPrincipalTexto = "Começar Leitura";
-    let linkLer = globalAllKeys.length > 0 ? `Capitulo.html?obra=${obraId}&cap=${sortedForNew[sortedForNew.length-1]}` : "#"; 
-
-    if (progressoAtual && progressoAtual.lendo && globalCapsObj[progressoAtual.lendo]) {
-        btnPrincipalTexto = `Continuar • Cap ${globalCapsObj[progressoAtual.lendo].numero || '?'}`;
-        linkLer = `Capitulo.html?obra=${obraId}&cap=${progressoAtual.lendo}`;
-    }
-
-    const generos = obra.generos ? obra.generos.split(',').map(g => `<span class="tag-pill">${g.trim()}</span>`).join('') : '';
-    let statusPill = obra.status?.toLowerCase().includes('completo') 
-        ? `<span class="tag-pill success">Completo</span>` 
-        : `<span class="tag-pill warning">Em Lançamento</span>`;
-        
-    let avisoPill = obra.classificacao === '+18' ? `<span class="tag-pill danger">🔞 +18</span>` : '';
-
-    const html = `
-      <div id="app-top-bar" class="app-bar">
-        <a href="index.html" class="icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></a>
-        <button class="icon-btn" onclick="navigator.share({title: document.title, url: window.location.href})"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
-      </div>
-
-      <div class="hero-header">
-        <img src="${obra.capaUrl || ''}" class="hero-bg-img">
-        <div class="hero-gradient"></div>
-        <div class="hero-content">
-          <h1 class="obra-titulo">${obra.nome || 'Carregando...'}</h1>
-          <div class="tags-scroll">
-            <span class="tag-pill accent">⭐ ${(obra.stats?.visualizacoes || 0)} views</span>
-            ${statusPill}
-            ${avisoPill}
-            ${generos}
+    /* ================= 4. RENDERIZAÇÃO INTELIGENTE ================= */
+    function createTop10CardHTML(obra, ranking) {
+      const views = obra.views || 0; 
+      return `
+        <a href="obra.html?obra=${obra.id}" class="card-obra top-card" 
+           oncontextmenu="event.preventDefault(); confirmarSalvar('${obra.id}')"
+           onclick="registrarClique('${obra.id}')">
+          <div class="rank-badge">${ranking}</div>
+          <div class="capa-wrapper">
+            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
+            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
           </div>
-        </div>
-      </div>
+        </a>
+      `;
+    }
 
-      <div class="app-body">
-        <div class="action-buttons">
-          <a href="${linkLer}" class="btn-primary" onclick="registrarLeitura('${progressoAtual?.lendo || sortedForNew[sortedForNew.length-1]}')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            ${btnPrincipalTexto}
-          </a>
-          <button id="btn-save" class="btn-square ${isSaved ? 'active' : ''}" onclick="toggleBiblioteca('${obraId}')" data-nome="${nomeObraSafe}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-            ${isSaved ? 'Salvo' : 'Salvar'}
-          </button>
-        </div>
+    function createNormalCardHTML(obra, isUpdated = false, isBiblioteca = false) {
+      const views = obra.views || 0;
+      let capsHTML = '';
+      let totalCaps = 0;
+      
+      if (obra.capitulos) {
+        const capArray = Object.values(obra.capitulos).sort((a, b) => b.numero - a.numero);
+        totalCaps = capArray.length;
+        
+        capArray.slice(0, 2).forEach((cap, index) => {
+          const badgeNovo = (isUpdated && index === 0) ? `<span class="badge-novo">NOVO</span>` : '';
+          capsHTML += `
+            <div class="chapter-row">
+              <span><i class="fa-solid fa-wand-magic-sparkles"></i> CAP ${cap.numero} ${badgeNovo}</span>
+            </div>
+          `;
+        });
+      }
 
-        <div class="synopsis-box">
-          <div class="section-title">Sobre a obra</div>
-          <p id="sinopse-text" class="synopsis-text">${obra.sinopse || 'Nenhuma descrição disponível.'}</p>
-          <button id="btn-ler-mais" class="btn-expand" onclick="expandirSinopse()">Ler mais ▼</button>
-        </div>
+      const removeBtn = isBiblioteca 
+        ? `<button onclick="event.preventDefault(); removerDaBiblioteca('${obra.id}')" class="btn-save-lib" style="background: rgba(255,0,0,0.8);"><i class="fa-solid fa-trash"></i></button>` 
+        : `<button onclick="event.preventDefault(); salvarObraPeloId('${obra.id}')" class="btn-save-lib" title="Salvar na Biblioteca"><i class="fa-solid fa-bookmark"></i></button>`;
 
-        <div class="chapters-box">
-          <div class="section-title">Capítulos <span style="font-size:14px; font-weight:600; color:var(--accent-color);">${globalAllKeys.length}</span></div>
-          <input type="text" class="search-input" placeholder="Pesquisar capítulo..." oninput="filtrarCaps(this.value)">
-          <div id="chapters-container"></div>
-        </div>
-      </div>
-    `;
+      const badge18 = (obra.adulto && !isBiblioteca) ? '<div class="badge-18">18+</div>' : '';
+
+      // Adicionado suporte ao Toque Longo na âncora usando oncontextmenu
+      return `
+        <a href="obra.html?obra=${obra.id}" class="card-obra" 
+           oncontextmenu="event.preventDefault(); confirmarSalvar('${obra.id}')" 
+           onclick="registrarClique('${obra.id}')">
+          ${removeBtn}
+          <div class="capa-wrapper">
+            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
+            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
+            <div class="badge-caps">${totalCaps} CAPS</div>
+            ${badge18}
+          </div>
+          <div class="info-obra">
+            <div class="titulo-obra">${obra.nome}</div>
+            ${capsHTML}
+          </div>
+        </a>
+      `;
+    }
+
+    function registrarClique(id) {
+      let history = JSON.parse(localStorage.getItem('meowHistory')) || [];
+      if(!history.includes(id)) { history.unshift(id); }
+      if(history.length > 15) history.pop(); 
+      localStorage.setItem('meowHistory', JSON.stringify(history));
+    }
+
+    function renderObras() {
+      let obrasFiltradas = todasObras.filter(o => {
+        if(o.adulto && !settings.show18) return false;
+        if(o.sensivel && !settings.showSensitive) return false;
+        return true;
+      });
+
+      // LÓGICA DO TOP 10 CORRIGIDA (SÓ APARECE SE TIVER VIEWS)
+      const topObras = [...obrasFiltradas].filter(o => o.views && o.views > 0).sort((a, b) => b.views - a.views).slice(0, 10);
+      const topSectionTitle = document.getElementById('top-section-title');
+      const gridTop = document.getElementById('grid-top');
+
+      if(topObras.length > 0) {
+        topSectionTitle.style.display = 'flex';
+        gridTop.style.display = 'flex';
+        gridTop.innerHTML = topObras.map((o, index) => createTop10CardHTML(o, index + 1)).join('');
+      } else {
+        topSectionTitle.style.display = 'none';
+        gridTop.style.display = 'none';
+      }
+
+      const obrasAtualizadas = [...obrasFiltradas].reverse(); 
+      document.getElementById('grid-inicio').innerHTML = obrasAtualizadas.slice(0, 12).map((o, index) => {
+        return createNormalCardHTML(o, index < 3); 
+      }).join('');
+
+      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      let obrasBusca = obrasFiltradas.filter(o => {
+        const matchesSearch = o.nome.toLowerCase().includes(searchTerm) || searchTerm === '';
+        const status = o.status ? o.status.toLowerCase() : 'em andamento';
+        const matchesStatus = currentFiltro === 'Todos' || status.includes(currentFiltro.toLowerCase());
+        return matchesSearch && matchesStatus;
+      });
+      document.getElementById('grid-busca').innerHTML = obrasBusca.map(o => createNormalCardHTML(o)).join('');
+      
+      renderHistorico();
+    }
+
+    document.getElementById('search-input').addEventListener('input', renderObras);
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentFiltro = e.target.getAttribute('data-status');
+        renderObras();
+      });
+    });
+
+    /* ================= 4.1 BIBLIOTECA OFFLINE (LOGIC) ================= */
     
-    document.getElementById('main-obra').innerHTML = html;
-    gerarHtmlCapitulos();
-  }
+    // Função para salvar a obra puxando o ID de dentro da própria aba principal
+    window.salvarObraPeloId = function(id) {
+      const obra = todasObras.find(o => o.id === id);
+      if(obra) salvarNaBiblioteca(obra);
+    };
 
-  // ==========================================
-  // INICIALIZAÇÃO
-  // ==========================================
-  if (obraId) {
-      const cacheKey = 'cache_obra_' + obraId;
-      const cachedData = localStorage.getItem(cacheKey);
-      
-      // Carrega os dados salvos primeiro, pra funcionar offline instantaneamente
-      if (cachedData) {
-          try {
-              currentObra = JSON.parse(cachedData);
-              renderizarPagina(currentObra);
-          } catch(e) {}
+    // Função para toque longo (segurar)
+    window.confirmarSalvar = function(id) {
+      if(confirm('Deseja salvar esta obra na sua Biblioteca para ler depois?')) {
+        salvarObraPeloId(id);
       }
-      
-      // Se tiver internet, atualiza o firebase e guarda no LocalStorage
-      if (db && navigator.onLine) {
-          db.ref('obras/' + obraId).on('value', snap => {
-              const newData = snap.val();
-              if (newData) {
-                  localStorage.setItem(cacheKey, JSON.stringify(newData));
-                  currentObra = newData;
-                  renderizarPagina(currentObra);
-              }
-          });
+    };
+
+    window.salvarNaBiblioteca = function(obraObj) {
+      let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
+      if(!bib.find(o => o.id === obraObj.id)) {
+        bib.push(obraObj);
+        localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
+        alert("Obra salva na Biblioteca Offline!");
+      } else {
+        alert("Esta obra já está na sua biblioteca.");
       }
-  } else {
-      document.getElementById('main-obra').innerHTML = '<div style="text-align:center; padding:50px;">Nenhuma obra especificada.</div>';
-  }
-</script>
+    };
+
+    window.removerDaBiblioteca = function(id) {
+      let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
+      bib = bib.filter(o => o.id !== id);
+      localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
+      renderBiblioteca();
+    };
+
+    function renderBiblioteca() {
+      const bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
+      const grid = document.getElementById('grid-biblioteca');
+      
+      if(bib.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-library" style="grid-column: span 2;">
+            <i class="fa-solid fa-box-open"></i>
+            <p>Sua biblioteca está vazia.</p>
+            <p style="font-size: 11px; margin-top: 5px;">Abra uma obra ou clique no botão de salvar nas capas para lê-la offline depois.</p>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = bib.map(o => createNormalCardHTML(o, false, true)).join('');
+    }
+
+    /* ================= 5. DESTAQUE ROTATIVO OTIMIZADO ================= */
+    let destaqueInterval;
+    let obraDestaqueAtual = null;
+
+    function iniciarDestaqueRotativo() {
+      if(todasObras.length === 0) return;
+      if(destaqueInterval) clearInterval(destaqueInterval);
+      trocarDestaque();
+      destaqueInterval = setInterval(trocarDestaque, 6000); 
+    }
+
+    function trocarDestaque() {
+      let obrasValidas = todasObras.filter(o => {
+        if(o.adulto && !settings.show18) return false;
+        if(o.sensivel && !settings.showSensitive) return false;
+        return true;
+      });
+
+      if(obrasValidas.length === 0) return;
+      
+      const randomIndex = Math.floor(Math.random() * obrasValidas.length);
+      obraDestaqueAtual = obrasValidas[randomIndex];
+      
+      const bannerImg = document.getElementById('banner-img');
+      bannerImg.style.opacity = 0; 
+      
+      setTimeout(() => {
+        bannerImg.src = obraDestaqueAtual.capaUrl || 'https://via.placeholder.com/800x400';
+        document.getElementById('banner-titulo').innerText = obraDestaqueAtual.nome;
+        bannerImg.style.opacity = 1; 
+      }, 400);
+    }
+
+    function irParaDestaque() {
+      if(obraDestaqueAtual) {
+        registrarClique(obraDestaqueAtual.id);
+        window.location.href = `obra.html?obra=${obraDestaqueAtual.id}`;
+      }
+    }
+
+    /* ================= 6. AUTHENTICAÇÃO INTELIGENTE ================= */
+    window.switchAuthTab = function(tabName) {
+      document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.auth-tabs button').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('form-' + tabName).classList.add('active');
+      if(tabName !== 'recover') {
+        document.getElementById('tab-' + tabName).classList.add('active');
+      }
+    };
+
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      
+      if (user && (user.emailVerified || user.providerData.some(p => p.providerId === 'google.com'))) {
+        document.getElementById('auth-box').style.display = 'none';
+        document.getElementById('profile-info').style.display = 'block';
+        document.getElementById('user-name').innerText = user.displayName || 'Leitor(a)';
+        document.getElementById('user-avatar').src = user.photoURL || 'https://via.placeholder.com/150';
+
+        db.ref(`notificacoes/${user.uid}`).on('value', snap => {
+          if(snap.exists() && snap.val().lida === false) {
+             document.querySelector('.notification-bell').classList.add('has-news');
+          } else {
+             document.querySelector('.notification-bell').classList.remove('has-news');
+          }
+        });
+
+        if (user.uid === ADMIN_UID) {
+          isAdmin = true;
+          document.getElementById('nav-parceiros').style.display = 'flex';
+          document.getElementById('admin-panel').style.display = 'block';
+        }
+      } else {
+        document.getElementById('auth-box').style.display = 'block';
+        document.getElementById('profile-info').style.display = 'none';
+        document.getElementById('nav-parceiros').style.display = 'none';
+        isAdmin = false;
+        switchAuthTab('login');
+        
+        if(user && !user.emailVerified && !user.providerData.some(p => p.providerId === 'google.com')) {
+           auth.signOut();
+        }
+      }
+    });
+
+    document.getElementById('btn-google-login').addEventListener('click', () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(err => alert(err.message));
+    });
+    
+    document.getElementById('btn-login-email').addEventListener('click', () => {
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-pass').value;
+      if(!email || !pass) return alert("Preencha e-mail e senha!");
+      
+      auth.signInWithEmailAndPassword(email, pass).then(cred => {
+         if(!cred.user.emailVerified) {
+             alert("Sua conta ainda não foi verificada. Por favor, cheque seu e-mail.");
+             auth.signOut();
+         }
+      }).catch(err => alert("Erro ao entrar: " + err.message));
+    });
+
+    document.getElementById('btn-register').addEventListener('click', () => {
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const pass = document.getElementById('reg-pass').value;
+      if(!name || !email || !pass) return alert("Preencha todos os campos!");
+      
+      auth.createUserWithEmailAndPassword(email, pass).then(cred => {
+         cred.user.updateProfile({ displayName: name });
+         return cred.user.sendEmailVerification();
+      }).then(() => {
+         alert("Conta criada! Verifique sua caixa de entrada.");
+         auth.signOut(); 
+         switchAuthTab('login');
+      }).catch(err => alert("Erro: " + err.message));
+    });
+
+    document.getElementById('btn-recover').addEventListener('click', () => {
+      const email = document.getElementById('rec-email').value;
+      if(!email) return alert("Digite seu e-mail.");
+      auth.sendPasswordResetEmail(email).then(() => {
+         alert("Link de recuperação enviado.");
+         switchAuthTab('login');
+      }).catch(err => alert("Erro: " + err.message));
+    });
+    
+    document.getElementById('btn-logout').addEventListener('click', () => auth.signOut());
+
+    function renderHistorico() {
+      const historyIds = JSON.parse(localStorage.getItem('meowHistory')) || [];
+      const historyObras = historyIds.map(id => todasObras.find(o => o.id === id)).filter(Boolean);
+      
+      document.getElementById('history-grid').innerHTML = historyObras.length > 0 
+        ? historyObras.map(o => createNormalCardHTML(o)).join('') 
+        : '<p style="color:#666; text-align:center; width:100%; font-size:12px; margin-top:20px;">Você ainda não leu nenhuma obra.</p>';
+    }
+
+    function abrirNotificacoes() {
+      if(!currentUser) return alert("Faça login para ver notificações!");
+      const bell = document.querySelector('.notification-bell');
+      if(bell.classList.contains('has-news')) {
+         alert("Você tem novas mensagens/atualizações!");
+         db.ref(`notificacoes/${currentUser.uid}`).update({ lida: true });
+         bell.classList.remove('has-news');
+      } else {
+         alert("Você não tem notificações no momento.");
+      }
+    }
+
+    /* ================= 7. PARCEIROS (ADMIN) ================= */
+    function adicionarParceiro() {
+      if(!isAdmin) return;
+      const nome = document.getElementById('nome-parceiro').value;
+      const link = document.getElementById('link-github-parceiro').value;
+      if(nome && link) {
+        db.ref('parceiros').push({ nome, link });
+        alert("Parceiro adicionado com sucesso!");
+        document.getElementById('nome-parceiro').value = '';
+        document.getElementById('link-github-parceiro').value = '';
+      }
+    }
+
+    db.ref('parceiros').on('value', snap => {
+      let html = '';
+      if(snap.exists()){
+        snap.forEach(child => {
+          const p = child.val();
+          html += `
+            <a href="${p.link}" target="_blank" class="card-obra" style="padding: 20px; text-align: center; justify-content: center;">
+              <i class="fa-solid fa-link" style="font-size: 28px; margin-bottom: 10px; color: var(--primary);"></i>
+              <div style="font-weight: 800; font-size: 13px;">${p.nome}</div>
+            </a>
+          `;
+        });
+      } else {
+        html = '<p style="color:#666; font-size: 12px; grid-column: span 2;">Nenhum parceiro adicionado ainda.</p>';
+      }
+      document.getElementById('lista-parceiros').innerHTML = html;
+    });
+
+    /* ================= 8. SUPORTE PWA E MODO OFFLINE ================= */
+    try {
+      db.goOnline();
+      firebase.database().ref('.info/connected').on('value', function(snap) {
+        if (snap.val() === true) {
+          console.log("Conectado ao Firebase");
+        } else {
+          console.log("Navegando em modo offline");
+        }
+      });
+    } catch(e) {
+      console.log("Erro na persistência:", e);
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(reg => console.log('Service Worker registrado!', reg))
+          .catch(err => console.error('Falha no SW:', err));
+      });
+    }
+
+  </script>
 </body>
 </html>
