@@ -539,7 +539,8 @@
       document.getElementById('reader-lista-container').innerHTML = html;
   }
 
-  function baixarCapApp(capKey, btnElement) {
+  // ====== NOVO SISTEMA DE DOWNLOAD DE IMAGENS ======
+  async function baixarCapApp(capKey, btnElement) {
     if (!navigator.onLine) {
         showToast("Você precisa de internet para baixar um capítulo.");
         return;
@@ -558,36 +559,55 @@
     }
     
     btnElement.innerHTML = `<div class="spinner" style="width:18px; height:18px; border-width:2px;"></div>`;
-    
     let capData = globalCapsObj[capKey];
     
-    // SISTEMA REAL DE CACHE DE IMAGENS
-    if (capData.formato !== 'novel_texto') {
-        let urls = extrairUrls(capData.url);
-        urls.forEach(u => {
-            let img = new Image();
-            img.src = u; // Isso força o navegador a salvar a imagem no cache invisível
-        });
-    }
+    try {
+        // Usa a Cache API do navegador para salvar as imagens de verdade
+        if (capData.formato !== 'novel_texto') {
+            let urls = extrairUrls(capData.url || capData.imagens);
+            if ('caches' in window) {
+                const cache = await caches.open('meowscan-v1'); // Mesmo nome do seu Service Worker
+                await Promise.all(urls.map(async (u) => {
+                    try {
+                        const res = await fetch(u, { mode: 'no-cors' }); // no-cors permite salvar imagens externas
+                        await cache.put(u, res);
+                    } catch(e) {
+                        console.error("Erro no download da imagem:", e);
+                    }
+                }));
+            }
+        }
 
-    setTimeout(() => {
         dbO[obraId][capKey] = { salvoEm: Date.now(), data: capData };
         localStorage.setItem('meow_offline', JSON.stringify(dbO));
         btnElement.innerHTML = iconCheck; 
         showToast("Baixado para leitura Offline!");
         renderizarDetalhes(currentObra);
-    }, 1500);
+    } catch (err) {
+        console.error(err);
+        btnElement.innerHTML = iconDL; 
+        showToast("Erro ao baixar. Tente novamente.");
+    }
   }
 
   /* INICIALIZAÇÃO DEPENDENDO DA INTERNET */
-  function inicializarAppOnline() {
-      db.ref('obras/' + obraId).on('value', snap => {
+  async function inicializarAppOnline() {
+      db.ref('obras/' + obraId).on('value', async snap => {
         if (snap.exists()) {
             let obra = snap.val();
             // Salva a Obra no Cache Central para acesso offline
             let cacheObras = JSON.parse(localStorage.getItem('meow_cache_obras') || '{}');
             cacheObras[obraId] = obra;
             localStorage.setItem('meow_cache_obras', JSON.stringify(cacheObras));
+            
+            // ====== NOVO: Salvar capa da obra para abrir offline ======
+            if ('caches' in window && obra.capaUrl) {
+                try {
+                    const cache = await caches.open('meowscan-v1');
+                    const res = await fetch(obra.capaUrl, { mode: 'no-cors' });
+                    await cache.put(obra.capaUrl, res);
+                } catch(e) {}
+            }
             
             renderizarDetalhes(obra);
         }
