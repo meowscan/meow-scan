@@ -6,238 +6,289 @@
 <title>Detalhes da Obra - Meow Scan</title>
 <link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap' rel='stylesheet'/>
 <style>
+  /* ========================================================= */
+  /* VARIÁVEIS GERAIS (CARA DE APLICATIVO) */
+  /* ========================================================= */
   :root {
-    --accent-gradient: linear-gradient(135deg, #f472b6, #ec4899);
+    --accent-gradient: linear-gradient(135deg, #f472b6, #ff69b4);
     --accent-color: #f472b6;
-    --accent-glow: rgba(244, 114, 182, 0.4);
     
-    --bg-main: #07070a; 
-    --glass-bg: rgba(18, 18, 24, 0.75);
-    --glass-border: rgba(244, 114, 182, 0.12); 
+    --bg-main: #0c0c11; 
+    --bg-surface: #15151e;
+    --bg-surface-light: #20202d;
     
-    --text-main: #F3F4F6;
-    --text-secondary: #9CA3AF;
+    --text-main: #F8F9FA;
+    --text-secondary: #9ba1a6;
     
-    --danger: #FF003C; 
+    --danger: #FF2A55; 
     --warning: #FFB703;
     --success: #00F5D4;
     
-    --radius-lg: 20px;
-    --radius-md: 14px;
-    --radius-sm: 10px;
+    --radius-xl: 32px;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { width: 100%; max-width: 100vw; overflow-x: hidden; scroll-behavior: smooth; }
+  html, body { width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
 
   body { 
     background-color: var(--bg-main); 
     color: var(--text-main); 
     font-family: 'Outfit', sans-serif; 
-    position: relative;
-    background-image: 
-        radial-gradient(circle at 10% 10%, rgba(244, 114, 182, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
-    background-attachment: fixed;
     line-height: 1.5;
   }
 
-  /* APP BAR SUPERIOR (ESTILO NATIVE APP) */
-  .app-header-bar {
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: rgba(7, 7, 10, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
+  /* ========================================================= */
+  /* APP BAR (TOPO NATIVO) */
+  /* ========================================================= */
+  .app-bar {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 20px;
     z-index: 1000;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+    transition: background 0.3s, backdrop-filter 0.3s;
   }
-  .app-header-title {
-    font-size: 15px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 65%;
+  .app-bar.scrolled {
+    background: rgba(12, 12, 17, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
   }
-  .btn-app-back {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    color: var(--text-main);
-    width: 38px;
-    height: 38px;
+
+  .icon-btn {
+    width: 40px; height: 40px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    text-decoration: none;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    display: flex; justify-content: center; align-items: center;
+    color: #fff; text-decoration: none; border: none; cursor: pointer;
     transition: 0.2s;
   }
-  .btn-app-back:hover { background: rgba(244, 114, 182, 0.2); border-color: var(--accent-color); }
+  .icon-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
 
-  /* AVISO FLUTUANTE DE CONTEÚDO ADULTO */
-  .aviso-18-flutuante {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(40px);
-    background: rgba(20, 20, 30, 0.95); border: 2px solid var(--danger);
-    box-shadow: 0 10px 30px rgba(255, 0, 60, 0.4); backdrop-filter: blur(15px);
-    color: var(--text-main); padding: 12px 20px; border-radius: 30px;
-    display: flex; align-items: center; gap: 12px; z-index: 9999;
-    opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* ========================================================= */
+  /* CAPA FULL-SCREEN (HERO) */
+  /* ========================================================= */
+  .hero-header {
+    position: relative;
+    width: 100%;
+    height: 55vh; /* Ocupa mais da metade da tela */
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
-  .aviso-18-flutuante.active { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
-  .aviso-18-texto { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; }
-  .btn-fechar-aviso { background: rgba(255, 0, 60, 0.2); border: 1px solid var(--danger); color: var(--danger); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-
-  .badge-sensivel { background: rgba(255, 183, 3, 0.15); color: var(--warning); border: 1px solid var(--warning); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
-  .badge-adulto { background: rgba(255, 0, 60, 0.15); color: var(--danger); border: 1px solid var(--danger); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes girarMeow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-  .premium-glass {
-    background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    border-radius: var(--radius-lg); animation: fadeIn 0.4s ease-out forwards;
+  .hero-bg-img {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .hero-gradient {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 80%;
+    background: linear-gradient(to top, var(--bg-main) 0%, rgba(12,12,17,0.8) 40%, transparent 100%);
+    z-index: -1;
   }
 
-  .hero-bg-wrapper { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: -1; pointer-events: none; }
-  .hero-bg { width: 100%; height: 100%; background-size: cover; background-position: center; filter: blur(50px) saturate(1.2) brightness(0.2); transform: scale(1.1); opacity: 0.8; }
-
-  #main-obra { max-width: 800px; margin: 0 auto; padding: 16px 12px 60px; }
-
-  /* HEADER DA OBRA ESTILO APP CARD */
-  .obra-hero-card { padding: 20px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
-  .obra-hero-top { display: flex; gap: 16px; align-items: flex-start; }
-  
-  .capa-box { width: 110px; min-width: 110px; position: relative; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); }
-  .capa-box img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
-
-  .obra-meta-info { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
-  .obra-titulo { font-size: 20px; font-weight: 900; line-height: 1.2; text-transform: uppercase; color: #fff; word-break: break-word; }
-  
-  .stats-row { display: flex; flex-wrap: wrap; gap: 10px 14px; font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-top: 2px; }
-  .stats-row span { display: flex; align-items: center; gap: 5px; }
-
-  .status-completo { background: rgba(0, 245, 212, 0.12); color: var(--success); padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 10px; text-transform: uppercase; border: 1px solid rgba(0, 245, 212, 0.3); }
-  .status-andamento { background: rgba(255, 183, 3, 0.12); color: var(--warning); padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 10px; text-transform: uppercase; border: 1px solid rgba(255, 183, 3, 0.3); }
-
-  /* BOTÃO PRINCIPAL DE LEITURA (HERO) */
-  .btn-hero-ler {
-    background: var(--accent-gradient); color: #fff; text-decoration: none; padding: 14px;
-    border-radius: var(--radius-md); font-weight: 800; font-size: 14px; text-transform: uppercase;
-    display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(244, 114, 182, 0.35);
-    transition: 0.2s; border: none; cursor: pointer; width: 100%; letter-spacing: 0.5px;
+  /* Títulos e Status em cima da capa */
+  .hero-content {
+    padding: 0 20px 20px 20px;
+    z-index: 2;
   }
-  .btn-hero-ler:active { transform: scale(0.98); }
-
-  /* BOTÕES SECUNDÁRIOS EM GRID (ESTILO APP TOOLBAR) */
-  .secondary-actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .btn-action-app {
-    background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); color: var(--text-main);
-    padding: 10px 6px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 700; display: flex;
-    flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: 0.2s; text-transform: uppercase;
+  .obra-titulo {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
   }
-  .btn-action-app svg { width: 16px; height: 16px; color: var(--accent-color); }
-  .btn-action-app:active { background: rgba(244, 114, 182, 0.15); }
-  .btn-action-app.saved { border-color: var(--accent-color); color: var(--accent-color); background: rgba(244, 114, 182, 0.08); }
-  .btn-action-app.subscribed { border-color: var(--success); color: var(--success); background: rgba(0, 245, 212, 0.08); }
-  .btn-action-app.subscribed svg { color: var(--success); }
-
-  /* SINOPSE COLAPSÁVEL / CLEAN */
-  .sinopse-container { font-size: 13px; color: #D1D5DB; font-weight: 300; line-height: 1.6; background: rgba(0,0,0,0.2); padding: 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.03); }
-
-  /* SEÇÃO DE CAPÍTULOS ESTILO LISTA DE APP */
-  .chapters-section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 12px; }
-  .chapters-section-title { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
   
-  .sort-group { display: flex; gap: 6px; }
-  .sort-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-secondary); width: 34px; height: 34px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  .sort-btn.active { background: var(--accent-color); color: #fff; border-color: transparent; }
-
-  .search-caps-input { width: 100%; background: rgba(15, 15, 20, 0.9); border: 1px solid var(--glass-border); color: #fff; padding: 12px 16px; border-radius: var(--radius-sm); outline: none; font-family: inherit; font-size: 13px; margin-bottom: 14px; }
-  .search-caps-input:focus { border-color: var(--accent-color); }
-
-  /* ACORDEON DE TEMPORADAS / VOLUMES */
-  .season-group { margin-bottom: 10px; background: rgba(15, 15, 20, 0.6); border-radius: var(--radius-md); border: 1px solid var(--glass-border); overflow: hidden; }
-  .season-header { padding: 12px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: rgba(25, 25, 32, 0.6); }
-  .season-title-wrapper { display: flex; align-items: center; gap: 10px; }
-  .season-badge { background: rgba(244, 114, 182, 0.12); color: var(--accent-color); padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-  .season-name { font-size: 13px; font-weight: 700; color: #fff; }
-  .season-chapters { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: rgba(5, 5, 8, 0.3); }
-
-  /* ITEM DE CAPÍTULO (CARD OTIMIZADO PARA TOQUE) */
-  .chapter-item-wrapper {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    background: rgba(22, 22, 29, 0.85); border: 1px solid var(--glass-border);
-    padding: 10px; border-radius: var(--radius-sm); transition: 0.2s;
+  /* ========================================================= */
+  /* STATUS HORIZONTAL SCROLL (PÍLULAS) */
+  /* ========================================================= */
+  .tags-scroll {
+    display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;
+    scrollbar-width: none; /* Firefox */
   }
-  .chapter-item-wrapper:active { background: rgba(244, 114, 182, 0.1); }
-  .chapter-item-wrapper.lido-style { opacity: 0.65; background: rgba(10,10,14,0.5); }
-
-  .chapter-link { display: flex; align-items: center; gap: 12px; flex: 1; text-decoration: none; color: white; min-width: 0; }
+  .tags-scroll::-webkit-scrollbar { display: none; }
   
-  .chap-thumbnail { width: 50px; height: 38px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-  
-  .chap-text-content { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-  .chap-id-string { font-size: 10px; color: var(--accent-color); font-weight: 800; text-transform: uppercase; }
-  .chap-main-title { font-weight: 700; font-size: 13px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  
-  .chap-meta-secondary { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
-
-  /* BOTÃO DE BAIXAR DIRETO (SEM ABRIR O CAPÍTULO) */
-  .btn-download-cap {
-    background: rgba(0, 245, 212, 0.1); color: var(--success); border: 1px solid rgba(0, 245, 212, 0.3);
-    padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase;
-    cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; flex-shrink: 0;
+  .tag-pill {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid rgba(255,255,255,0.05);
   }
-  .btn-download-cap:active { transform: scale(0.95); }
+  .tag-pill.accent { background: rgba(244, 114, 182, 0.15); color: var(--accent-color); border-color: rgba(244, 114, 182, 0.3); }
+  .tag-pill.success { background: rgba(0, 245, 212, 0.15); color: var(--success); }
+  .tag-pill.warning { background: rgba(255, 183, 3, 0.15); color: var(--warning); }
+  .tag-pill.danger { background: rgba(255, 42, 85, 0.15); color: var(--danger); border-color: rgba(255, 42, 85, 0.3); }
 
-  .badge-lido { background: rgba(0, 245, 212, 0.15); color: var(--success); font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
-  .badge-lendo { background: rgba(255, 183, 3, 0.15); color: var(--warning); font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
-  .tag-novo { background: var(--danger); color: #fff; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+  /* ========================================================= */
+  /* CONTEÚDO PRINCIPAL (APP SURFACE) */
+  /* ========================================================= */
+  .app-body {
+    padding: 20px;
+    background: var(--bg-main);
+  }
 
-  .loading-container { display: flex; justify-content: center; align-items: center; height: 40vh; flex-direction: column; gap: 15px; }
-  .loader-spinner { width: 40px; height: 40px; border: 3px solid rgba(244, 114, 182, 0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .action-buttons {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+  
+  .btn-primary {
+    background: var(--accent-color);
+    color: #000;
+    font-weight: 800;
+    font-size: 15px;
+    border-radius: var(--radius-lg);
+    border: none;
+    display: flex; justify-content: center; align-items: center; gap: 8px;
+    padding: 16px;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(244, 114, 182, 0.4);
+    transition: 0.2s;
+  }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-square {
+    width: 56px; height: 56px;
+    background: var(--bg-surface);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius-lg);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    color: var(--text-main); font-size: 10px; font-weight: 600; gap: 4px;
+    cursor: pointer; transition: 0.2s;
+  }
+  .btn-square.active {
+    background: rgba(244, 114, 182, 0.15);
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+  }
+
+  /* Sinopse */
+  .synopsis-box { margin-bottom: 30px; }
+  .synopsis-text {
+    font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .synopsis-text.expanded { -webkit-line-clamp: unset; }
+  .btn-expand {
+    background: none; border: none; color: var(--accent-color);
+    font-size: 13px; font-weight: 700; margin-top: 8px; cursor: pointer; padding: 0;
+  }
+
+  /* ========================================================= */
+  /* LISTA DE CAPÍTULOS (ESTILO NATIVO) */
+  /* ========================================================= */
+  .section-title {
+    font-size: 18px; font-weight: 800; margin-bottom: 15px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  
+  .search-input {
+    width: 100%; background: var(--bg-surface); border: none;
+    color: #fff; padding: 14px 20px; border-radius: 50px;
+    font-size: 14px; margin-bottom: 20px; outline: none;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+  }
+  .search-input:focus { border: 1px solid var(--accent-color); }
+
+  .season-header {
+    background: var(--bg-surface);
+    padding: 16px 20px; border-radius: var(--radius-md);
+    display: flex; justify-content: space-between; align-items: center;
+    font-weight: 700; margin-bottom: 10px; cursor: pointer;
+  }
+  .season-content { display: none; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+
+  /* ITEM DO CAPÍTULO - 100% ISOLADO */
+  .chapter-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    transition: 0.2s;
+  }
+  
+  /* Área clicável do Link (Abre a leitura) */
+  .chapter-link-area {
+    display: flex; align-items: center; gap: 15px; flex: 1;
+    text-decoration: none; color: white; min-width: 0;
+  }
+  
+  .chapter-thumb {
+    width: 55px; height: 55px; border-radius: 10px; object-fit: cover;
+  }
+  
+  .chapter-info { display: flex; flex-direction: column; flex: 1; overflow: hidden; gap: 4px; }
+  .chapter-number { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chapter-date { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+
+  /* Área clicável do Download (Baixa o cap) - SEPARADA */
+  .chapter-action-area {
+    padding-left: 15px;
+    border-left: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  /* Botão circular nativo de Download */
+  .btn-dl-app {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: none; color: var(--text-secondary);
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer; transition: 0.3s;
+  }
+  .btn-dl-app:active { transform: scale(0.85); background: rgba(255,255,255,0.1); }
+  
+  /* Estado de Sucesso */
+  .btn-dl-app.downloaded {
+    background: rgba(0, 245, 212, 0.15);
+    color: var(--success);
+  }
+
+  /* Animação Spinner Download */
+  @keyframes spinApp { 100% { transform: rotate(360deg); } }
+  .spinner-icon {
+    width: 20px; height: 20px;
+    border: 2px solid transparent; border-top-color: var(--accent-color); border-left-color: var(--accent-color);
+    border-radius: 50%; animation: spinApp 0.8s linear infinite;
+  }
+
+  /* Badges */
+  .badge-lido { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; }
+  .badge-lendo { font-size: 9px; padding: 3px 8px; border-radius: 10px; background: rgba(244, 114, 182, 0.2); color: var(--accent-color); }
+  
+  .loading-container { height: 100vh; display: flex; justify-content: center; align-items: center; }
+
+  @media (min-width: 768px) {
+    /* Ajustes para tablet/desktop continuarem bonitos, mas com a vibe do app */
+    .hero-header { height: 40vh; }
+    #main-obra { max-width: 800px; margin: 0 auto; }
+    .app-body { padding: 40px; border-radius: 24px 24px 0 0; margin-top: -20px; z-index: 10; position: relative; }
+  }
 </style>
 </head>
 <body>
 
-<!-- APP BAR SUPERIOR -->
-<div class="app-header-bar">
-    <span id="nav-voltar-container">
-        <a href="index.html" class="btn-app-back">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        </a>
-    </span>
-    <div class="app-header-title" id="header-obra-titulo-topo">Carregando...</div>
-    <div style="width: 38px;"></div> <!-- Espaçador para centralizar título -->
-</div>
-
-<div id="aviso-18" class="aviso-18-flutuante">
-    <div class="aviso-18-texto"><span>🔞</span> Conteúdo Maduro / Sensível</div>
-    <button class="btn-fechar-aviso" onclick="aceitarConteudoAdulto()">✕</button>
-</div>
-
-<div class="hero-bg-wrapper">
-    <div class="hero-bg" id="hero-blur"></div>
-</div>
-
 <div id="main-obra">
   <div class="loading-container">
-      <div class="loader-spinner"></div>
-      <div style="font-weight: 700; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary);">Carregando Aplicativo...</div>
+      <div class="spinner-icon" style="width: 40px; height: 40px; border-width: 4px;"></div>
   </div>
 </div>
 
@@ -246,6 +297,9 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
 <script>
+  // ==========================================
+  // CONFIGURAÇÃO FIREBASE SEGURA
+  // ==========================================
   const firebaseConfig = {
     apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo",
     authDomain: "meow-scan-ffff0.firebaseapp.com",
@@ -262,42 +316,35 @@
           if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
           db = firebase.database();
       }
-  } catch (error) {
-      console.warn("Modo Offline ativado:", error);
-  }
+  } catch (error) { console.warn("Modo Offline"); }
 
   const urlParams = new URLSearchParams(window.location.search);
   const obraId = urlParams.get('obra'); 
 
   let currentObra = null;
   let globalSeasons = [];
-  let globalSpecialKeys = [];
   let globalCapsObj = {};
   let globalAllKeys = [];
-  let isAscending = false; 
   let currentSearchTerm = '';
 
-  function verificarConteudoAdulto(obra) {
-      if (!obraId) return;
-      const generos = String(obra.generos || '').toLowerCase();
-      const isAdulto = obra.classificacao === '+18' || obra.adulto === true || generos.includes('+18') || generos.includes('smut') || generos.includes('maduro');
-      if (isAdulto && !localStorage.getItem('adult_consent_aviso')) {
-          document.getElementById('aviso-18').classList.add('active');
-      }
-  }
+  // Header Scroll Effect
+  window.addEventListener('scroll', () => {
+    const bar = document.getElementById('app-top-bar');
+    if(bar) {
+      if (window.scrollY > 50) bar.classList.add('scrolled');
+      else bar.classList.remove('scrolled');
+    }
+  });
 
-  window.aceitarConteudoAdulto = function() {
-      localStorage.setItem('adult_consent_aviso', 'true');
-      document.getElementById('aviso-18').classList.remove('active');
-  }
-
-  function registrarVisualizacaoObra() {
-      if (!obraId || !db || !navigator.onLine) return;
-      let viewsSessao = JSON.parse(sessionStorage.getItem('meow_views_sessao') || '{}');
-      if (!viewsSessao[obraId]) {
-          db.ref(`obras/${obraId}/stats/visualizacoes`).transaction(c => (c || 0) + 1).catch(() => {});
-          viewsSessao[obraId] = true;
-          sessionStorage.setItem('meow_views_sessao', JSON.stringify(viewsSessao));
+  function expandirSinopse() {
+      const p = document.getElementById('sinopse-text');
+      const btn = document.getElementById('btn-ler-mais');
+      if (p.classList.contains('expanded')) {
+          p.classList.remove('expanded');
+          btn.innerText = "Ler mais ▼";
+      } else {
+          p.classList.add('expanded');
+          btn.innerText = "Recolher ▲";
       }
   }
 
@@ -309,6 +356,7 @@
     }
     let progresso = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
     if (!progresso[obraId]) progresso[obraId] = { lidos: [], lendo: null };
+    
     let lendoAnterior = progresso[obraId].lendo;
     if (lendoAnterior && lendoAnterior !== capKey && !progresso[obraId].lidos.includes(lendoAnterior)) {
         progresso[obraId].lidos.push(lendoAnterior);
@@ -319,57 +367,33 @@
   }
 
   function toggleBiblioteca(id) {
-    const btn = document.getElementById('btn-save-library');
+    const btn = document.getElementById('btn-save');
     const nome = btn.getAttribute('data-nome');
-    const capaUrl = btn.getAttribute('data-capa');
     let listaBib = JSON.parse(localStorage.getItem('meow_priv') || '[]');
     const index = listaBib.findIndex(item => item.id === id);
 
     if (index > -1) {
       listaBib.splice(index, 1);
-      btn.classList.remove('saved');
-      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Salvar`;
+      btn.classList.remove('active');
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Salvar`;
     } else {
-      listaBib.push({ id: id, nome: nome, capa: capaUrl, dataSalvo: Date.now() });
-      btn.classList.add('saved');
-      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Salvo`;
+      listaBib.push({ id: id, nome: nome, dataSalvo: Date.now() });
+      btn.classList.add('active');
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Salvo`;
     }
     localStorage.setItem('meow_priv', JSON.stringify(listaBib));
   }
 
-  function toggleNotificacao(id) {
-    const btn = document.getElementById('btn-notif');
-    const nome = btn.getAttribute('data-nome');
-    let subs = JSON.parse(localStorage.getItem('meow_notifs') || '[]');
-    const index = subs.findIndex(item => item.id === id);
-    if (index > -1) {
-      subs.splice(index, 1);
-    } else {
-      const capa = document.querySelector('.capa-box img') ? document.querySelector('.capa-box img').src : '';
-      subs.push({ id, nome, capa });
-    }
-    localStorage.setItem('meow_notifs', JSON.stringify(subs));
-    location.reload();
-  }
-
-  window.compartilharObra = function() {
-    if (navigator.share) {
-        navigator.share({ title: document.title, url: window.location.href }).catch(() => {});
-    } else {
-        navigator.clipboard.writeText(window.location.href).then(() => alert('Link copiado!'));
-    }
-  }
-
   window.toggleSeason = function(header) {
     const chapters = header.nextElementSibling;
-    chapters.style.display = (getComputedStyle(chapters).display === 'none') ? 'flex' : 'none';
-  }
-
-  window.mudarOrdem = function(asc) {
-      isAscending = asc;
-      document.getElementById('btn-sort-asc').classList.toggle('active', asc);
-      document.getElementById('btn-sort-desc').classList.toggle('active', !asc);
-      gerarHtmlCapitulos(currentSearchTerm);
+    const icon = header.querySelector('.arrow-icon');
+    if (getComputedStyle(chapters).display === 'none') {
+      chapters.style.display = 'flex';
+      icon.style.transform = 'rotate(180deg)';
+    } else {
+      chapters.style.display = 'none';
+      icon.style.transform = 'rotate(0deg)';
+    }
   }
 
   window.filtrarCaps = function(term) {
@@ -377,14 +401,15 @@
       gerarHtmlCapitulos(currentSearchTerm);
   }
 
-  // INDEXED DB PARA DOWNLOAD OFFLINE DAS IMAGENS
+  // ==========================================
+  // DB OFFLINE E DOWNLOAD - NATIVO E ISOLADO
+  // ==========================================
   const initDB = () => {
       return new Promise((resolve, reject) => {
           const request = indexedDB.open('MeowScanOfflineDB', 1);
           request.onupgradeneeded = (e) => {
-              if (!e.target.result.objectStoreNames.contains('capitulos_imagens')) {
-                  e.target.result.createObjectStore('capitulos_imagens', { keyPath: 'id' });
-              }
+              const db = e.target.result;
+              if (!db.objectStoreNames.contains('capitulos_imagens')) db.createObjectStore('capitulos_imagens', { keyPath: 'id' });
           };
           request.onsuccess = () => resolve(request.result);
           request.onerror = () => reject(request.error);
@@ -392,10 +417,11 @@
   };
 
   const salvarImagensIndexedDB = async (id, imagensBase64) => {
-      const dbInstance = await initDB();
+      const db = await initDB();
       return new Promise((resolve, reject) => {
-          const tx = dbInstance.transaction('capitulos_imagens', 'readwrite');
-          tx.objectStore('capitulos_imagens').put({ id: id, imagens: imagensBase64 });
+          const tx = db.transaction('capitulos_imagens', 'readwrite');
+          const store = tx.objectStore('capitulos_imagens');
+          store.put({ id: id, imagens: imagensBase64 });
           tx.oncomplete = () => resolve();
           tx.onerror = () => reject(tx.error);
       });
@@ -411,22 +437,20 @@
               reader.onerror = reject;
               reader.readAsDataURL(blob);
           });
-      } catch (e) {
-          return null;
-      }
+      } catch (e) { return null; }
   };
 
-  // BOTÃO DE DOWNLOAD DIRETO FUNCIONANDO 100% SEM ABRIR O CAPÍTULO
-  window.baixarCapituloDireto = async function(event, capKey, capNome) {
-      event.preventDefault();
-      event.stopPropagation();
+  // Ícones em SVG
+  const iconeDownload = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+  const iconeCheck = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+  const iconeSpinner = `<div class="spinner-icon"></div>`;
+
+  window.baixarCapituloApp = async function(capKey) {
+      let btn = document.getElementById(`btn-dl-${capKey}`);
       
-      let btn = event.currentTarget;
-      let textoOriginal = btn.innerHTML;
-      
-      btn.innerHTML = `<span style="display:inline-block; width:12px; height:12px; border:2px solid transparent; border-top-color: currentColor; border-radius:50%; animation: girarMeow 0.8s linear infinite; vertical-align: middle; margin-right: 4px;"></span> Baixando`;
+      // Muda UI para carregando
+      btn.innerHTML = iconeSpinner;
       btn.style.pointerEvents = 'none';
-      btn.style.opacity = '0.7';
 
       try {
           let capData = globalCapsObj[capKey];
@@ -446,35 +470,32 @@
           offlineDb[obraId][capKey] = { data: capData, salvoEm: Date.now() };
           localStorage.setItem('meow_offline', JSON.stringify(offlineDb));
           
-          btn.innerHTML = `✓ Baixado`;
-          btn.style.background = 'var(--success)';
-          btn.style.color = '#000';
-          btn.style.borderColor = 'var(--success)';
+          // UI Sucesso
+          btn.innerHTML = iconeCheck;
+          btn.classList.add('downloaded');
+
       } catch (erro) {
           console.error(erro);
-          alert("Erro ao baixar o capítulo.");
-          btn.innerHTML = textoOriginal;
+          alert("Erro ao baixar. Verifique sua conexão.");
+          btn.innerHTML = iconeDownload; // Volta pro padrão
       } finally {
           btn.style.pointerEvents = 'auto';
-          btn.style.opacity = '1';
       }
   }
 
   function gerarHtmlCapitulos(searchTerm = '') {
       let html = '';
       let seasonsToRender = JSON.parse(JSON.stringify(globalSeasons));
-      let specialsToRender = JSON.parse(JSON.stringify(globalSpecialKeys));
-
+      
       let progressoObj = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
       let progressoAtual = progressoObj[obraId] || { lidos: [], lendo: null };
+      
       let offlineDb = JSON.parse(localStorage.getItem('meow_offline') || '{}');
       let offlineObra = offlineDb[obraId] || {};
 
-      if (!isAscending) {
-          seasonsToRender.reverse();
-          seasonsToRender.forEach(s => s.chapters.reverse());
-          specialsToRender.reverse();
-      }
+      // Sempre renderizando decrescente (mais novo no topo) na visão de APP
+      seasonsToRender.reverse();
+      seasonsToRender.forEach(s => s.chapters.reverse());
 
       seasonsToRender.forEach((season) => {
           let filtered = season.chapters.filter(k => {
@@ -489,61 +510,55 @@
           let badgeText = season.type === 'Volume' ? `VOL. ${season.num}` : `TEMP. ${season.num}`;
 
           html += `
-          <div class="season-group">
             <div class="season-header" onclick="toggleSeason(this)">
-              <div class="season-title-wrapper">
-                  <span class="season-badge">${badgeText}</span>
-                  <span class="season-name">${season.type} ${season.num}</span>
-              </div>
-              <span style="font-size:11px; color:var(--text-secondary);">${filtered.length} caps</span>
+              <span>${badgeText} • ${season.chapters.length} Caps</span>
+              <svg class="arrow-icon" style="transition:0.3s;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </div>
-            <div class="season-chapters" style="display: flex;">
+            <div class="season-content" style="display: flex;">
           `;
 
           filtered.forEach((k) => {
               let c = globalCapsObj[k];
+              
               let isLendo = (progressoAtual.lendo === k);
               let isLido = (progressoAtual.lidos || []).includes(k) && !isLendo;
-              let extraClass = isLido ? ' lido-style' : '';
+              
+              let badgeHtml = '';
+              if (isLendo) badgeHtml = `<span class="badge-lendo">Lendo</span>`;
+              else if (isLido) badgeHtml = `<span class="badge-lido">Lido</span>`;
 
-              let badgeLeitura = isLendo ? `<span class="badge-lendo">Lendo</span>` : (isLido ? `<span class="badge-lido">Lido</span>` : '');
-              let ehNovo = (Date.now() - (c.dataPostagem || 0)) < 172800000;
-              let tagNovoHtml = ehNovo ? `<span class="tag-novo">NOVO</span>` : '';
               let nomeFormatado = (c.nomeCap && c.nomeCap.trim() !== "") ? c.nomeCap : `Capítulo ${c.numero || '?'}`;
+              let dataCap = new Date(c.dataPostagem || Date.now()).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'});
               
               let jaBaixado = !!offlineObra[k];
-              let btnDownloadHtml = jaBaixado 
-                  ? `<button class="btn-download-cap" style="background:var(--success); color:#000; border-color:var(--success);" onclick="baixarCapituloDireto(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')">✓ Baixado</button>`
-                  : `<button class="btn-download-cap" onclick="baixarCapituloDireto(event, '${k}', '${nomeFormatado.replace(/'/g, "\\'")}')">Baixar</button>`;
+              let uiBotaoDL = jaBaixado 
+                ? `<button id="btn-dl-${k}" class="btn-dl-app downloaded" onclick="baixarCapituloApp('${k}')">${iconeCheck}</button>`
+                : `<button id="btn-dl-${k}" class="btn-dl-app" onclick="baixarCapituloApp('${k}')">${iconeDownload}</button>`;
 
+              // SEPARAÇÃO FÍSICA: O Link (a) e o Botão (button) estão lado a lado, não um dentro do outro.
               html += `
-              <div class="chapter-item-wrapper ${extraClass}">
-                <a href="Capitulo.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link">
-                  <img src="${currentObra.capaUrl}" class="chap-thumbnail" loading="lazy">
-                  <div class="chap-text-content">
-                    <span class="chap-id-string">${c.tipoLabel || 'Cap.'} ${c.numero || '?'}</span>
-                    <span class="chap-main-title">${nomeFormatado}</span>
-                    <div class="chap-meta-secondary">
-                        ${badgeLeitura} ${tagNovoHtml}
-                        <span>👁 ${c.cliques || 0}</span>
-                    </div>
+              <div class="chapter-item">
+                <a href="Capitulo.html?obra=${obraId}&cap=${k}" onclick="registrarLeitura('${k}')" class="chapter-link-area">
+                  <img src="${currentObra.capaUrl}" class="chapter-thumb" loading="lazy">
+                  <div class="chapter-info">
+                    <span class="chapter-number">${nomeFormatado} ${badgeHtml}</span>
+                    <span class="chapter-date">${dataCap} • ${c.cliques || 0} views</span>
                   </div>
                 </a>
-                ${btnDownloadHtml}
+                <div class="chapter-action-area">
+                  ${uiBotaoDL}
+                </div>
               </div>`;
           });
-          html += `</div></div>`;
+          html += `</div>`;
       });
 
-      document.getElementById('chapters-container').innerHTML = html || '<div style="text-align:center; padding:20px; color:var(--text-secondary); font-size:12px;">Nenhum capítulo encontrado.</div>';
+      if(html === '') html = '<div style="text-align:center; padding:40px; color:var(--text-secondary);">Nenhum capítulo.</div>';
+      document.getElementById('chapters-container').innerHTML = html;
   }
 
   function renderizarPagina(obra) {
-    document.getElementById('header-obra-titulo-topo').innerText = obra.nome;
-    document.getElementById('hero-blur').style.backgroundImage = `url(${obra.capaUrl})`;
-
-    const notifList = JSON.parse(localStorage.getItem('meow_notifs') || '[]');
-    const isSubscribed = notifList.some(item => item.id === obraId);
+    const nomeObraSafe = String(obra.nome || '').replace(/"/g, '&quot;');
     const listaBib = JSON.parse(localStorage.getItem('meow_priv') || '[]');
     const isSaved = listaBib.some(item => item.id === obraId);
     
@@ -551,103 +566,116 @@
     globalAllKeys = Object.keys(globalCapsObj);
     
     const regularChaptersKeys = globalAllKeys.filter(k => (globalCapsObj[k].tipoLabel || 'Capítulo') === 'Capítulo').sort((a, b) => parseFloat(globalCapsObj[a].numero || 0) - parseFloat(globalCapsObj[b].numero || 0));
-    globalSpecialKeys = globalAllKeys.filter(k => (globalCapsObj[k].tipoLabel || 'Capítulo') !== 'Capítulo').sort((a, b) => parseFloat(globalCapsObj[a].numero || 0) - parseFloat(globalCapsObj[b].numero || 0));
 
     globalSeasons = [];
-    let seasonNum = 1, currentSeason = [];
+    let seasonNum = 1; let currentSeason = [];
+    const defaultType = (String(obra.tipo||'').toLowerCase().includes('novel') || String(obra.generos||'').toLowerCase().includes('novel')) ? 'Volume' : 'Temporada'; 
+
     for (const k of regularChaptersKeys) {
       currentSeason.push(k);
       const enc = String(globalCapsObj[k].encerramento || '').toLowerCase();
-      if (enc.includes('temporada') || enc.includes('volume') || enc === 'fim') {
-        globalSeasons.push({ num: seasonNum, type: 'Temporada', chapters: currentSeason });
-        currentSeason = []; 
-        seasonNum++;
+      if (enc.includes('temporada') || enc.includes('volume') || enc.includes('fim')) {
+        const match = enc.match(/(\d+)/); 
+        let sNum = match ? parseInt(match[1]) : seasonNum;
+        globalSeasons.push({ num: sNum, type: defaultType, chapters: currentSeason });
+        currentSeason = []; seasonNum = sNum + 1;
       }
     }
-    if (currentSeason.length > 0) globalSeasons.push({ num: seasonNum, type: 'Temporada', chapters: currentSeason });
+    if (currentSeason.length > 0) globalSeasons.push({ num: seasonNum, type: defaultType, chapters: currentSeason });
 
     let progressoObj = JSON.parse(localStorage.getItem('progresso_leitura') || '{}');
     let progressoAtual = progressoObj[obraId];
     const sortedForNew = globalAllKeys.sort((a, b) => (globalCapsObj[b].dataPostagem || 0) - (globalCapsObj[a].dataPostagem || 0));
     
-    let btnPrincipalTexto = "Ler Capítulo 1";
+    let btnPrincipalTexto = "Começar Leitura";
     let linkLer = globalAllKeys.length > 0 ? `Capitulo.html?obra=${obraId}&cap=${sortedForNew[sortedForNew.length-1]}` : "#"; 
 
     if (progressoAtual && progressoAtual.lendo && globalCapsObj[progressoAtual.lendo]) {
-        btnPrincipalTexto = `Continuar Cap. ${globalCapsObj[progressoAtual.lendo].numero || '?'}`;
+        btnPrincipalTexto = `Continuar • Cap ${globalCapsObj[progressoAtual.lendo].numero || '?'}`;
         linkLer = `Capitulo.html?obra=${obraId}&cap=${progressoAtual.lendo}`;
     }
 
+    const generos = obra.generos ? obra.generos.split(',').map(g => `<span class="tag-pill">${g.trim()}</span>`).join('') : '';
+    let statusPill = obra.status?.toLowerCase().includes('completo') 
+        ? `<span class="tag-pill success">Completo</span>` 
+        : `<span class="tag-pill warning">Em Lançamento</span>`;
+        
+    let avisoPill = obra.classificacao === '+18' ? `<span class="tag-pill danger">🔞 +18</span>` : '';
+
     const html = `
-      <div class="obra-hero-card premium-glass">
-        <div class="obra-hero-top">
-          <div class="capa-box">
-            <img src="${obra.capaUrl}" loading="lazy">
+      <div id="app-top-bar" class="app-bar">
+        <a href="index.html" class="icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></a>
+        <button class="icon-btn" onclick="navigator.share({title: document.title, url: window.location.href})"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+      </div>
+
+      <div class="hero-header">
+        <img src="${obra.capaUrl}" class="hero-bg-img">
+        <div class="hero-gradient"></div>
+        <div class="hero-content">
+          <h1 class="obra-titulo">${obra.nome}</h1>
+          <div class="tags-scroll">
+            <span class="tag-pill accent">⭐ ${(obra.stats?.visualizacoes || 0)} views</span>
+            ${statusPill}
+            ${avisoPill}
+            ${generos}
           </div>
-          <div class="obra-meta-info">
-            <h1 class="obra-titulo">${obra.nome}</h1>
-            <div class="stats-row">
-              <span>${obra.status?.toLowerCase().includes('completo') ? '<span class="status-completo">Completo</span>' : '<span class="status-andamento">Em Andamento</span>'}</span>
-              <span>👁 ${obra.stats?.visualizacoes || 0}</span>
-              <span>📖 ${obra.stats?.total_cliques_ler || 0}</span>
-            </div>
-            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">
-              <strong>Autor:</strong> ${obra.autor || 'N/A'}
-            </div>
-          </div>
-        </div>
-
-        <div class="sinopse-container">
-          ${obra.sinopse || 'Sem sinopse cadastrada.'}
-        </div>
-
-        <a href="${linkLer}" class="btn-hero-ler" onclick="registrarLeitura('${progressoAtual?.lendo || sortedForNew[sortedForNew.length-1]}')">
-          ▶ ${btnPrincipalTexto}
-        </a>
-
-        <div class="secondary-actions-grid">
-            <button id="btn-save-library" onclick="toggleBiblioteca('${obraId}')" data-nome="${obra.nome.replace(/"/g, '&quot;')}" data-capa="${obra.capaUrl}" class="btn-action-app ${isSaved ? 'saved' : ''}">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-              ${isSaved ? 'Salvo' : 'Biblioteca'}
-            </button>
-            <button id="btn-notif" onclick="toggleNotificacao('${obraId}')" data-nome="${obra.nome.replace(/"/g, '&quot;')}" class="btn-action-app ${isSubscribed ? 'subscribed' : ''}">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="${isSubscribed ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-              ${isSubscribed ? 'Inscrito' : 'Notificar'}
-            </button>
-            <button class="btn-action-app" onclick="compartilharObra()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              Compartilhar
-            </button>
         </div>
       </div>
 
-      <div class="chapters-section-header">
-        <span class="chapters-section-title">Capítulos (${globalAllKeys.length})</span>
-        <div class="sort-group">
-          <button id="btn-sort-asc" class="sort-btn" onclick="mudarOrdem(true)">↑</button>
-          <button id="btn-sort-desc" class="sort-btn active" onclick="mudarOrdem(false)">↓</button>
+      <div class="app-body">
+        <div class="action-buttons">
+          <a href="${linkLer}" class="btn-primary" onclick="registrarLeitura('${progressoAtual?.lendo || sortedForNew[sortedForNew.length-1]}')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            ${btnPrincipalTexto}
+          </a>
+          <button id="btn-save" class="btn-square ${isSaved ? 'active' : ''}" onclick="toggleBiblioteca('${obraId}')" data-nome="${nomeObraSafe}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            ${isSaved ? 'Salvo' : 'Salvar'}
+          </button>
+        </div>
+
+        <div class="synopsis-box">
+          <div class="section-title">Sobre a obra</div>
+          <p id="sinopse-text" class="synopsis-text">${obra.sinopse || 'Nenhuma descrição disponível.'}</p>
+          <button id="btn-ler-mais" class="btn-expand" onclick="expandirSinopse()">Ler mais ▼</button>
+        </div>
+
+        <div class="chapters-box">
+          <div class="section-title">Capítulos <span style="font-size:14px; font-weight:600; color:var(--accent-color);">${globalAllKeys.length}</span></div>
+          <input type="text" class="search-input" placeholder="Pesquisar capítulo..." oninput="filtrarCaps(this.value)">
+          <div id="chapters-container"></div>
         </div>
       </div>
-
-      <input type="text" class="search-caps-input" placeholder="Pesquisar capítulo (Ex: 01)..." oninput="filtrarCaps(this.value)">
-      <div id="chapters-container"></div>
     `;
     
     document.getElementById('main-obra').innerHTML = html;
     gerarHtmlCapitulos();
-    verificarConteudoAdulto(obra);
   }
 
-  if (obraId && db) {
-      db.ref('obras/' + obraId).on('value', snap => {
-          if (snap.val()) {
-              currentObra = snap.val();
+  // ==========================================
+  // INICIALIZAÇÃO
+  // ==========================================
+  if (obraId) {
+      const cacheKey = 'cache_obra_' + obraId;
+      const cachedData = localStorage.getItem(cacheKey);
+      
+      if (cachedData) {
+          try {
+              currentObra = JSON.parse(cachedData);
               renderizarPagina(currentObra);
-              registrarVisualizacaoObra();
-          } else {
-              document.getElementById('main-obra').innerHTML = `<div style="text-align:center; padding:50px; color:var(--danger); font-size:14px;">Obra não encontrada.</div>`;
-          }
-      });
+          } catch(e) {}
+      }
+      
+      if (db && navigator.onLine) {
+          db.ref('obras/' + obraId).on('value', snap => {
+              const newData = snap.val();
+              if (newData) {
+                  localStorage.setItem(cacheKey, JSON.stringify(newData));
+                  currentObra = newData;
+                  renderizarPagina(currentObra);
+              }
+          });
+      }
   }
 </script>
 </body>
