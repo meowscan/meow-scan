@@ -1,16 +1,25 @@
 {
   "short_name": "MeowScan",
   "name": "Meow Scan - App",
-  "icons": [
-    {
-      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png",
-      "type": "image/png",
-      "sizes": "192x192 512x512"
-    }
-  ],
-  "start_url": "./index.html",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "background_color": "#0f0c1b",
   "theme_color": "#0f0c1b",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
