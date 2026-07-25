@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parceiros - Meow Scan</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root { 
+  --primary: #8b0029; /* Vermelho Vinho */
+  --bg: #000000;      /* Fundo Preto Padrão */
+  --card: #0f0f11; 
+  --text: #eeeeee; 
+  --accent: #10b981;
+}
+body { 
+    background: var(--bg); 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Poppins', sans-serif; 
+    color: var(--text);
+    transition: background 0.5s ease;
+}
+
+/* Container Principal */
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+.hidden { display: none !important; }
+
+/* Títulos */
+h1 { color: var(--primary); text-align: center; font-weight: 800; text-transform: uppercase; border-bottom: 2px solid #222; padding-bottom: 10px; }
+h2 { font-size: 1.5rem; margin-top: 30px; border-left: 4px solid var(--primary); padding-left: 10px; }
+
+/* Grid de Parceiros (Menu Inicial) */
+.scans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+.scan-card { 
+    background: var(--card); border: 1px solid #222; border-radius: 15px; padding: 20px; 
+    text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+.scan-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(139, 0, 41, 0.4); }
+.scan-logo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 2px solid #333; }
+.scan-name { font-weight: 800; font-size: 1.1rem; }
+.scan-count { font-size: 12px; color: #aaa; margin-top: 5px; }
+
+/* Perfil da Scan (Quando Clica) */
+#perfil-header { 
+    background: var(--card); padding: 30px; border-radius: 20px; display: flex; align-items: center; gap: 20px; 
+    border: 1px solid #222; margin-bottom: 30px; flex-wrap: wrap; position: relative;
+}
+.btn-voltar { 
+    position: absolute; top: 15px; right: 15px; background: #333; color: white; border: none; 
+    padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
+}
+.btn-voltar:hover { background: var(--primary); }
+.perfil-logo { width: 120px; height: 120px; border-radius: 15px; object-fit: cover; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+.perfil-info h2 { border: none; padding: 0; margin: 0 0 10px 0; font-size: 2rem; }
+.perfil-desc { color: #ccc; font-size: 14px; max-width: 600px; margin-bottom: 15px; }
+.social-links a { 
+    display: inline-block; background: var(--primary); color: white; text-decoration: none; 
+    padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-right: 10px; transition: 0.2s;
+}
+.social-links a:hover { filter: brightness(1.2); }
+
+/* Grid de Obras da Scan */
+.obras-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+.obra-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; position: relative; transition: 0.3s; }
+.obra-card:hover { border-color: var(--primary); transform: scale(1.03); }
+.obra-capa { width: 100%; height: 230px; object-fit: cover; }
+.obra-info { padding: 10px; }
+.obra-titulo { font-size: 14px; font-weight: 800; margin: 0 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.badge { position: absolute; top: 10px; left: 10px; background: var(--primary); color: white; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
+.badge.completo { background: var(--accent); }
+
+@media (max-width: 768px) {
+    #perfil-header { flex-direction: column; text-align: center; padding-top: 50px; }
+    .btn-voltar { top: 10px; right: 50%; transform: translateX(50%); }
+    .obras-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    .obra-capa { height: 190px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Tela 1: Lista de Todas as Scans -->
+    <div id="tela-lista">
+        <h1>🤝 Scans Parceiras</h1>
+        <p style="text-align: center; color: #aaa;">Conheça o trabalho incrível das Scans que fazem parte do nosso projeto!</p>
+        
+        <div id="loading" style="text-align:center; padding: 50px; color: var(--primary);">Carregando parceiros... ⏳</div>
+        <div class="scans-grid" id="grid-scans"></div>
+    </div>
+
+    <!-- Tela 2: Perfil da Scan (Obras e Estilo) -->
+    <div id="tela-perfil" class="hidden">
+        <div id="perfil-header">
+            <button class="btn-voltar" onclick="voltarParaLista()">⬅ Voltar</button>
+            <img id="p-logo" class="perfil-logo" src="" alt="Logo da Scan">
+            <div class="perfil-info">
+                <h2 id="p-nome">Nome da Scan</h2>
+                <p id="p-desc" class="perfil-desc">Descrição da scan vai aqui...</p>
+                <div class="social-links" id="p-social"></div>
+            </div>
+        </div>
+
+        <h2>🔥 Destaques e Atualizações</h2>
+        <div class="obras-grid" id="obras-andamento"></div>
+        
+        <h2 style="border-color: var(--accent);">✅ Obras Completas</h2>
+        <div class="obras-grid" id="obras-completas"></div>
+    </div>
+
+</div>
+
+<!-- Scripts do Firebase (Mantive a mesma configuração que você me enviou) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBDHUlG1Y3DqfMrgNoSw-OmfmUcXeTIKJo",
+  authDomain: "meow-scan-ffff0.firebaseapp.com",
+  databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com",
+  projectId: "meow-scan-ffff0",
+  storageBucket: "meow-scan-ffff0.firebasestorage.app",
+  messagingSenderId: "76129834936",
+  appId: "1:76129834936:web:c36cd66d16f6622d69e14d"
+};
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+const fDb = firebase.database();
+
+let bancoDeObras = [];     // Guarda todas as obras para não precisar carregar de novo
+let perfisDasScans = {};   // Guarda as cores e logos personalizadas
+const URL_LEITURA = "https://meowscan7.blogspot.com/p/obra.html?obra="; 
+const LOGO_PADRAO = "https://via.placeholder.com/150/1a1a1a/8b0029?text=SCAN";
+
+// Inicia o carregamento
+async function iniciar() {
+    try {
+        // 1. Puxa as configurações de perfis (se os ADMs tiverem criado)
+        const snapPerfis = await fDb.ref('config/perfis_scans').once('value');
+        if(snapPerfis.exists()) perfisDasScans = snapPerfis.val();
+
+        // 2. Puxa TODAS as obras de uma vez para filtrar rápido
+        const snapObras = await fDb.ref('obras').once('value');
+        if(snapObras.exists()) {
+            snapObras.forEach(child => {
+                let obra = child.val();
+                obra.id = child.key;
+                bancoDeObras.push(obra);
+            });
+        }
+        
+        gerarListaDeScans();
+
+    } catch (e) {
+        document.getElementById('loading').innerText = "Erro ao carregar os dados :(";
+        console.error(e);
+    }
+}
+
+function gerarListaDeScans() {
+    document.getElementById('loading').classList.add('hidden');
+    const grid = document.getElementById('grid-scans');
+    grid.innerHTML = "";
+
+    // Agrupa as obras pelo nome da "hospedagem"
+    let scansUnicas = {};
+    bancoDeObras.forEach(obra => {
+        let scanNome = obra.hospedagem;
+        // Se quiser que a Meow Scan não apareça aqui, descomente a linha abaixo:
+        // if(scanNome === "Meow Scan") return; 
+
+        if(scanNome) {
+            if(!scansUnicas[scanNome]) scansUnicas[scanNome] = 0;
+            scansUnicas[scanNome]++;
+        }
+    });
+
+    // Cria os cartões para cada Scan
+    for (let scan in scansUnicas) {
+        let perfil = perfisDasScans[scan] || {};
+        let logoUrl = perfil.logo || LOGO_PADRAO;
+        
+        let card = document.createElement('div');
+        card.className = 'scan-card';
+        card.onclick = () => abrirPerfilScan(scan);
+        card.innerHTML = `
+            <img class="scan-logo" src="${logoUrl}" alt="Logo ${scan}" loading="lazy">
+            <div class="scan-name">${scan}</div>
+            <div class="scan-count">${scansUnicas[scan]} Obras</div>
+        `;
+        grid.appendChild(card);
+    }
+}
+
+function abrirPerfilScan(scanNome) {
+    // Esconde a lista e mostra o perfil
+    document.getElementById('tela-lista').classList.add('hidden');
+    document.getElementById('tela-perfil').classList.remove('hidden');
+
+    // Aplica o estilo customizado (Cor de fundo, etc) se o ADM tiver configurado
+    let perfil = perfisDasScans[scanNome] || {};
+    document.body.style.background = perfil.corFundo || "var(--bg)";
+    
+    // Preenche os dados do cabeçalho
+    document.getElementById('p-nome').innerText = scanNome;
+    document.getElementById('p-logo').src = perfil.logo || LOGO_PADRAO;
+    document.getElementById('p-desc').innerText = perfil.descricao || `Página oficial das obras traduzidas pela ${scanNome}.`;
+    
+    // Redes sociais dinâmicas
+    const socialDiv = document.getElementById('p-social');
+    socialDiv.innerHTML = "";
+    if (perfil.discord) socialDiv.innerHTML += `<a href="${perfil.discord}" target="_blank">Discord</a>`;
+    if (perfil.instagram) socialDiv.innerHTML += `<a href="${perfil.instagram}" target="_blank">Instagram</a>`;
+    if (perfil.site) socialDiv.innerHTML += `<a href="${perfil.site}" target="_blank">Site Oficial</a>`;
+
+    // Filtra e renderiza as obras dessa scan específica
+    let andamentoGrid = document.getElementById('obras-andamento');
+    let completasGrid = document.getElementById('obras-completas');
+    andamentoGrid.innerHTML = ""; completasGrid.innerHTML = "";
+
+    let temAndamento = false;
+    let temCompleta = false;
+
+    bancoDeObras.forEach(obra => {
+        if (obra.hospedagem === scanNome) {
+            let ehCompleto = obra.status === 'completo';
+            let badgeTexto = ehCompleto ? "Completo" : (obra.tipo || "Manhwa");
+            let badgeClass = ehCompleto ? "badge completo" : "badge";
+            let capa = obra.capaUrl || "https://via.placeholder.com/300x430/1a1a1a/8b0029?text=Sem+Capa";
+
+            let card = `
+                <a href="${URL_LEITURA}${obra.id}" target="_blank" style="text-decoration: none; color: inherit;">
+                    <div class="obra-card">
+                        <span class="${badgeClass}">${badgeTexto}</span>
+                        <img class="obra-capa" src="${capa}" alt="${obra.nome}" loading="lazy">
+                        <div class="obra-info">
+                            <h3 class="obra-titulo">${obra.nome}</h3>
+                        </div>
+                    </div>
+                </a>
+            `;
+            
+            if (ehCompleto) {
+                completasGrid.innerHTML += card;
+                temCompleta = true;
+            } else {
+                andamentoGrid.innerHTML += card;
+                temAndamento = true;
+            }
+        }
+    });
+
+    if(!temAndamento) andamentoGrid.innerHTML = "<p style='color:#888;'>Nenhuma obra em andamento no momento.</p>";
+    if(!temCompleta) completasGrid.innerHTML = "<p style='color:#888;'>Nenhuma obra completa no momento.</p>";
+}
+
+function voltarParaLista() {
+    // Restaura o fundo padrão do site
+    document.body.style.background = "var(--bg)";
+    // Volta para a tela inicial
+    document.getElementById('tela-perfil').classList.add('hidden');
+    document.getElementById('tela-lista').classList.remove('hidden');
+}
+
+// Roda a função principal ao carregar a página
+iniciar();
+</script>
+</body>
+</html>
