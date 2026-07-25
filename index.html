@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* ================= VARIÁVEIS E TEMAS ================= */
+    /* ================= VARIÁVEIS E TEMAS ================= -->
     :root {
       --bg-color: #0f0c1b;
       --card-bg: #1a1625;
@@ -318,7 +318,7 @@
       </div>
     </div>
 
-    <!-- NOVA SEÇÃO: MODO DISCRETO -->
+    <!-- SEÇÃO: MODO DISCRETO -->
     <div class="config-box">
       <h4 style="margin-bottom: 20px; font-size: 16px;"><i class="fa-solid fa-user-secret"></i> Modo Discreto (Esconder)</h4>
       <p style="font-size: 11px; color: #aaa; margin-bottom: 15px;">Disfarce o app alterando o nome e a logo principal.</p>
@@ -355,7 +355,6 @@
     <button class="nav-item" onclick="switchTab('busca', this)">
       <i class="fa-solid fa-magnifying-glass"></i> Busca
     </button>
-    <!-- NOVA ABA DA BIBLIOTECA -->
     <button class="nav-item" onclick="switchTab('biblioteca', this); renderBiblioteca();">
       <i class="fa-solid fa-book-bookmark"></i> Biblioteca
     </button>
@@ -383,7 +382,6 @@
     };
 
     function applySettings() {
-      // Cores e Fundo
       document.documentElement.style.setProperty('--bg-color', settings.bgColor);
       document.documentElement.style.setProperty('--text-color', settings.textColor);
       document.documentElement.style.setProperty('--bg-image', settings.bgImage ? `url(${settings.bgImage})` : 'none');
@@ -393,7 +391,6 @@
       document.getElementById('cfg-bg').value = settings.bgColor;
       document.getElementById('cfg-text').value = settings.textColor;
 
-      // Aplicar Modo Discreto
       if(settings.appName) {
         document.getElementById('header-title').innerText = settings.appName;
         document.getElementById('app-document-title').innerText = settings.appName;
@@ -412,7 +409,6 @@
     }
     applySettings();
 
-    // Eventos Modo Discreto
     document.getElementById('icon-upload').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -437,7 +433,6 @@
       alert("Modo discreto desativado!");
     });
 
-    // Eventos Gerais de Configuração
     document.getElementById('toggle-18').addEventListener('change', (e) => {
       if(e.target.checked && !settings.ageVerified) {
         if(confirm("Você confirma ser maior de 18 anos?")) {
@@ -520,20 +515,26 @@
       }
       renderObras();
       iniciarDestaqueRotativo();
-      renderBiblioteca(); // Atualiza a biblioteca offline se houver dados novos
+      renderBiblioteca();
     });
 
     /* ================= 4. RENDERIZAÇÃO INTELIGENTE ================= */
     function createTop10CardHTML(obra, ranking) {
       const views = obra.views || 0; 
+      const isInLib = checarSeEstaNaBiblioteca(obra.id);
+      const bookmarkColor = isInLib ? "var(--primary)" : "rgba(0,0,0,0.6)";
+      
       return `
-        <a href="obra.html?obra=${obra.id}" class="card-obra top-card" onclick="registrarClique('${obra.id}')">
+        <div class="card-obra top-card">
           <div class="rank-badge">${ranking}</div>
-          <div class="capa-wrapper">
-            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
-            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
-          </div>
-        </a>
+          <button onclick="event.stopPropagation(); toggleSalvarBiblioteca('${obra.id}')" style="position: absolute; top: 12px; right: 8px; background: ${bookmarkColor}; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; z-index: 20; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"><i class="fa-solid fa-bookmark"></i></button>
+          <a href="obra.html?obra=${obra.id}" onclick="registrarClique('${obra.id}')" style="text-decoration:none; color:inherit; display:block; height:100%;">
+            <div class="capa-wrapper">
+              <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
+              <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
+            </div>
+          </a>
+        </div>
       `;
     }
 
@@ -556,24 +557,31 @@
         });
       }
 
-      // Botão de remover caso esteja renderizando na aba de Biblioteca
-      const removeBtn = isBiblioteca ? `<button onclick="event.preventDefault(); removerDaBiblioteca('${obra.id}')" style="position: absolute; top: 8px; right: 8px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; z-index: 20; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>` : '';
-      const badge18 = (obra.adulto && !isBiblioteca) ? '<div class="badge-18">18+</div>' : '';
+      const isInLib = checarSeEstaNaBiblioteca(obra.id);
+      const bookmarkColor = isInLib ? "var(--primary)" : "rgba(0,0,0,0.7)";
+      
+      const rightActionBtn = isBiblioteca 
+        ? `<button onclick="event.stopPropagation(); removerDaBiblioteca('${obra.id}')" style="position: absolute; top: 8px; right: 8px; background: rgba(230,57,70,0.9); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; z-index: 20; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-trash"></i></button>`
+        : `<button onclick="event.stopPropagation(); toggleSalvarBiblioteca('${obra.id}')" style="position: absolute; top: 8px; right: 8px; background: ${bookmarkColor}; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; z-index: 20; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"><i class="fa-solid fa-bookmark"></i></button>`;
+
+      const badge18 = (obra.adulto && !isBiblioteca) ? '<div class="badge-18" style="right: 42px;">18+</div>' : '';
 
       return `
-        <a href="obra.html?obra=${obra.id}" class="card-obra" onclick="registrarClique('${obra.id}')">
-          ${removeBtn}
-          <div class="capa-wrapper">
-            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
-            <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
-            <div class="badge-caps">${totalCaps} CAPS</div>
-            ${badge18}
-          </div>
-          <div class="info-obra">
-            <div class="titulo-obra">${obra.nome}</div>
-            ${capsHTML}
-          </div>
-        </a>
+        <div class="card-obra">
+          ${rightActionBtn}
+          <a href="obra.html?obra=${obra.id}" onclick="registrarClique('${obra.id}')" style="text-decoration:none; color:inherit; display:block;">
+            <div class="capa-wrapper">
+              <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
+              <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
+              <div class="badge-caps">${totalCaps} CAPS</div>
+              ${badge18}
+            </div>
+            <div class="info-obra">
+              <div class="titulo-obra">${obra.nome}</div>
+              ${capsHTML}
+            </div>
+          </a>
+        </div>
       `;
     }
 
@@ -609,6 +617,7 @@
       document.getElementById('grid-busca').innerHTML = obrasBusca.map(o => createNormalCardHTML(o)).join('');
       
       renderHistorico();
+      renderBiblioteca();
     }
 
     document.getElementById('search-input').addEventListener('input', renderObras);
@@ -622,34 +631,49 @@
     });
 
     /* ================= 4.1 BIBLIOTECA OFFLINE (LOGIC) ================= */
-    // Função global que você pode chamar na página "obra.html" para salvar offline
-    window.salvarNaBiblioteca = function(obraObj) {
+    function checarSeEstaNaBiblioteca(id) {
       let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
-      // Se não existir, salva o objeto inteiro para leitura offline
-      if(!bib.find(o => o.id === obraObj.id)) {
+      return bib.some(o => o.id === id);
+    }
+
+    window.toggleSalvarBiblioteca = function(id) {
+      const obraObj = todasObras.find(o => o.id === id);
+      if(!obraObj) return;
+
+      let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
+      const index = bib.findIndex(o => o.id === id);
+
+      if (index >= fALSE) { // Se já está salvo, remove
+        bib.splice(index, 1);
+        localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
+        alert("Obra removida da Biblioteca Offline!");
+      } else { // Se não está salvo, adiciona
         bib.push(obraObj);
         localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
         alert("Obra salva na Biblioteca Offline!");
       }
+      renderObras();
     };
 
     window.removerDaBiblioteca = function(id) {
       let bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
       bib = bib.filter(o => o.id !== id);
       localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
-      renderBiblioteca();
+      renderObras();
     };
 
     function renderBiblioteca() {
       const bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
       const grid = document.getElementById('grid-biblioteca');
       
+      if(!grid) return;
+
       if(bib.length === 0) {
         grid.innerHTML = `
           <div class="empty-library" style="grid-column: span 2;">
             <i class="fa-solid fa-box-open"></i>
             <p>Sua biblioteca está vazia.</p>
-            <p style="font-size: 11px; margin-top: 5px;">Abra uma obra e clique no botão de salvar para lê-la offline depois.</p>
+            <p style="font-size: 11px; margin-top: 5px;">Clique no ícone de marcador nos cards para salvar obras para leitura offline.</p>
           </div>`;
         return;
       }
@@ -681,6 +705,7 @@
       obraDestaqueAtual = obrasValidas[randomIndex];
       
       const bannerImg = document.getElementById('banner-img');
+      if(!bannerImg) return;
       bannerImg.style.opacity = 0; 
       
       setTimeout(() => {
@@ -697,7 +722,7 @@
       }
     }
 
-    /* ================= 6. AUTHENTICAÇÃO INTELIGENTE E CORRIGIDA ================= */
+    /* ================= 6. AUTENTICAÇÃO INTELIGENTE ================= */
     window.switchAuthTab = function(tabName) {
       document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.auth-tabs button').forEach(el => el.classList.remove('active'));
@@ -711,7 +736,6 @@
     auth.onAuthStateChanged(user => {
       currentUser = user;
       
-      // VERIFICA SE O E-MAIL FOI VALIDADO ANTES DE LIBERAR O PERFIL
       if (user && (user.emailVerified || user.providerData.some(p => p.providerId === 'google.com'))) {
         document.getElementById('auth-box').style.display = 'none';
         document.getElementById('profile-info').style.display = 'block';
@@ -738,20 +762,17 @@
         isAdmin = false;
         switchAuthTab('login');
         
-        // Se existe user mas não verificou e-mail, forçar deslogar UI internamente
         if(user && !user.emailVerified && !user.providerData.some(p => p.providerId === 'google.com')) {
            auth.signOut();
         }
       }
     });
 
-    // Login Google
     document.getElementById('btn-google-login').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider).catch(err => alert(err.message));
     });
     
-    // Login E-mail COM VALIDAÇÃO
     document.getElementById('btn-login-email').addEventListener('click', () => {
       const email = document.getElementById('login-email').value;
       const pass = document.getElementById('login-pass').value;
@@ -759,13 +780,12 @@
       
       auth.signInWithEmailAndPassword(email, pass).then(cred => {
          if(!cred.user.emailVerified) {
-             alert("Sua conta ainda não foi verificada. Por favor, cheque seu e-mail (incluindo a caixa de spam) e clique no link de verificação.");
+             alert("Sua conta ainda não foi verificada. Por favor, cheque seu e-mail e clique no link de verificação.");
              auth.signOut();
          }
       }).catch(err => alert("Erro ao entrar: " + err.message));
     });
 
-    // Cadastro COM ENVIO DE VERIFICAÇÃO
     document.getElementById('btn-register').addEventListener('click', () => {
       const name = document.getElementById('reg-name').value;
       const email = document.getElementById('reg-email').value;
@@ -774,16 +794,14 @@
       
       auth.createUserWithEmailAndPassword(email, pass).then(cred => {
          cred.user.updateProfile({ displayName: name });
-         // Envia o e-mail de verificação
          return cred.user.sendEmailVerification();
       }).then(() => {
-         alert("Conta criada com sucesso! Um e-mail de verificação foi enviado. Verifique sua caixa de entrada (ou spam) antes de fazer login.");
-         auth.signOut(); // Desloga pra forçar a verificação primeiro
+         alert("Conta criada com sucesso! Um e-mail de verificação foi enviado. Verifique sua caixa de entrada antes de fazer login.");
+         auth.signOut(); 
          switchAuthTab('login');
       }).catch(err => alert("Erro ao criar conta: " + err.message));
     });
 
-    // Recuperar Senha
     document.getElementById('btn-recover').addEventListener('click', () => {
       const email = document.getElementById('rec-email').value;
       if(!email) return alert("Digite seu e-mail para recuperar a senha.");
@@ -847,7 +865,7 @@
       document.getElementById('lista-parceiros').innerHTML = html;
     });
 
-    /* ================= 8. SUPORTE PWA E MODO OFFLINE (FIREBASE) ================= */
+    /* ================= 8. SUPORTE PWA E MODO OFFLINE ================= */
     try {
       db.goOnline();
       firebase.database().ref('.info/connected').on('value', function(snap) {
@@ -861,7 +879,6 @@
       console.log("Erro na persistência do banco:", e);
     }
 
-    // Registrar o Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
