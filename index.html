@@ -325,24 +325,6 @@
       
       <div id="onboarding-step-1">
         <div style="text-align: center; margin-bottom: 15px;">
-          <i class="fa-solid fa-shield-halved" style="font-size: 45px; color: var(--primary);"></i>
-        </div>
-        <h3 style="text-align: center; margin-bottom: 10px; color: #fff;">Bem-vindo(a) ao Meow Scan!</h3>
-        <p style="font-size: 12px; color: #aaa; text-align: center; margin-bottom: 15px;">Para continuar e aproveitar ao máximo o app de Mangás/Manhwas, aceite os nossos termos e permissões:</p>
-        
-        <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 14px; font-size: 11px; color: #ccc; max-height: 140px; overflow-y: auto; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.05); line-height: 1.5;">
-          <strong>Política de Uso e Permissões:</strong><br>
-          1. O app armazena sua biblioteca e preferências localmente no dispositivo (LocalStorage).<br>
-          2. Você concorda em receber notificações de atualizações de capítulos (opcional).<br>
-          3. O conteúdo disponibilizado é para entretenimento e leitura offline.<br>
-          4. Não é permitido o uso indevido da plataforma ou scraping automatizado.
-        </div>
-
-        <button onclick="aceitarTermos()" class="meow-btn"><i class="fa-solid fa-circle-check"></i> Aceitar Termos e Continuar</button>
-      </div>
-
-      <div id="onboarding-step-2" style="display: none;">
-        <div style="text-align: center; margin-bottom: 15px;">
           <i class="fa-solid fa-download" style="font-size: 45px; color: var(--success);"></i>
         </div>
         <h3 style="text-align: center; margin-bottom: 10px; color: #fff;">Como Funciona o Leitor Offline?</h3>
@@ -353,7 +335,41 @@
           <p><i class="fa-solid fa-wifi" style="color: #ff477e;"></i> <strong>Modo Offline:</strong> Sem internet? Abra a aba <strong>Biblioteca</strong> e leia normalmente em qualquer lugar!</p>
         </div>
 
-        <button onclick="finalizarOnboarding()" class="meow-btn" style="background: linear-gradient(135deg, var(--success), #00b0ff); color: #000; font-weight: 800;"><i class="fa-solid fa-rocket"></i> Entendi, Começar a Ler!</button>
+        <button onclick="irParaPasso(2)" class="meow-btn" style="background: var(--success); color: #000; font-weight: 800;">Próximo Passo <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="onboarding-step-2" style="display: none;">
+        <div style="text-align: center; margin-bottom: 15px;">
+          <i class="fa-solid fa-gear" style="font-size: 45px; color: var(--primary);"></i>
+        </div>
+        <h3 style="text-align: center; margin-bottom: 10px; color: #fff;">Funções e Biblioteca</h3>
+        
+        <div style="font-size: 12px; color: #ddd; line-height: 1.6; margin-bottom: 20px;">
+          <p style="margin-bottom: 10px;"><i class="fa-solid fa-book-bookmark" style="color: var(--primary);"></i> <strong>Sua Biblioteca:</strong> Fica no menu inferior. É lá que suas obras salvas e baixadas vão morar.</p>
+          <p style="margin-bottom: 10px;"><i class="fa-solid fa-palette" style="color: var(--accent);"></i> <strong>Aba Config:</strong> Você pode mudar as cores do app, colocar papel de parede, e ativar opções para conteúdo sensível e +18 (se for maior de idade!).</p>
+          <p><i class="fa-solid fa-bell" style="color: #ffd700;"></i> <strong>Notificações:</strong> Você pode receber avisos da nossa equipe direto no sininho lá no topo.</p>
+        </div>
+
+        <button onclick="irParaPasso(3)" class="meow-btn">Próximo Passo <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="onboarding-step-3" style="display: none;">
+        <div style="text-align: center; margin-bottom: 15px;">
+          <i class="fa-solid fa-shield-halved" style="font-size: 45px; color: #ff477e;"></i>
+        </div>
+        <h3 style="text-align: center; margin-bottom: 10px; color: #fff;">Termos de Uso e Segurança</h3>
+        <p style="font-size: 12px; color: #aaa; text-align: center; margin-bottom: 15px;">Para sua segurança e a da Meow Scan, leia e aceite as regras abaixo antes de continuar:</p>
+        
+        <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 14px; font-size: 11px; color: #ccc; max-height: 140px; overflow-y: auto; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.05); line-height: 1.5;">
+          <strong>Projeto Feito de Fã para Fã:</strong><br>
+          1. A Meow Scan é um grupo sem fins lucrativos. As obras disponibilizadas pertencem aos seus autores e artistas originais. Nós apenas traduzimos e editamos para a nossa comunidade.<br>
+          2. Não é permitido vender, redistribuir ou utilizar nosso conteúdo para ganhar dinheiro.<br>
+          3. Em caso de solicitação oficial dos detentores dos direitos (autores/editoras), removeremos a obra imediatamente do aplicativo.<br>
+          4. O app armazena sua biblioteca e preferências localmente no dispositivo (LocalStorage). Não fazemos uso indevido de seus dados.<br>
+          5. Leia, divirta-se e apoie os criadores originais sempre que possível!
+        </div>
+
+        <button onclick="finalizarOnboarding()" class="meow-btn" style="background: linear-gradient(135deg, #ff477e, #e63946); color: #fff; font-weight: 800;"><i class="fa-solid fa-check"></i> Aceito e Quero Ler!</button>
       </div>
 
     </div>
@@ -571,29 +587,31 @@
   <script>
     /* ================= VERIFICAÇÃO PWA (BLOQUEIO WEB) ================= */
     function checkAppInstall() {
-      // Checa se está no modo Standalone (App) ou navegador normal
       const isApp = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
       if (!isApp) {
         document.getElementById('pwa-install-blocker').style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Impede de rolar a página de trás
+        document.body.style.overflow = 'hidden'; 
       }
     }
     checkAppInstall();
 
     /* ================= TEMPO DE CARREGAMENTO ESTIMADO ================= */
-    let tempoEstimado = 60; // Começa em 60 segundos (1 minuto) para dar tempo de sobra
-    document.getElementById('loading-overlay').style.display = 'flex';
-    
-    let loadingInterval = setInterval(() => {
-      tempoEstimado--;
-      const text = document.getElementById('loading-time-text');
-      if (text && tempoEstimado > 0) {
-        let minutos = Math.floor(tempoEstimado / 60);
-        let segundos = tempoEstimado % 60;
-        let minText = minutos > 0 ? `${minutos} minuto(s) e ` : '';
-        text.innerText = `Faltam cerca de ${minText}${segundos} segundos para carregar... aguarde!`;
-      }
-    }, 1000);
+    let tempoEstimado = 60; 
+    let loadingInterval;
+
+    function iniciarCarregamentoVisual() {
+      document.getElementById('loading-overlay').style.display = 'flex';
+      loadingInterval = setInterval(() => {
+        tempoEstimado--;
+        const text = document.getElementById('loading-time-text');
+        if (text && tempoEstimado > 0) {
+          let minutos = Math.floor(tempoEstimado / 60);
+          let segundos = tempoEstimado % 60;
+          let minText = minutos > 0 ? `${minutos} minuto(s) e ` : '';
+          text.innerText = `Faltam cerca de ${minText}${segundos} segundos para carregar... aguarde!`;
+        }
+      }, 1000);
+    }
 
     /* ================= DETECTOR OFFLINE ================= */
     window.addEventListener('offline', () => {
@@ -625,13 +643,15 @@
       }
     }
     
-    function aceitarTermos() {
-      localStorage.setItem('meowTermosAceitos', 'true');
+    function irParaPasso(passo) {
       document.getElementById('onboarding-step-1').style.display = 'none';
-      document.getElementById('onboarding-step-2').style.display = 'block';
+      document.getElementById('onboarding-step-2').style.display = 'none';
+      document.getElementById('onboarding-step-3').style.display = 'none';
+      document.getElementById(`onboarding-step-${passo}`).style.display = 'block';
     }
 
     function finalizarOnboarding() {
+      localStorage.setItem('meowTermosAceitos', 'true');
       document.getElementById('modal-onboarding').style.display = 'none';
       showToast('Bem-vindo(a)! Aproveite sua leitura.');
     }
@@ -736,18 +756,38 @@
     let isAdmin = false;
     const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3"; 
 
-    // Filtros selecionados (Múltipla Seleção Estilo Batoto)
+    // Filtros selecionados
     let selectedTipo = ['Todos'];
     let selectedStatus = ['Todos'];
     let selectedHospedagem = ['Todos'];
 
-    db.ref('obras').on('value', snap => {
-      // Quando os dados carregarem, sumimos com a tela de carregamento e o timer
+    /* ================= O SEGREDO DO CARREGAMENTO: CACHE LOCAL ================= */
+    const cacheObras = localStorage.getItem('meowCacheObras');
+    if (cacheObras) {
+      // Se tiver cache salvo da última vez, carrega instantaneamente! Não precisa mostrar a tela
+      todasObras = JSON.parse(cacheObras);
       document.getElementById('loading-overlay').style.display = 'none';
-      clearInterval(loadingInterval);
+      document.getElementById('banner-destaque').classList.add('loaded');
+      document.getElementById('banner-destaque').classList.remove('skeleton');
+      carregarFiltrosHospedagem();
+      renderObras();
+      iniciarDestaqueRotativo();
+    } else {
+      // Se for a primeira vez mesmo (sem cache), mostra a tela de carregamento
+      iniciarCarregamentoVisual();
+    }
+
+    // De qualquer forma, ele vai no Firebase baixar as atualizações em segundo plano silenciosamente
+    db.ref('obras').on('value', snap => {
+      // Tira o loading se ele estiver aparecendo (primeira vez)
+      document.getElementById('loading-overlay').style.display = 'none';
+      if(loadingInterval) clearInterval(loadingInterval);
       
       todasObras = [];
       if(snap.exists()){ snap.forEach(child => { todasObras.push({ id: child.key, ...child.val() }); }); }
+      
+      // Salva o Cache Fresquinho no celular pra próxima vez carregar rápido
+      localStorage.setItem('meowCacheObras', JSON.stringify(todasObras));
       
       document.getElementById('banner-destaque').classList.add('loaded');
       document.getElementById('banner-destaque').classList.remove('skeleton');
@@ -836,7 +876,6 @@
         const capArray = Object.values(obra.capitulos).sort((a, b) => b.numero - a.numero);
         totalCaps = capArray.length;
         capArray.slice(0, 2).forEach((cap, index) => {
-          // Tag de "NOVO" no capítulo mais recente com efeito de pulso vermelho
           const badgeNovo = (isUpdated && index === 0) ? `<span class="badge-novo">NOVO</span>` : '';
           capsHTML += `<div class="chapter-row"><span><i class="fa-solid fa-wand-magic-sparkles"></i> CAP ${cap.numero} ${badgeNovo}</span></div>`;
         });
@@ -932,7 +971,7 @@
 
     document.getElementById('search-input').addEventListener('input', renderObras);
 
-    /* ================= TOGGLE NA BIBLIOTECA (VISUAL ATUALIZADO NA HORA) ================= */
+    /* ================= TOGGLE NA BIBLIOTECA ================= */
     window.toggleSalvarBiblioteca = function(id) {
       const obraObj = todasObras.find(o => o.id === id);
       if(!obraObj) return;
@@ -1123,7 +1162,7 @@
 
         if (user.uid === ADMIN_UID) {
           isAdmin = true;
-          navAdm.style.display = 'flex'; // Aba ADM só surge para o Administrador!
+          navAdm.style.display = 'flex'; 
         } else {
           isAdmin = false;
           navAdm.style.display = 'none';
