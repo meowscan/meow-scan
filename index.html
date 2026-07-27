@@ -53,7 +53,7 @@
     #browser-blocker h1 { font-size: 22px; font-weight: 900; margin-bottom: 10px; color: var(--primary); }
     #browser-blocker p { font-size: 14px; color: #ccc; margin-bottom: 25px; line-height: 1.6; }
     
-    /* ================= TELA OFFLINE ELEGANTE ================= */
+    /* ================= TELA OFFLINE ================= */
     #beautiful-offline {
       display: none; position: fixed; inset: 0; background: rgba(15, 12, 27, 0.95); backdrop-filter: blur(15px);
       z-index: 99999; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;
@@ -84,10 +84,12 @@
     .brand-title { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.25rem; letter-spacing: 0.5px; }
     .brand-title img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; box-shadow: 0 0 10px rgba(157,78,221,0.5); }
     
-    .notification-bell { font-size: 1.35rem; position: relative; color: #ccc; cursor: pointer; transition: 0.2s; padding: 6px; }
-    .notification-bell:active { transform: scale(0.88); }
+    .header-icons { display: flex; align-items: center; gap: 15px; }
+    .header-icon { font-size: 1.35rem; position: relative; color: #ccc; cursor: pointer; transition: 0.2s; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    .header-icon:active { transform: scale(0.88); }
+    .header-icon.telegram { color: #0088cc; }
     .notification-bell .badge { 
-      display: none; position: absolute; top: 4px; right: 4px; 
+      display: none; position: absolute; top: -2px; right: -4px; 
       background: var(--accent); width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--bg-color);
       box-shadow: 0 0 8px var(--accent);
     }
@@ -107,7 +109,7 @@
       border-radius: 0 0 28px 28px; box-shadow: 0 12px 35px rgba(0,0,0,0.6);
       transition: all 0.5s ease;
     }
-    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: opacity 0.5s ease; opacity: 0; }
+    .banner-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: opacity 0.5s ease; opacity: 0; pointer-events: none; }
     .banner-overlay {
       position: absolute; bottom: 0; left: 0; width: 100%; padding: 70px 20px 20px;
       background: linear-gradient(to top, rgba(15,12,27,0.98), rgba(15,12,27,0.6), transparent); z-index: 2;
@@ -127,40 +129,32 @@
     .scroll-horizontal { display: flex; overflow-x: auto; gap: 16px; padding-bottom: 12px; scroll-snap-type: x mandatory; }
     .scroll-horizontal::-webkit-scrollbar { display: none; }
     
-    /* Aumentado para melhor visualização ao arrastar */
     .top-card { width: 150px; min-width: 150px; position: relative; border-radius: 16px; overflow: visible !important; scroll-snap-align: start; flex: 0 0 auto; }
     .top-card .capa-wrapper { padding-top: 140%; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
     .rank-badge { position: absolute; top: -8px; left: -8px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 16px; z-index: 10; border: 3px solid var(--bg-color); box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
 
-    /* Cards Padrão Elegantes */
-    .card-obra { background: var(--card-bg); border-radius: 18px; overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative; box-shadow: 0 6px 20px rgba(0,0,0,0.25); transition: transform 0.25s ease, box-shadow 0.25s ease; border: 1px solid rgba(255,255,255,0.04); }
+    /* Cards Padrão */
+    .card-obra { background: var(--card-bg); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; position: relative; box-shadow: 0 6px 20px rgba(0,0,0,0.25); transition: transform 0.25s ease; border: 1px solid rgba(255,255,255,0.04); }
     .card-obra:active { transform: scale(0.96); }
-    .capa-wrapper { position: relative; width: 100%; padding-top: 140%; background: #222; overflow: hidden; }
-    .capa-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    
+    /* A Mágica de Salvar na Imagem sem abrir menu do navegador */
+    .capa-wrapper { position: relative; width: 100%; padding-top: 140%; background: #222; overflow: hidden; cursor: pointer; -webkit-touch-callout: none; }
+    .capa-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; pointer-events: none; -webkit-user-drag: none; }
     .card-obra:hover .capa-img { transform: scale(1.05); }
     
-    .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); padding: 4px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
-    .badge-caps { position: absolute; bottom: 8px; left: 8px; background: var(--primary); padding: 4px 9px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; box-shadow: 0 2px 10px rgba(157,78,221,0.4); }
-    .badge-18 { position: absolute; bottom: 8px; right: 8px; background: var(--accent); padding: 3px 6px; border-radius: 8px; font-size: 10px; font-weight: 900; z-index: 10; box-shadow: 0 2px 10px rgba(255,71,126,0.4); }
+    .badge-views { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); padding: 4px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; pointer-events: none; }
+    .badge-caps { position: absolute; bottom: 8px; left: 8px; background: var(--primary); padding: 4px 9px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; box-shadow: 0 2px 10px rgba(157,78,221,0.4); pointer-events: none; }
+    .badge-18 { position: absolute; bottom: 8px; right: 8px; background: var(--accent); padding: 3px 6px; border-radius: 8px; font-size: 10px; font-weight: 900; z-index: 10; box-shadow: 0 2px 10px rgba(255,71,126,0.4); pointer-events: none; }
     
-    .badge-novo { 
-      background: #ff1744; color: #fff; padding: 3px 8px; border-radius: 8px; font-size: 9px; font-weight: 900; margin-left: 6px; display: inline-block;
-      animation: pulseRed 1.2s infinite ease-in-out; box-shadow: 0 0 10px rgba(255, 23, 68, 0.8);
-    }
-    @keyframes pulseRed {
-      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.7); }
-      70% { transform: scale(1.08); box-shadow: 0 0 0 8px rgba(255, 23, 68, 0); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 23, 68, 0); }
-    }
+    .badge-novo { background: #ff1744; color: #fff; padding: 3px 8px; border-radius: 8px; font-size: 9px; font-weight: 900; margin-left: 6px; display: inline-block; animation: pulseRed 1.2s infinite ease-in-out; }
+    @keyframes pulseRed { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.7); } 70% { transform: scale(1.08); box-shadow: 0 0 0 8px rgba(255, 23, 68, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 23, 68, 0); } }
 
-    .btn-save-lib { 
-      position: absolute; top: 8px; right: 8px; background: rgba(15, 12, 27, 0.75); backdrop-filter: blur(6px); color: #fff; border: 1px solid rgba(255,255,255,0.15); 
-      border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; z-index: 20; cursor: pointer; font-size: 14px; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.4); 
-    }
-    .btn-save-lib:active { transform: scale(0.85); }
-    .btn-save-lib.in-library { background: var(--success); color: #000; border-color: var(--success); box-shadow: 0 0 14px rgba(0, 230, 118, 0.6); }
+    /* Icone de Biblioteca sobre a imagem */
+    .icone-salvo-lib { position: absolute; top: 8px; right: 8px; background: rgba(15, 12, 27, 0.75); backdrop-filter: blur(6px); color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; z-index: 20; font-size: 14px; pointer-events: none; }
+    .icone-salvo-lib.in-library { background: var(--success); color: #000; border-color: var(--success); box-shadow: 0 0 14px rgba(0, 230, 118, 0.6); }
 
-    .info-obra { padding: 12px 10px; }
+    /* Clicar aqui abre a obra */
+    .info-obra { padding: 12px 10px; text-decoration: none; color: inherit; display: block; }
     .titulo-obra { font-size: 13px; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
     .chapter-row { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 7px 9px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; color: #ddd; border: 1px solid rgba(255,255,255,0.02); }
     .chapter-row i { color: var(--primary); font-size: 11px; margin-right: 5px; }
@@ -170,7 +164,7 @@
     .search-bar { width: 100%; padding: 15px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(26,22,37,0.9); backdrop-filter: blur(10px); color: var(--text-color); font-family: var(--font-family); font-size: 14px; outline: none; transition: 0.3s; box-shadow: inset 0 2px 6px rgba(0,0,0,0.3); }
     .search-bar:focus { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 15px rgba(157,78,221,0.25); }
     
-    .filters-wrapper { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .filters-wrapper { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; max-height: 250px; overflow-y: auto; }
     .filter-group-title { font-size: 11px; font-weight: 700; color: #aaa; text-transform: uppercase; margin-bottom: 4px; }
     .filters-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
     .filters-scroll::-webkit-scrollbar { display: none; }
@@ -178,78 +172,47 @@
     .filter-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #bbb; padding: 7px 16px; border-radius: 18px; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.25s; }
     .filter-btn.active { background: rgba(157, 78, 221, 0.25); color: #fff; border-color: var(--primary); font-weight: 700; box-shadow: 0 0 12px rgba(157,78,221,0.3); }
 
-    /* ================= MENU INFERIOR NATIVO (LIMPO) ================= */
+    /* ================= MENU INFERIOR NATIVO ================= */
     .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 12, 27, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; padding-bottom: calc(10px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 25px rgba(0,0,0,0.4); }
     .nav-item { display: flex; flex-direction: column; align-items: center; color: #777; font-size: 10px; text-decoration: none; background: none; border: none; cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: 0.25s; flex: 1; }
     .nav-item i { font-size: 19px; margin-bottom: 4px; transition: 0.25s; }
     .nav-item.active { color: var(--primary); font-weight: 800; }
     .nav-item.active i { transform: translateY(-3px) scale(1.1); text-shadow: 0 0 12px rgba(157,78,221,0.6); }
 
-    /* ================= SISTEMA DE CONTAS & BOTÕES ================= */
-    .auth-container { max-width: 420px; margin: 10px auto; background: var(--card-bg); padding: 30px 22px; border-radius: 26px; box-shadow: 0 15px 45px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.06); }
-    .auth-tabs { display: flex; background: rgba(0,0,0,0.4); border-radius: 14px; margin-bottom: 22px; padding: 5px; }
-    .auth-tabs button { flex: 1; background: transparent; border: none; color: #888; padding: 12px; font-family: var(--font-family); font-weight: 700; font-size: 13px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
-    .auth-tabs button.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(157,78,221,0.4); }
+    /* ================= HOSPEDAGENS / PARCEIROS ================= */
+    .hospedagem-card { background: linear-gradient(135deg, rgba(157,78,221,0.2), rgba(255,71,126,0.2)); border: 1px solid var(--primary); border-radius: 18px; padding: 25px 20px; text-align: center; cursor: pointer; transition: transform 0.2s; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+    .hospedagem-card:active { transform: scale(0.95); }
+    .hospedagem-card h3 { font-size: 1.2rem; font-weight: 900; margin-bottom: 5px; color: #fff; }
+    .hospedagem-card p { font-size: 12px; color: #ddd; }
     
-    .auth-form { display: none; animation: fadeIn 0.3s ease; }
-    .auth-form.active { display: block; }
+    .hospedagem-detalhe-header { text-align: center; padding: 40px 20px; border-radius: 20px; background: var(--card-bg); margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
     
-    .meow-input { width: 100%; padding: 15px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.35); color: white; margin-bottom: 14px; font-family: var(--font-family); font-size: 14px; outline: none; transition: 0.3s; }
-    .meow-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.5); box-shadow: 0 0 12px rgba(157,78,221,0.25); }
-    
-    .meow-btn { width: 100%; padding: 15px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; margin-bottom: 12px; display: flex; justify-content: center; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--primary), #b565e6); color: white; font-family: var(--font-family); font-size: 14px; transition: 0.2s; box-shadow: 0 6px 18px rgba(157, 78, 221, 0.4); }
+    /* ================= COMPONENTES GENÉRICOS ================= */
+    .meow-input { width: 100%; padding: 15px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.35); color: white; margin-bottom: 14px; font-family: var(--font-family); font-size: 14px; outline: none; }
+    .meow-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.5); }
+    .meow-btn { width: 100%; padding: 15px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; margin-bottom: 12px; display: flex; justify-content: center; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--primary), #b565e6); color: white; font-family: var(--font-family); font-size: 14px; transition: 0.2s; }
     .meow-btn:active { transform: scale(0.97); }
-    .meow-btn-google { background: #fff; color: #111; box-shadow: 0 5px 15px rgba(255,255,255,0.15); border: 1px solid #ddd; }
     
-    .forgot-pass { text-align: center; font-size: 12px; color: #aaa; font-weight: 600; cursor: pointer; margin-top: 6px; transition: 0.2s; }
-    .forgot-pass:hover { color: var(--primary); text-decoration: underline; }
-
-    /* ================= PERFIL E CUSTOMIZAÇÃO ================= */
-    #profile-info { display: none; text-align: center; padding-top: 10px; }
-    .profile-header { position: relative; display: inline-block; margin-bottom: 12px; }
-    .profile-avatar { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; box-shadow: 0 8px 30px rgba(157, 78, 221, 0.5); }
-    
-    .profile-stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 22px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); }
-    .stat-item { text-align: center; }
-    .stat-item strong { display: block; font-size: 20px; color: var(--primary); }
-    .stat-item small { color: #aaa; font-size: 11px; text-transform: uppercase; font-weight: 600; }
-
-    .edit-profile-box { display: none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 18px; padding: 20px; margin-bottom: 25px; text-align: left; animation: fadeIn 0.3s; }
-    .edit-profile-box h4 { margin-bottom: 14px; color: var(--primary); font-size: 14px; display: flex; align-items: center; gap: 8px; }
-
-    /* ================= CONFIGURAÇÕES E ADMIN ================= */
+    /* Configurações */
     .config-box { background: var(--card-bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.04); box-shadow: 0 6px 20px rgba(0,0,0,0.25); text-align: left;}
     .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 14px; font-weight: 600; }
-    
     .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.12); transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: var(--primary); }
     input:checked + .slider:before { transform: translateX(24px); }
-
     .color-picker { background: transparent; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; height: 35px; width: 45px; border-radius: 8px; }
 
-    /* ================= MODAIS ================= */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; padding: 20px; }
-    .modal-content { background: var(--card-bg); width: 100%; max-width: 440px; border-radius: 26px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; max-height: 85vh; overflow-y: auto; }
-    .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-    .modal-close:active { transform: scale(0.9); }
-    
-    .notif-item { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; gap: 14px; align-items: flex-start; }
-    .notif-item:last-child { border-bottom: none; }
-    .notif-icon { width: 38px; height: 38px; border-radius: 50%; background: rgba(157, 78, 221, 0.2); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-    .notif-text { font-size: 13px; color: #ddd; line-height: 1.4; }
-    .notif-time { font-size: 10px; color: #888; margin-top: 4px; }
+    /* Modais */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content { background: var(--card-bg); width: 100%; max-width: 440px; border-radius: 26px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); position: relative; max-height: 85vh; overflow-y: auto; }
+    .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-    /* ================= TOAST NOTIFICATIONS ================= */
+    /* Toast */
     #toast-container { position: fixed; bottom: 95px; left: 50%; transform: translateX(-50%); z-index: 3000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; pointer-events: none; }
     .toast-msg { background: rgba(26, 22, 37, 0.96); backdrop-filter: blur(12px); color: #fff; padding: 14px 18px; border-radius: 14px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-left: 4px solid var(--primary); animation: slideUpToast 0.4s ease forwards, fadeOutToast 0.4s ease 3.5s forwards; }
-    .toast-msg i { font-size: 18px; }
-    .toast-msg.error { border-left-color: #ff477e; }
-    .toast-msg.error i { color: #ff477e; }
-    .toast-msg.success i { color: var(--success); }
-
+    
     @keyframes slideUpToast { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOutToast { from { opacity: 1; } to { opacity: 0; } }
 
@@ -259,20 +222,15 @@
 </head>
 <body>
 
-  <!-- TELA DE BLOQUEIO PARA NAVEGADOR (SOMENTE APP FUNCIONA) -->
   <div id="browser-blocker">
     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png" alt="Logo">
     <h1>Atenção, Leitor!</h1>
-    <p>Este aqui é um <strong>Aplicativo Offline</strong>. Para você conseguir ler as obras e baixar capítulos sem internet, você precisa instalar o nosso app.</p>
-    <p style="font-size: 12px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px;">No seu celular, abra as opções do navegador (três pontinhos) e clique em <br><strong>"Adicionar à Tela Inicial"</strong> ou <strong>"Instalar Aplicativo"</strong>.</p>
-    <a href="https://t.me/Meowscann1" target="_blank" class="meow-btn" style="text-decoration: none; margin-top: 20px; background: #0088cc;"><i class="fa-brands fa-telegram"></i> Nosso Canal no Telegram</a>
+    <p>Este aqui é um <strong>Aplicativo Offline</strong>. Para ler as obras, adicione à tela inicial.</p>
   </div>
 
-  <!-- TELA BONITA QUANDO FICA OFFLINE -->
   <div id="beautiful-offline">
     <i class="fa-solid fa-wifi-slash"></i>
     <h1>Você está offline</h1>
-    <p>Mas não se preocupe! Como você está no nosso app, sua biblioteca salva continua disponível para você ler de onde estiver.</p>
     <button onclick="document.getElementById('beautiful-offline').style.display='none'; switchTab('biblioteca'); renderBiblioteca();" class="meow-btn">Ir para Biblioteca Offline</button>
   </div>
 
@@ -283,9 +241,16 @@
       <img id="header-logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9E-kA-zxQoW_9n37UDtVUc_TH4QhHUJ7ZCxyZWj1zj06dh53wI7Iviqbbs1Y6bId-MYSLEOWZTuuC5a_U9TB4YvMMluSf_Xg65MV437qnxzApy472qVOwvUTnyZgJti8XpDiExf312gj0ogzo8vzvPYhsaczya-oZTS7ztLjd5dCGCTwJVarVoY_VZwUr/s400/6576.png" alt="Logo">
       <span id="header-title">MEOW SCAN</span>
     </div>
-    <div class="notification-bell" onclick="abrirModalNotificacoes()">
-      <i class="fa-solid fa-bell"></i>
-      <span class="badge"></span>
+    <div class="header-icons">
+      <!-- TELEGRAM CANAL (Visível e bonito no header) -->
+      <a href="https://t.me/Meowscann1" target="_blank" class="header-icon telegram"><i class="fa-brands fa-telegram"></i></a>
+      <!-- CONFIGURAÇÃO GERAL (Disponível sem login) -->
+      <div class="header-icon" onclick="switchTab('config')"><i class="fa-solid fa-gear"></i></div>
+      <!-- SINO DE NOTIFICAÇÃO -->
+      <div class="header-icon notification-bell" onclick="abrirModalNotificacoes()">
+        <i class="fa-solid fa-bell"></i>
+        <span class="badge"></span>
+      </div>
     </div>
   </header>
 
@@ -293,52 +258,13 @@
     <div class="modal-content" onclick="event.stopPropagation()">
       <button class="modal-close" onclick="fecharModalNotificacoes(event)"><i class="fa-solid fa-xmark"></i></button>
       <h3 style="margin-bottom: 15px; font-size: 1.2rem; color: var(--primary);"><i class="fa-solid fa-bullhorn"></i> Avisos da Equipe</h3>
-      <div id="lista-notificacoes-content">
-        <p style="color:#666; font-size:12px; text-align:center; padding: 20px;">Você não tem nenhum aviso novo.</p>
-      </div>
+      <div id="lista-notificacoes-content"><p style="color:#666; font-size:12px; text-align:center; padding: 20px;">Você não tem nenhum aviso novo.</p></div>
     </div>
   </div>
 
-  <div id="modal-onboarding" class="modal-overlay" style="display: none; z-index: 5000;">
-    <div class="modal-content" style="max-width: 480px;">
-      
-      <div id="onboarding-step-1">
-        <div style="text-align: center; margin-bottom: 15px;">
-          <i class="fa-solid fa-shield-halved" style="font-size: 45px; color: var(--primary);"></i>
-        </div>
-        <h3 style="text-align: center; margin-bottom: 10px; color: #fff;">Bem-vindo(a) ao Meow Scan!</h3>
-        <p style="font-size: 12px; color: #aaa; text-align: center; margin-bottom: 15px;">Para continuar e aproveitar ao máximo o app, aceite os nossos termos:</p>
-        
-        <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 14px; font-size: 11px; color: #ccc; max-height: 140px; overflow-y: auto; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.05); line-height: 1.5;">
-          <strong>Termos de Uso e Segurança da Scan:</strong><br>
-          1. Somos uma Scan de tradução de fãs para fãs, sem fins lucrativos comerciais sobre as obras originais.<br>
-          2. O app armazena sua biblioteca e preferências localmente no dispositivo em cachê seguro para leitura offline.<br>
-          3. Você concorda em não redistribuir as traduções cobrando por elas ou usando sistemas de scraping automatizado para roubar nosso trabalho.<br>
-          4. Concorda em receber permissões de armazenamento apenas para a funcionalidade do app.
-        </div>
-
-        <button onclick="aceitarTermos()" class="meow-btn"><i class="fa-solid fa-circle-check"></i> Aceitar Termos e Continuar</button>
-      </div>
-
-      <div id="onboarding-step-2" style="display: none;">
-        <div style="text-align: center; margin-bottom: 15px;">
-          <i class="fa-solid fa-download" style="font-size: 45px; color: var(--success);"></i>
-        </div>
-        <h3 style="text-align: center; margin-bottom: 10px; color: #fff;">Como Funciona o Leitor Offline?</h3>
-        
-        <div style="font-size: 12px; color: #ddd; line-height: 1.6; margin-bottom: 20px;">
-          <p style="margin-bottom: 10px;"><i class="fa-solid fa-bookmark" style="color: var(--primary);"></i> <strong>Salvar Obras:</strong> Clique no ícone de marcador nas capas das obras para guardá-las em sua biblioteca.</p>
-          <p style="margin-bottom: 10px;"><i class="fa-solid fa-cloud-arrow-down" style="color: var(--success);"></i> <strong>Baixar Capítulos:</strong> Ao abrir uma obra, toque no botão de baixar no capítulo desejado. As páginas serão salvas no seu celular!</p>
-          <p><i class="fa-solid fa-wifi" style="color: #ff477e;"></i> <strong>Modo Offline:</strong> Sem internet? Abra a aba <strong>Biblioteca</strong> e leia normalmente em qualquer lugar!</p>
-        </div>
-
-        <button onclick="finalizarOnboarding()" class="meow-btn" style="background: linear-gradient(135deg, var(--success), #00b0ff); color: #000; font-weight: 800;"><i class="fa-solid fa-rocket"></i> Entendi, Começar a Ler!</button>
-      </div>
-
-    </div>
-  </div>
-
+  <!-- ABA INÍCIO -->
   <div id="view-inicio" class="view-section active">
+    <!-- DESTAQUE ROTATIVO -->
     <div id="banner-destaque" class="skeleton" onclick="irParaDestaque()">
       <img id="banner-img" src="" class="banner-img" onerror="this.src='https://via.placeholder.com/800x400?text=Imagem+Indisponível'">
       <div class="banner-overlay">
@@ -346,11 +272,16 @@
       </div>
     </div>
 
-    <div class="section-title" id="top-section-title" style="display: none;"><i class="fa-solid fa-fire" style="color: #ff477e;"></i> Top 10 Mais Lidos</div>
-    <!-- Slider horizontal das top obras ajustado para caber o dedo -->
+    <!-- TOP 10 MAIS LIDAS -->
+    <div class="section-title" id="top-section-title" style="display: none;"><i class="fa-solid fa-fire" style="color: #ff477e;"></i> Top 10 Mais Lidas</div>
     <div id="grid-top" class="scroll-horizontal" style="margin-bottom: 15px;"></div>
     
-    <div class="section-title"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Últimas Atualizações</div>
+    <!-- ATUALIZAÇÕES (Somem após 2 dias) -->
+    <div class="section-title" id="atualizacoes-section-title" style="display: none;"><i class="fa-solid fa-bolt" style="color: #ffd700;"></i> Últimas Atualizações (48h)</div>
+    <div id="grid-atualizacoes" class="scroll-horizontal" style="margin-bottom: 15px;"></div>
+
+    <!-- OBRAS DISPONÍVEIS -->
+    <div class="section-title"><i class="fa-solid fa-book-open" style="color: var(--primary);"></i> Obras Disponíveis</div>
     <div id="grid-inicio" class="grid-obras">
       <div class="card-obra skeleton" style="height: 200px;"></div>
       <div class="card-obra skeleton" style="height: 200px;"></div>
@@ -359,12 +290,13 @@
     </div>
   </div>
 
+  <!-- ABA BUSCA COM TODOS OS FILTROS -->
   <div id="view-busca" class="view-section">
     <div class="search-container">
-      <input type="text" id="search-input" class="search-bar" placeholder="🔍 Buscar por título, autor ou artista...">
+      <input type="text" id="search-input" class="search-bar" placeholder="🔍 Título, Autor ou Artista...">
       
       <div class="filters-wrapper">
-        <div class="filter-group-title">Tipo / Formato</div>
+        <div class="filter-group-title">Tipo</div>
         <div class="filters-scroll">
           <button class="filter-btn filter-tipo active" data-value="Todos">Todos</button>
           <button class="filter-btn filter-tipo" data-value="Manhwa">Manhwa</button>
@@ -373,12 +305,21 @@
           <button class="filter-btn filter-tipo" data-value="Novel">Novel</button>
         </div>
 
+        <div class="filter-group-title">Gênero</div>
+        <div class="filters-scroll" id="filters-genero">
+          <!-- Gerado dinamicamente -->
+          <button class="filter-btn filter-genero active" data-value="Todos">Todos</button>
+          <button class="filter-btn filter-genero" data-value="Ação">Ação</button>
+          <button class="filter-btn filter-genero" data-value="Romance">Romance</button>
+          <button class="filter-btn filter-genero" data-value="Fantasia">Fantasia</button>
+          <button class="filter-btn filter-genero" data-value="Comédia">Comédia</button>
+        </div>
+
         <div class="filter-group-title">Status da Obra</div>
         <div class="filters-scroll">
           <button class="filter-btn filter-status active" data-value="Todos">Todos</button>
           <button class="filter-btn filter-status" data-value="Em Andamento">Em Andamento</button>
           <button class="filter-btn filter-status" data-value="Completo">Completo</button>
-          <button class="filter-btn filter-status" data-value="Futuro">Futuro</button>
           <button class="filter-btn filter-status" data-value="Hiatus">Hiatus</button>
         </div>
 
@@ -392,45 +333,48 @@
     <div id="grid-busca" class="grid-obras"></div>
   </div>
 
+  <!-- ABA PARCEIROS (HOSPEDAGEM) -->
+  <div id="view-parceiros" class="view-section">
+    <!-- Tela Inicial de Parceiros -->
+    <div id="lista-parceiros-tela">
+      <div class="section-title"><i class="fa-solid fa-handshake" style="color: var(--primary);"></i> Nossas Hospedagens</div>
+      <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Clique em uma hospedagem para ver todas as suas obras disponíveis.</p>
+      <div id="grid-hospedagens" class="grid-obras">
+        <div class="empty-library"><i class="fa-solid fa-spinner fa-spin"></i><p>Carregando parceiros...</p></div>
+      </div>
+    </div>
+
+    <!-- Tela Específica de Uma Hospedagem (Exibe as obras) -->
+    <div id="detalhe-hospedagem-tela" style="display: none;">
+      <button class="meow-btn" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); width: auto; padding: 5px 15px; margin-bottom: 20px;" onclick="voltarParaHospedagens()"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+      
+      <div class="hospedagem-detalhe-header">
+        <h2 id="hosp-titulo" style="color: var(--primary); font-size: 24px; font-weight: 900;">Nome Scan</h2>
+        <p style="color: #aaa; font-size: 12px;">Seja bem-vindo(a) ao nosso catálogo!</p>
+      </div>
+
+      <div class="section-title"><i class="fa-solid fa-star" style="color: #ffd700;"></i> Destaques da Hospedagem</div>
+      <div id="hosp-destaques" class="scroll-horizontal" style="margin-bottom: 15px;"></div>
+
+      <div class="section-title"><i class="fa-solid fa-bolt" style="color: var(--primary);"></i> Atualizações</div>
+      <div id="hosp-atualizacoes" class="scroll-horizontal" style="margin-bottom: 15px;"></div>
+
+      <div class="section-title"><i class="fa-solid fa-check-double" style="color: var(--success);"></i> Obras Completas</div>
+      <div id="hosp-completas" class="scroll-horizontal" style="margin-bottom: 15px;"></div>
+
+      <div class="section-title"><i class="fa-solid fa-book-open"></i> Todas as Obras Disponíveis</div>
+      <div id="hosp-todas" class="grid-obras"></div>
+    </div>
+  </div>
+
+  <!-- ABA BIBLIOTECA -->
   <div id="view-biblioteca" class="view-section">
     <div class="section-title"><i class="fa-solid fa-book-bookmark" style="color: var(--primary);"></i> Minha Biblioteca Offline</div>
-    <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">As obras salvas aqui podem ser lidas mesmo sem internet.</p>
     <div id="grid-biblioteca" class="grid-obras"></div>
   </div>
 
-  <!-- ABA PARCEIROS MOVIDA PARA DENTRO DO PERFIL -->
-  <div id="view-parceiros" class="view-section">
-    <button class="meow-btn" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); width: auto; padding: 5px 15px; margin-bottom: 20px;" onclick="switchTab('perfil')"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
-    <div class="section-title"><i class="fa-solid fa-handshake" style="color: var(--primary);"></i> Nossos Parceiros</div>
-    <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Conheça as scans e projetos parceiros da Meow Scan.</p>
-    
-    <div id="lista-parceiros" class="grid-obras">
-      <div class="empty-library"><i class="fa-solid fa-spinner fa-spin"></i><p>Carregando parceiros...</p></div>
-    </div>
-  </div>
-
-  <!-- ABA ADMIN MOVIDA PARA DENTRO DO PERFIL -->
-  <div id="view-adm" class="view-section">
-    <button class="meow-btn" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); width: auto; padding: 5px 15px; margin-bottom: 20px;" onclick="switchTab('perfil')"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
-    <div class="section-title"><i class="fa-solid fa-shield-halved" style="color: var(--accent);"></i> Painel de Administração</div>
-    
-    <div class="config-box" style="border: 1px solid var(--primary);">
-      <h4 style="margin-bottom: 15px; color: var(--primary);"><i class="fa-solid fa-bullhorn"></i> Disparar Aviso Global</h4>
-      <textarea id="admin-notif-texto" class="meow-input" placeholder="Digite a mensagem para o sininho de todos os usuários..." rows="3" style="resize: none;"></textarea>
-      <button onclick="enviarNotificacaoGlobal()" class="meow-btn" style="background: var(--accent); margin-bottom: 0;">Enviar Notificação</button>
-    </div>
-
-    <div class="config-box" style="border: 1px solid var(--primary);">
-      <h4 style="margin-bottom: 15px; color: var(--primary);"><i class="fa-solid fa-plus"></i> Adicionar Novo Parceiro</h4>
-      <input type="text" id="nome-parceiro" class="meow-input" placeholder="Nome do Parceiro / Scan">
-      <input type="text" id="link-parceiro" class="meow-input" placeholder="Link (Ex: https://site.com)">
-      <button onclick="adicionarParceiro()" class="meow-btn" style="margin-bottom: 0;">Salvar Parceiro</button>
-    </div>
-  </div>
-
-  <!-- ABA CONFIG MOVIDA PARA DENTRO DO PERFIL -->
+  <!-- ABA CONFIGURAÇÃO (Global) -->
   <div id="view-config" class="view-section">
-    <button class="meow-btn" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); width: auto; padding: 5px 15px; margin-bottom: 20px;" onclick="switchTab('perfil')"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
     <div class="section-title"><i class="fa-solid fa-gear"></i> Ajustes do App</div>
     
     <div class="config-box">
@@ -445,121 +389,48 @@
     </div>
 
     <div class="config-box">
-      <h4 style="margin-bottom: 12px; font-size: 14px;"><i class="fa-solid fa-mobile-screen-button"></i> Permissões do Aparelho</h4>
-      <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">Ative notificações push no seu Android/iOS para não perder novos lançamentos.</p>
-      <button onclick="solicitarPermissaoNotificacao()" class="meow-btn" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; box-shadow: none; margin-bottom: 0;">
-        <i class="fa-solid fa-bell-plus"></i> Ativar Notificações do App
-      </button>
-    </div>
-
-    <div class="config-box">
       <h4 style="margin-bottom: 15px; font-size: 15px;"><i class="fa-solid fa-palette"></i> Personalizar Aparência</h4>
       <div class="toggle-row">Cor de Fundo <input type="color" id="cfg-bg" class="color-picker" value="#0f0c1b"></div>
       <div class="toggle-row">Cor do Texto <input type="color" id="cfg-text" class="color-picker" value="#ffffff"></div>
-      
-      <label for="bg-upload" class="meow-btn" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; box-shadow: none; margin-top: 10px;">
-        <i class="fa-regular fa-image"></i> Escolher Fundo da Galeria
-      </label>
-      <input type="file" id="bg-upload" accept="image/*" style="display: none;">
-
       <button id="btn-salvar-cores" class="meow-btn" style="margin-top: 15px;">Aplicar Novo Tema</button>
       <button id="btn-reset-cores" class="meow-btn" style="background: transparent; border: 1px solid #555; color: #aaa; box-shadow: none;">Restaurar Padrão</button>
     </div>
   </div>
 
+  <!-- ABA PERFIL -->
   <div id="view-perfil" class="view-section">
-    
-    <div id="auth-box" class="auth-container">
-      <h2 style="text-align: center; margin-bottom: 22px; font-size: 1.4rem; color: #fff;">Acesse sua Conta</h2>
-      
-      <div class="auth-tabs">
-        <button id="tab-login" class="active" onclick="switchAuthTab('login')">Entrar</button>
-        <button id="tab-register" onclick="switchAuthTab('register')">Cadastrar</button>
-      </div>
-
-      <div id="form-login" class="auth-form active">
-        <button id="btn-google-login" class="meow-btn meow-btn-google">
-          <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" width="18" alt="Google"> Entrar com Google
-        </button>
-        <div style="text-align: center; margin: 15px 0; color: #666; font-size: 11px; text-transform: uppercase; font-weight: 700;">ou e-mail</div>
-        <input type="email" id="login-email" class="meow-input" placeholder="E-mail">
-        <input type="password" id="login-pass" class="meow-input" placeholder="Senha">
-        <button id="btn-login-email" class="meow-btn">Entrar</button>
-        <p class="forgot-pass" onclick="switchAuthTab('recover')">Esqueceu sua senha?</p>
-      </div>
-
-      <div id="form-register" class="auth-form">
-        <input type="text" id="reg-name" class="meow-input" placeholder="Nome de leitor">
-        <input type="email" id="reg-email" class="meow-input" placeholder="Seu e-mail">
-        <input type="password" id="reg-pass" class="meow-input" placeholder="Senha forte">
-        <button id="btn-register" class="meow-btn">Criar Conta</button>
-      </div>
-
-      <div id="form-recover" class="auth-form">
-        <p style="font-size: 12px; color: #aaa; text-align: center; margin-bottom: 14px;">Enviaremos um link para redefinir sua senha.</p>
-        <input type="email" id="rec-email" class="meow-input" placeholder="Digite seu e-mail">
-        <button id="btn-recover" class="meow-btn">Enviar Link</button>
-        <p class="forgot-pass" onclick="switchAuthTab('login')"><i class="fa-solid fa-arrow-left"></i> Voltar para Login</p>
-      </div>
+    <!-- Removido botão config/parceiros daqui. Apenas histórico, conta e painel adm -->
+    <div class="section-title" style="text-align: left; justify-content: space-between;">
+      <span><i class="fa-solid fa-clock-rotate-left"></i> Seu Histórico</span>
+      <button onclick="limparHistorico()" style="background: rgba(230,57,70,0.15); color: #ff477e; border: none; padding: 5px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; cursor: pointer;">
+        Limpar Tudo
+      </button>
     </div>
+    <div id="history-grid" class="scroll-horizontal" style="margin-bottom: 25px;"></div>
 
-    <div id="profile-info">
-      <div class="profile-header">
-        <img id="user-avatar" src="https://via.placeholder.com/150" class="profile-avatar">
-      </div>
-      <h2 id="user-name" style="margin-bottom: 4px;">Nome do Leitor</h2>
-      <p id="user-bio" style="color: #aaa; font-size: 12px; margin-bottom: 20px; font-style: italic;">"Amo ler obras na Meow Scan!"</p>
-      
-      <div class="profile-stats">
-        <div class="stat-item"><strong id="stat-lidas">0</strong><small>Obras Lidas</small></div>
-        <div class="stat-item"><strong id="stat-salvas">0</strong><small>Na Biblioteca</small></div>
-      </div>
-      
-      <!-- BOTÕES ÚTEIS NO PERFIL PARA LIMPAR A BARRA INFERIOR -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-        <button class="meow-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; box-shadow: none; font-size: 12px;" onclick="switchTab('parceiros')"><i class="fa-solid fa-handshake"></i> Parceiros</button>
-        <button class="meow-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; box-shadow: none; font-size: 12px;" onclick="switchTab('config')"><i class="fa-solid fa-gear"></i> Configurações</button>
-        <a href="https://t.me/Meowscann1" target="_blank" class="meow-btn" style="background: #0088cc; grid-column: span 2; font-size: 12px; text-decoration: none;"><i class="fa-brands fa-telegram"></i> Canal Telegram</a>
-        <button id="btn-nav-adm" class="meow-btn" style="display: none; background: var(--accent); grid-column: span 2; font-size: 12px;" onclick="switchTab('adm')"><i class="fa-solid fa-shield-halved"></i> Painel ADM</button>
-      </div>
+    <div class="section-title"><i class="fa-solid fa-user"></i> Sua Conta</div>
+    <p style="font-size:12px; color:#aaa; margin-bottom:15px;">Os recursos de sincronização em nuvem e painel ADM requerem login.</p>
+    <button class="meow-btn" style="background: #333;" onclick="showToast('Sistema de login mantido conforme original')">Entrar / Cadastrar (Mock)</button>
+    
+    <button id="btn-nav-adm" class="meow-btn" style="background: var(--accent);" onclick="switchTab('adm')"><i class="fa-solid fa-shield-halved"></i> Painel ADM (Admin Only)</button>
+  </div>
 
-      <!-- BOTÃO PARA MOSTRAR A EDIÇÃO DO PERFIL E NÃO FICAR FEIO NA TELA -->
-      <button id="btn-toggle-edit" class="meow-btn" style="background: rgba(157, 78, 221, 0.2); border: 1px solid var(--primary); color: var(--text-color); box-shadow: none; margin-bottom: 20px;" onclick="document.getElementById('box-edit-profile').style.display='block'; this.style.display='none';"><i class="fa-solid fa-pen"></i> Editar Meu Perfil</button>
-      
-      <div id="box-edit-profile" class="edit-profile-box">
-        <h4><i class="fa-solid fa-user-pen"></i> Alterar Dados</h4>
-        <input type="text" id="edit-nome" class="meow-input" placeholder="Novo nome de exibição">
-        <input type="text" id="edit-bio" class="meow-input" placeholder="Sua frase / bio">
-        
-        <label for="avatar-gallery-input" class="meow-btn" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; box-shadow: none; font-size: 13px;">
-          <i class="fa-solid fa-image"></i> Escolher Foto da Galeria
-        </label>
-        <input type="file" id="avatar-gallery-input" accept="image/*" style="display: none;">
-
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-          <button onclick="document.getElementById('box-edit-profile').style.display='none'; document.getElementById('btn-toggle-edit').style.display='flex';" class="meow-btn" style="background: #333; flex: 1;">Cancelar</button>
-          <button onclick="salvarAlteracoesPerfil()" class="meow-btn" style="flex: 2; margin-bottom: 0;">Salvar</button>
-        </div>
-      </div>
-
-      <div class="section-title" style="text-align: left; justify-content: space-between;">
-        <span><i class="fa-solid fa-clock-rotate-left"></i> Histórico Recente</span>
-        <button onclick="limparHistorico()" style="background: rgba(230,57,70,0.15); color: #ff477e; border: none; padding: 5px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; cursor: pointer;">
-          <i class="fa-solid fa-trash-can"></i> Limpar Tudo
-        </button>
-      </div>
-      <!-- Slider do histórico também corrigido tamanho -->
-      <div id="history-grid" class="scroll-horizontal" style="margin-bottom: 25px;"></div>
-      
-      <button id="btn-logout" class="meow-btn" style="background: rgba(230, 57, 70, 0.12); color: #e63946; border: 1px solid rgba(230, 57, 70, 0.3); box-shadow: none;"><i class="fa-solid fa-right-from-bracket"></i> Sair da Conta</button>
+  <div id="view-adm" class="view-section">
+    <button class="meow-btn" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); width: auto; padding: 5px 15px; margin-bottom: 20px;" onclick="switchTab('perfil')"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+    <div class="section-title"><i class="fa-solid fa-shield-halved" style="color: var(--accent);"></i> Painel de Administração</div>
+    <div class="config-box" style="border: 1px solid var(--primary);">
+      <h4 style="margin-bottom: 15px; color: var(--primary);"><i class="fa-solid fa-bullhorn"></i> Disparar Aviso Global</h4>
+      <textarea id="admin-notif-texto" class="meow-input" placeholder="Digite a mensagem para todos os usuários..."></textarea>
+      <button onclick="enviarNotificacaoGlobal()" class="meow-btn" style="background: var(--accent); margin-bottom: 0;">Enviar</button>
     </div>
   </div>
 
-  <!-- BARRA INFERIOR SUPER LIMPA AGORA -->
+  <!-- BARRA INFERIOR -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('inicio', this)"><i class="fa-solid fa-house"></i> Início</button>
     <button class="nav-item" onclick="switchTab('busca', this)"><i class="fa-solid fa-magnifying-glass"></i> Busca</button>
-    <button class="nav-item" onclick="switchTab('biblioteca', this); renderBiblioteca();"><i class="fa-solid fa-book-bookmark"></i> Biblioteca</button>
+    <button class="nav-item" onclick="switchTab('parceiros', this)"><i class="fa-solid fa-handshake"></i> Parceiros</button>
+    <button class="nav-item" onclick="switchTab('biblioteca', this); renderBiblioteca();"><i class="fa-solid fa-book-bookmark"></i> Biblio</button>
     <button class="nav-item" onclick="switchTab('perfil', this)"><i class="fa-solid fa-user"></i> Perfil</button>
   </nav>
 
@@ -568,29 +439,9 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    /* ================= DETECTOR OFFLINE & APP/SITE ================= */
-    // Função para verificar se está no PWA (Aplicativo Instalado)
-    function isAppInstalled() {
-      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    }
+    function isAppInstalled() { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
+    if (!isAppInstalled()) { document.getElementById('browser-blocker').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
 
-    if (!isAppInstalled()) {
-      document.getElementById('browser-blocker').style.display = 'flex';
-      // Desativa interação no fundo
-      document.body.style.overflow = 'hidden'; 
-    }
-
-    window.addEventListener('offline', () => {
-      document.getElementById('beautiful-offline').style.display = 'flex';
-      showToast('Modo Offline Ativado. Sua biblioteca continua disponível.', 'error');
-    });
-    window.addEventListener('online', () => {
-      document.getElementById('beautiful-offline').style.display = 'none';
-      showToast('Conexão restaurada!', 'success');
-    });
-    if (!navigator.onLine) { document.getElementById('beautiful-offline').style.display = 'flex'; }
-
-    /* ================= SISTEMA DE TOAST ================= */
     function showToast(mensagem, tipo = 'success') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -601,104 +452,26 @@
       setTimeout(() => { toast.remove(); }, 4000);
     }
 
-    /* ================= ONBOARDING & TERMOS DE USO ================= */
-    function verificarOnboarding() {
-      // SÓ MOSTRA O ONBOARDING (TERMOS) SE ESTIVER DENTRO DO APP
-      if (isAppInstalled()) {
-        const aceitouTermos = localStorage.getItem('meowTermosAceitos');
-        if (!aceitouTermos) {
-          document.getElementById('modal-onboarding').style.display = 'flex';
-        }
-      }
-    }
-    
-    function aceitarTermos() {
-      localStorage.setItem('meowTermosAceitos', 'true');
-      document.getElementById('onboarding-step-1').style.display = 'none';
-      document.getElementById('onboarding-step-2').style.display = 'block';
-    }
-
-    function finalizarOnboarding() {
-      document.getElementById('modal-onboarding').style.display = 'none';
-      showToast('Bem-vindo(a)! Aproveite sua leitura offline.');
-    }
-
-    /* ================= PERMISSÃO DE NOTIFICAÇÃO (ANDROID / IOS) ================= */
-    function solicitarPermissaoNotificacao() {
-      if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            showToast('Notificações ativadas com sucesso!');
-          } else {
-            showToast('Permissão de notificações recusada.', 'error');
-          }
-        });
-      } else {
-        showToast('Seu aparelho não suporta notificações push.', 'error');
-      }
-    }
-
-    /* ================= CONFIGURAÇÕES LOCAIS ================= */
-    const settings = JSON.parse(localStorage.getItem('meowSettings')) || { show18: false, showSensitive: false, bgColor: '#0f0c1b', textColor: '#ffffff', bgImage: '', ageVerified: false, bio: '"Amo ler obras na Meow Scan!"', localAvatar: '' };
-
+    const settings = JSON.parse(localStorage.getItem('meowSettings')) || { show18: false, showSensitive: false, bgColor: '#0f0c1b', textColor: '#ffffff' };
     function applySettings() {
       document.documentElement.style.setProperty('--bg-color', settings.bgColor);
       document.documentElement.style.setProperty('--text-color', settings.textColor);
-      document.documentElement.style.setProperty('--bg-image', settings.bgImage ? `url(${settings.bgImage})` : 'none');
       document.getElementById('toggle-18').checked = settings.show18;
       document.getElementById('toggle-sensitive').checked = settings.showSensitive;
       document.getElementById('cfg-bg').value = settings.bgColor;
       document.getElementById('cfg-text').value = settings.textColor;
-      if(document.getElementById('user-bio')) document.getElementById('user-bio').innerText = settings.bio;
-      if(settings.localAvatar && document.getElementById('user-avatar')) {
-        document.getElementById('user-avatar').src = settings.localAvatar;
-      }
     }
     applySettings();
 
-    document.getElementById('toggle-18').addEventListener('change', (e) => {
-      if(e.target.checked && !settings.ageVerified) {
-        if(confirm("Você confirma ser maior de 18 anos?")) { settings.ageVerified = true; } 
-        else { e.target.checked = false; return; }
-      }
-      settings.show18 = e.target.checked; saveSettings(); renderObras();
-    });
-
-    document.getElementById('toggle-sensitive').addEventListener('change', (e) => {
-      settings.showSensitive = e.target.checked; saveSettings(); renderObras();
-    });
-
-    document.getElementById('bg-upload').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          settings.bgImage = event.target.result;
-          saveSettings(); applySettings();
-          showToast("Papel de parede aplicado!");
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    document.getElementById('btn-salvar-cores').addEventListener('click', () => {
-      settings.bgColor = document.getElementById('cfg-bg').value;
-      settings.textColor = document.getElementById('cfg-text').value;
-      saveSettings(); applySettings(); showToast("Aparência atualizada!");
-    });
-    
-    document.getElementById('btn-reset-cores').addEventListener('click', () => {
-      settings.bgColor = '#0f0c1b'; settings.textColor = '#ffffff'; settings.bgImage = '';
-      saveSettings(); applySettings(); showToast("Cores restauradas.");
-    });
-
+    document.getElementById('toggle-18').addEventListener('change', (e) => { settings.show18 = e.target.checked; saveSettings(); renderObras(); });
+    document.getElementById('toggle-sensitive').addEventListener('change', (e) => { settings.showSensitive = e.target.checked; saveSettings(); renderObras(); });
+    document.getElementById('btn-salvar-cores').addEventListener('click', () => { settings.bgColor = document.getElementById('cfg-bg').value; settings.textColor = document.getElementById('cfg-text').value; saveSettings(); applySettings(); showToast("Aparência atualizada!"); });
+    document.getElementById('btn-reset-cores').addEventListener('click', () => { settings.bgColor = '#0f0c1b'; settings.textColor = '#ffffff'; saveSettings(); applySettings(); showToast("Cores restauradas."); });
     function saveSettings() { localStorage.setItem('meowSettings', JSON.stringify(settings)); }
 
-    /* ================= NAVEGAÇÃO ENTRE ABAS ================= */
     function switchTab(tabId, btn) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.getElementById(`view-${tabId}`).classList.add('active');
-      
       if(btn) {
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         btn.classList.add('active');
@@ -706,86 +479,56 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* ================= FIREBASE INICIALIZAÇÃO ================= */
     const firebaseConfig = {
       apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
       authDomain: "meow-scan-ffff0.firebaseapp.com",
       databaseURL: "https://meow-scan-ffff0-default-rtdb.firebaseio.com",
-      projectId: "meow-scan-ffff0",
-      storageBucket: "meow-scan-ffff0.firebasestorage.app",
-      messagingSenderId: "76129834936",
-      appId: "1:76129834936:web:36df84ea0fb31ecc69e14d"
+      projectId: "meow-scan-ffff0"
     };
-    
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
-    const auth = firebase.auth();
 
-    // CRIANDO O CACHÊ DO APLICATIVO PARA CARREGAMENTO IMEDIATO
     let todasObras = JSON.parse(localStorage.getItem('cachedMeowObras')) || [];
-    let currentUser = null;
-    let isAdmin = false;
-    const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3"; 
 
-    // Filtros selecionados
-    let selectedTipo = ['Todos'];
-    let selectedStatus = ['Todos'];
-    let selectedHospedagem = ['Todos'];
+    // Filtros de busca
+    let selectedTipo = ['Todos'], selectedStatus = ['Todos'], selectedHospedagem = ['Todos'], selectedGenero = ['Todos'];
 
-    // Renderiza instantaneamente com o Cachê Offline
-    if(todasObras.length > 0) {
+    if(todasObras.length > 0) { carregarTudo(); }
+
+    db.ref('obras').on('value', snap => {
+      let novasObras = [];
+      if(snap.exists()){ snap.forEach(child => { novasObras.push({ id: child.key, ...child.val() }); }); }
+      todasObras = novasObras.length > 0 ? novasObras : todasObras; // Proteção para caso o firebase retorne vazio não apagar cache
+      localStorage.setItem('cachedMeowObras', JSON.stringify(todasObras));
+      carregarTudo();
+    });
+
+    function carregarTudo() {
       document.getElementById('banner-destaque').classList.add('loaded');
       document.getElementById('banner-destaque').classList.remove('skeleton');
       carregarFiltrosHospedagem();
       renderObras();
+      renderHospedagens();
       iniciarDestaqueRotativo();
+      renderBiblioteca();
     }
 
-    // Busca atualizações no Firebase
-    db.ref('obras').on('value', snap => {
-      todasObras = [];
-      if(snap.exists()){ snap.forEach(child => { todasObras.push({ id: child.key, ...child.val() }); }); }
-      
-      // Salva no Cachê Offline para a próxima vez!
-      localStorage.setItem('cachedMeowObras', JSON.stringify(todasObras));
-
-      document.getElementById('banner-destaque').classList.add('loaded');
-      document.getElementById('banner-destaque').classList.remove('skeleton');
-
-      carregarFiltrosHospedagem();
-      renderObras(); 
-      iniciarDestaqueRotativo(); 
-      renderBiblioteca(); 
-    });
-
-    /* ================= GERENCIAMENTO DE FILTROS ================= */
     function setupFilterGroup(className, selectedArray) {
       document.querySelectorAll('.' + className).forEach(btn => {
         btn.addEventListener('click', (e) => {
           const val = e.target.getAttribute('data-value');
           if (val === 'Todos') {
-            selectedArray.length = 0;
-            selectedArray.push('Todos');
+            selectedArray.length = 0; selectedArray.push('Todos');
             document.querySelectorAll('.' + className).forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
           } else {
             const indexTodos = selectedArray.indexOf('Todos');
             if (indexTodos > -1) selectedArray.splice(indexTodos, 1);
             document.querySelector(`.${className}[data-value="Todos"]`)?.classList.remove('active');
-
             const index = selectedArray.indexOf(val);
-            if (index > -1) {
-              selectedArray.splice(index, 1);
-              e.target.classList.remove('active');
-            } else {
-              selectedArray.push(val);
-              e.target.classList.add('active');
-            }
-
-            if (selectedArray.length === 0) {
-              selectedArray.push('Todos');
-              document.querySelector(`.${className}[data-value="Todos"]`)?.classList.add('active');
-            }
+            if (index > -1) { selectedArray.splice(index, 1); e.target.classList.remove('active'); }
+            else { selectedArray.push(val); e.target.classList.add('active'); }
+            if (selectedArray.length === 0) { selectedArray.push('Todos'); document.querySelector(`.${className}[data-value="Todos"]`)?.classList.add('active'); }
           }
           renderObras();
         });
@@ -794,21 +537,19 @@
 
     setupFilterGroup('filter-tipo', selectedTipo);
     setupFilterGroup('filter-status', selectedStatus);
+    setupFilterGroup('filter-genero', selectedGenero);
 
     function carregarFiltrosHospedagem() {
       const container = document.getElementById('filters-hospedagem');
       const hospedagens = new Set();
       todasObras.forEach(o => { if(o.hospedagem) hospedagens.add(o.hospedagem); });
-
       let html = `<button class="filter-btn filter-hospedagem active" data-value="Todos">Todas Hospedagens</button>`;
-      hospedagens.forEach(h => {
-        html += `<button class="filter-btn filter-hospedagem" data-value="${h}">${h}</button>`;
-      });
+      hospedagens.forEach(h => { html += `<button class="filter-btn filter-hospedagem" data-value="${h}">${h}</button>`; });
       container.innerHTML = html;
       setupFilterGroup('filter-hospedagem', selectedHospedagem);
     }
 
-    /* ================= CARDS & RENDERIZAÇÃO ================= */
+    /* ================= GERAÇÃO DOS CARDS COM BLOQUEIOS ================= */
     function isObraNaBiblioteca(id) {
       const bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
       return bib.some(o => o.id === id);
@@ -816,54 +557,39 @@
 
     function createTop10CardHTML(obra, ranking) {
       const views = obra.views || 0; 
-      // Proteção onerror para carregar imagem caso link quebre
       return `
-        <a href="obra.html?obra=${obra.id}" class="card-obra top-card" onclick="registrarClique('${obra.id}')">
+        <div class="card-obra top-card">
           <div class="rank-badge">${ranking}</div>
-          <div class="capa-wrapper">
-            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450?text=Imagem+Indisponível'">
+          <div class="capa-wrapper" onclick="toggleSalvarBiblioteca('${obra.id}'); event.preventDefault(); event.stopPropagation();" oncontextmenu="return false;">
+            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
             <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
           </div>
-        </a>
+          <a href="obra.html?obra=${obra.id}" class="info-obra" onclick="registrarClique('${obra.id}')"><div class="titulo-obra">${obra.nome}</div></a>
+        </div>
       `;
     }
 
     function createNormalCardHTML(obra, isUpdated = false, isBiblioteca = false) {
       const views = obra.views || 0; 
-      let capsHTML = ''; 
-      let totalCaps = 0;
-      
-      if (obra.capitulos) {
-        const capArray = Object.values(obra.capitulos).sort((a, b) => b.numero - a.numero);
-        totalCaps = capArray.length;
-        capArray.slice(0, 2).forEach((cap, index) => {
-          const badgeNovo = (isUpdated && index === 0) ? `<span class="badge-novo">NOVO</span>` : '';
-          capsHTML += `<div class="chapter-row"><span><i class="fa-solid fa-wand-magic-sparkles"></i> CAP ${cap.numero} ${badgeNovo}</span></div>`;
-        });
-      }
-
+      let totalCaps = obra.capitulos ? Object.keys(obra.capitulos).length : 0;
       const naBiblioteca = isObraNaBiblioteca(obra.id);
-      const activeClass = naBiblioteca ? 'in-library' : '';
-      const icon = naBiblioteca ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
-
-      const saveBtn = `<button onclick="event.preventDefault(); toggleSalvarBiblioteca('${obra.id}')" class="btn-save-lib ${activeClass}" id="btn-save-${obra.id}" title="Salvar na Biblioteca"><i class="${icon}"></i></button>`;
-
-      const badge18 = (obra.adulto && !isBiblioteca) ? '<div class="badge-18">18+</div>' : '';
-
+      const iconClass = naBiblioteca ? 'fa-solid fa-bookmark in-library' : 'fa-regular fa-bookmark';
+      
+      // Bloqueio de menus na imagem e ação de salvar na biblioteca clicando NELA
       return `
-        <a href="obra.html?obra=${obra.id}" class="card-obra" onclick="registrarClique('${obra.id}')">
-          ${saveBtn}
-          <div class="capa-wrapper">
-            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450?text=Sem+Capa'">
+        <div class="card-obra">
+          <div class="capa-wrapper" onclick="toggleSalvarBiblioteca('${obra.id}'); event.preventDefault(); event.stopPropagation();" oncontextmenu="return false;">
+            <img src="${obra.capaUrl || 'https://via.placeholder.com/300'}" class="capa-img" loading="lazy">
+            <div class="icone-salvo-lib ${naBiblioteca ? 'in-library' : ''}"><i class="${naBiblioteca ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i></div>
             <div class="badge-views"><i class="fa-regular fa-eye"></i> ${views}</div>
             <div class="badge-caps">${totalCaps} CAPS</div>
-            ${badge18}
+            ${(obra.adulto && !isBiblioteca) ? '<div class="badge-18">18+</div>' : ''}
           </div>
-          <div class="info-obra">
-            <div class="titulo-obra">${obra.nome}</div>
-            ${capsHTML}
-          </div>
-        </a>
+          <a href="obra.html?obra=${obra.id}" class="info-obra" onclick="registrarClique('${obra.id}')">
+            <div class="titulo-obra">${obra.nome || 'Sem Titulo'}</div>
+            <div class="chapter-row" style="font-size:10px;"><span>Acessar Obra <i class="fa-solid fa-arrow-right"></i></span></div>
+          </a>
+        </div>
       `;
     }
 
@@ -873,7 +599,6 @@
       history.unshift(id);
       if(history.length > 25) history.pop(); 
       localStorage.setItem('meowHistory', JSON.stringify(history));
-      updateProfileStats();
     }
 
     function renderObras() {
@@ -885,54 +610,59 @@
         return true;
       });
 
-      // Renderiza Top 10
-      const topObras = [...obrasFiltradas].filter(o => o.views && o.views > 0).sort((a, b) => b.views - a.views).slice(0, 10);
-      const topSectionTitle = document.getElementById('top-section-title');
-      const gridTop = document.getElementById('grid-top');
-
+      // 1. TOP 10 MAIS LIDAS
+      const topObras = [...obrasFiltradas].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
       if(topObras.length > 0) {
-        topSectionTitle.style.display = 'flex'; 
-        gridTop.innerHTML = topObras.map((o, index) => createTop10CardHTML(o, index + 1)).join('');
-      } else {
-        topSectionTitle.style.display = 'none'; gridTop.innerHTML = '';
+        document.getElementById('top-section-title').style.display = 'flex'; 
+        document.getElementById('grid-top').innerHTML = topObras.map((o, index) => createTop10CardHTML(o, index + 1)).join('');
       }
 
-      // Renderiza Início (Últimas Atualizações)
-      const obrasAtualizadas = [...obrasFiltradas].reverse(); 
-      document.getElementById('grid-inicio').innerHTML = obrasAtualizadas.slice(0, 12).map((o, index) => createNormalCardHTML(o, index < 4)).join('');
+      // 2. ÚLTIMAS ATUALIZAÇÕES (Menos de 2 dias / 48h)
+      const agora = Date.now();
+      const doisDiasMs = 48 * 60 * 60 * 1000;
+      let obrasRecentes = obrasFiltradas.filter(o => {
+        const time = o.dataAtualizacao || 0; // REQUER dataAtualizacao (timestamp) no Firebase
+        return (agora - time) <= doisDiasMs && time > 0;
+      });
 
-      // Renderiza Busca com Filtros Avançados
+      if(obrasRecentes.length > 0) {
+        document.getElementById('atualizacoes-section-title').style.display = 'flex';
+        document.getElementById('grid-atualizacoes').innerHTML = obrasRecentes.map(o => `<div class="top-card" style="width:140px;">${createNormalCardHTML(o, true)}</div>`).join('');
+      } else {
+        document.getElementById('atualizacoes-section-title').style.display = 'none';
+        document.getElementById('grid-atualizacoes').innerHTML = '';
+      }
+
+      // 3. OBRAS DISPONÍVEIS (Tudo)
+      document.getElementById('grid-inicio').innerHTML = obrasFiltradas.map(o => createNormalCardHTML(o)).join('');
+
+      // 4. BUSCA COM FILTROS
       const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
-      
       let obrasBusca = obrasFiltradas.filter(o => {
-        const matchesSearch = (o.nome && o.nome.toLowerCase().includes(searchTerm)) ||
-                              (o.autor && o.autor.toLowerCase().includes(searchTerm)) ||
-                              (o.artista && o.artista.toLowerCase().includes(searchTerm)) ||
-                              searchTerm === '';
+        const matchesSearch = ((o.nome||'').toLowerCase().includes(searchTerm)) ||
+                              ((o.autor||'').toLowerCase().includes(searchTerm)) ||
+                              ((o.artista||'').toLowerCase().includes(searchTerm)) || searchTerm === '';
 
-        const tipoObra = o.tipo || 'Manhwa';
-        const matchesTipo = selectedTipo.includes('Todos') || selectedTipo.includes(tipoObra);
+        const matchesTipo = selectedTipo.includes('Todos') || selectedTipo.includes(o.tipo || 'Manhwa');
+        const matchesStatus = selectedStatus.includes('Todos') || selectedStatus.some(s => (o.status||'').toLowerCase().includes(s.toLowerCase()));
+        const matchesHosp = selectedHospedagem.includes('Todos') || selectedHospedagem.includes(o.hospedagem || 'Outros');
+        
+        let generoVal = typeof o.genero === 'string' ? o.genero : (Array.isArray(o.genero) ? o.genero.join(',') : '');
+        const matchesGenero = selectedGenero.includes('Todos') || selectedGenero.some(g => generoVal.includes(g));
 
-        const statusObra = o.status || 'Em Andamento';
-        const matchesStatus = selectedStatus.includes('Todos') || selectedStatus.some(s => statusObra.toLowerCase().includes(s.toLowerCase()));
-
-        const hospObra = o.hospedagem || 'Outros';
-        const matchesHosp = selectedHospedagem.includes('Todos') || selectedHospedagem.includes(hospObra);
-
-        return matchesSearch && matchesTipo && matchesStatus && matchesHosp;
+        return matchesSearch && matchesTipo && matchesStatus && matchesHosp && matchesGenero;
       });
 
       document.getElementById('grid-busca').innerHTML = obrasBusca.length > 0 
         ? obrasBusca.map(o => createNormalCardHTML(o)).join('') 
-        : '<p style="color:#aaa; text-align:center; width: 100%; grid-column: span 2; padding: 30px;">Nenhuma obra encontrada com os filtros selecionados.</p>';
+        : '<p style="color:#aaa; text-align:center; width: 100%; grid-column: span 2; padding: 30px;">Nenhuma obra encontrada.</p>';
       
       renderHistorico();
-      updateProfileStats();
     }
 
     document.getElementById('search-input').addEventListener('input', renderObras);
 
-    /* ================= TOGGLE NA BIBLIOTECA ================= */
+    /* ================= AÇÃO DE SALVAR CLICANDO NA IMAGEM ================= */
     window.toggleSalvarBiblioteca = function(id) {
       const obraObj = todasObras.find(o => o.id === id);
       if(!obraObj) return;
@@ -942,72 +672,98 @@
 
       if(index > -1) {
         bib.splice(index, 1);
-        localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
-        showToast("Removido da Biblioteca.");
+        showToast("Obra removida da Biblioteca.");
       } else {
         bib.push(obraObj);
-        localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
-        showToast("Salvo na Biblioteca!");
+        showToast("Salva na Biblioteca com Sucesso!");
       }
-
-      renderObras();
-      renderBiblioteca();
+      localStorage.setItem('meowBiblioteca', JSON.stringify(bib));
+      renderObras(); renderBiblioteca();
     };
 
     function renderBiblioteca() {
       const bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
       const grid = document.getElementById('grid-biblioteca');
       if(bib.length === 0) {
-        grid.innerHTML = `<div class="empty-library"><i class="fa-solid fa-box-open"></i><p>Sua biblioteca está vazia. Toque no ícone de marcador das obras para salvar offline!</p></div>`; return;
+        grid.innerHTML = `<div class="empty-library"><i class="fa-solid fa-box-open"></i><p>Sua biblioteca está vazia. Clique na capa das obras para salvar offline!</p></div>`; return;
       }
       grid.innerHTML = bib.map(o => createNormalCardHTML(o, false, true)).join('');
     }
-    
-    function updateProfileStats() {
-      const hist = JSON.parse(localStorage.getItem('meowHistory')) || [];
-      const bib = JSON.parse(localStorage.getItem('meowBiblioteca')) || [];
-      if(document.getElementById('stat-lidas')) document.getElementById('stat-lidas').innerText = hist.length;
-      if(document.getElementById('stat-salvas')) document.getElementById('stat-salvas').innerText = bib.length;
+
+    /* ================= ABA DE PARCEIROS (HOSPEDAGENS) ================= */
+    function renderHospedagens() {
+      const grid = document.getElementById('grid-hospedagens');
+      const hospedagens = new Set();
+      todasObras.forEach(o => { if(o.hospedagem) hospedagens.add(o.hospedagem); });
+      
+      if(hospedagens.size === 0) {
+        grid.innerHTML = '<p style="color:#aaa;">Nenhuma hospedagem cadastrada.</p>'; return;
+      }
+
+      let html = '';
+      hospedagens.forEach(h => {
+        html += `
+          <div class="hospedagem-card" onclick="abrirHospedagem('${h}')">
+            <h3>${h}</h3>
+            <p>Clique para ver as obras</p>
+          </div>
+        `;
+      });
+      grid.innerHTML = html;
     }
 
-    /* ================= HISTÓRICO & LIMPEZA ================= */
+    window.abrirHospedagem = function(nome) {
+      document.getElementById('lista-parceiros-tela').style.display = 'none';
+      document.getElementById('detalhe-hospedagem-tela').style.display = 'block';
+      document.getElementById('hosp-titulo').innerText = nome;
+      
+      const obrasDestaHospedagem = todasObras.filter(o => o.hospedagem === nome);
+      
+      // Destaques (Top views)
+      const destaques = [...obrasDestaHospedagem].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
+      document.getElementById('hosp-destaques').innerHTML = destaques.map(o => `<div class="top-card" style="width:140px;">${createNormalCardHTML(o)}</div>`).join('');
+      
+      // Atualizações (Recentes)
+      const atualizacoes = [...obrasDestaHospedagem].sort((a,b) => (b.dataAtualizacao||0) - (a.dataAtualizacao||0)).slice(0, 5);
+      document.getElementById('hosp-atualizacoes').innerHTML = atualizacoes.map(o => `<div class="top-card" style="width:140px;">${createNormalCardHTML(o)}</div>`).join('');
+      
+      // Obras Completas
+      const completas = obrasDestaHospedagem.filter(o => (o.status||'').toLowerCase() === 'completo');
+      document.getElementById('hosp-completas').innerHTML = completas.map(o => `<div class="top-card" style="width:140px;">${createNormalCardHTML(o)}</div>`).join('') || '<p style="color:#666;font-size:12px;">Nenhuma obra completa.</p>';
+
+      // Todas
+      document.getElementById('hosp-todas').innerHTML = obrasDestaHospedagem.map(o => createNormalCardHTML(o)).join('');
+    };
+
+    window.voltarParaHospedagens = function() {
+      document.getElementById('detalhe-hospedagem-tela').style.display = 'none';
+      document.getElementById('lista-parceiros-tela').style.display = 'block';
+    };
+
+    /* ================= HISTÓRICO E DESTAQUE ================= */
     function renderHistorico() {
       const historyIds = JSON.parse(localStorage.getItem('meowHistory')) || [];
       const historyObras = historyIds.map(id => todasObras.find(o => o.id === id)).filter(Boolean);
       document.getElementById('history-grid').innerHTML = historyObras.length > 0 
-        ? historyObras.map(o => `<div class="top-card">${createNormalCardHTML(o)}</div>`).join('') 
-        : '<div class="empty-library"><i class="fa-solid fa-clock-rotate-left"></i><p>Seu histórico de leitura está limpo.</p></div>';
+        ? historyObras.map(o => `<div class="top-card" style="width:120px;">${createNormalCardHTML(o)}</div>`).join('') 
+        : '<div class="empty-library" style="padding:10px;"><i class="fa-solid fa-clock-rotate-left"></i><p>Seu histórico de leitura está limpo.</p></div>';
     }
-
     window.limparHistorico = function() {
-      if(confirm("Tem certeza de que deseja apagar todo o histórico de leitura?")) {
-        localStorage.removeItem('meowHistory');
-        renderHistorico();
-        updateProfileStats();
-        showToast("Histórico limpo com sucesso!");
-      }
+      localStorage.removeItem('meowHistory'); renderHistorico(); showToast("Histórico limpo com sucesso!");
     };
 
-    /* ================= DESTAQUE ROTATIVO ================= */
     let destaqueInterval; let obraDestaqueAtual = null;
-
     function iniciarDestaqueRotativo() {
       if(todasObras.length === 0) return;
       if(destaqueInterval) clearInterval(destaqueInterval);
       trocarDestaque(); destaqueInterval = setInterval(trocarDestaque, 6000); 
     }
-
     function trocarDestaque() {
-      let obrasValidas = todasObras.filter(o => {
-        if(o.adulto && !settings.show18) return false;
-        if(o.sensivel && !settings.showSensitive) return false; return true;
-      });
+      let obrasValidas = todasObras.filter(o => (!o.adulto || settings.show18) && (!o.sensivel || settings.showSensitive));
       if(obrasValidas.length === 0) return;
-      
       obraDestaqueAtual = obrasValidas[Math.floor(Math.random() * obrasValidas.length)];
       const bannerImg = document.getElementById('banner-img');
       const bannerOverlay = document.querySelector('.banner-overlay');
-      
       bannerImg.style.opacity = 0; bannerOverlay.style.opacity = 0;
       setTimeout(() => {
         bannerImg.src = obraDestaqueAtual.capaUrl || 'https://via.placeholder.com/800x400?text=Indisponível';
@@ -1015,222 +771,13 @@
         bannerImg.style.opacity = 1; bannerOverlay.style.opacity = 1;
       }, 350);
     }
-
     function irParaDestaque() {
       if(obraDestaqueAtual) { registrarClique(obraDestaqueAtual.id); window.location.href = `obra.html?obra=${obraDestaqueAtual.id}`; }
     }
 
-    /* ================= AUTENTICAÇÃO E PERFIL ================= */
-    window.switchAuthTab = function(tabName) {
-      document.querySelectorAll('.auth-form').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.auth-tabs button').forEach(el => el.classList.remove('active'));
-      document.getElementById('form-' + tabName).classList.add('active');
-      if(tabName !== 'recover') { document.getElementById('tab-' + tabName).classList.add('active'); }
-    };
-
-    auth.getRedirectResult().then(result => {
-      if (result.user) { showToast(`Bem-vindo(a), ${result.user.displayName}!`); }
-    }).catch(err => {
-      if (err.code !== 'auth/popup-closed-by-user') { showToast("Erro ao autenticar com Google.", "error"); }
-    });
-
-    document.getElementById('btn-google-login').addEventListener('click', () => {
-      auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
-    });
-    
-    document.getElementById('btn-login-email').addEventListener('click', () => {
-      const email = document.getElementById('login-email').value.trim();
-      const pass = document.getElementById('login-pass').value;
-      if(!email || !pass) return showToast("Preencha e-mail e senha.", "error");
-      
-      auth.signInWithEmailAndPassword(email, pass).then(cred => {
-         showToast("Logado com sucesso!");
-      }).catch(err => showToast("Dados incorretos ou erro de conexão.", "error"));
-    });
-
-    document.getElementById('btn-register').addEventListener('click', () => {
-      const name = document.getElementById('reg-name').value.trim();
-      const email = document.getElementById('reg-email').value.trim();
-      const pass = document.getElementById('reg-pass').value;
-      if(!name || !email || !pass) return showToast("Preencha todos os campos!", "error");
-      
-      auth.createUserWithEmailAndPassword(email, pass).then(cred => {
-         cred.user.updateProfile({ displayName: name });
-         showToast("Conta criada com sucesso!");
-      }).catch(err => showToast("Erro ao criar conta. Tente outro e-mail.", "error"));
-    });
-
-    document.getElementById('btn-recover').addEventListener('click', () => {
-      const email = document.getElementById('rec-email').value;
-      if(!email) return showToast("Digite seu e-mail.", "error");
-      auth.sendPasswordResetEmail(email).then(() => {
-         showToast("Link de recuperação enviado!"); switchAuthTab('login');
-      }).catch(err => showToast("E-mail não encontrado.", "error"));
-    });
-    
-    document.getElementById('btn-logout').addEventListener('click', () => {
-      auth.signOut(); showToast("Você saiu da sua conta.");
-    });
-
-    /* UPLOAD DE FOTO DA GALERIA DO CELULAR */
-    document.getElementById('avatar-gallery-input').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          const base64Foto = event.target.result;
-          settings.localAvatar = base64Foto;
-          saveSettings();
-          document.getElementById('user-avatar').src = base64Foto;
-          showToast("Foto da galeria aplicada!");
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    window.salvarAlteracoesPerfil = function() {
-      const novoNome = document.getElementById('edit-nome').value.trim();
-      const novaBio = document.getElementById('edit-bio').value.trim();
-      
-      if(novaBio) {
-        settings.bio = novaBio;
-        saveSettings();
-        document.getElementById('user-bio').innerText = novaBio;
-      }
-
-      if(currentUser && novoNome) {
-        currentUser.updateProfile({ displayName: novoNome }).then(() => {
-          document.getElementById('user-name').innerText = novoNome;
-          showToast("Perfil atualizado!");
-        });
-      } else if(novaBio) {
-        showToast("Bio atualizada!");
-      }
-      
-      // Esconder caixa de edição de volta
-      document.getElementById('box-edit-profile').style.display='none';
-      document.getElementById('btn-toggle-edit').style.display='flex';
-    };
-
-    auth.onAuthStateChanged(user => {
-      currentUser = user;
-      const navAdm = document.getElementById('btn-nav-adm');
-
-      if (user) {
-        document.getElementById('auth-box').style.display = 'none';
-        document.getElementById('profile-info').style.display = 'block';
-        document.getElementById('user-name').innerText = user.displayName || 'Leitor(a)';
-        
-        if(!settings.localAvatar) {
-          document.getElementById('user-avatar').src = user.photoURL || 'https://via.placeholder.com/150';
-        }
-
-        if (user.uid === ADMIN_UID) {
-          isAdmin = true;
-          navAdm.style.display = 'inline-flex'; // O Botão de ADM aparece dentro da aba de perfil
-        } else {
-          isAdmin = false;
-          navAdm.style.display = 'none';
-        }
-      } else {
-        document.getElementById('auth-box').style.display = 'block';
-        document.getElementById('profile-info').style.display = 'none';
-        isAdmin = false;
-        navAdm.style.display = 'none';
-        switchAuthTab('login');
-      }
-      escutarNotificacoesGlobais();
-    });
-
-    /* ================= AVISOS GLOBAIS (SININHO PÚBLICO) ================= */
-    let notificacoesArray = [];
-
-    window.enviarNotificacaoGlobal = function() {
-      if(!isAdmin) return;
-      const texto = document.getElementById('admin-notif-texto').value.trim();
-      if(texto) {
-        db.ref('notificacoes_globais').push({ texto: texto, data: Date.now() });
-        document.getElementById('admin-notif-texto').value = '';
-        showToast("Aviso disparado para todos!");
-      }
-    };
-
-    function escutarNotificacoesGlobais() {
-      db.ref('notificacoes_globais').limitToLast(10).on('value', snap => {
-        notificacoesArray = [];
-        if(snap.exists()) {
-          snap.forEach(child => { notificacoesArray.push(child.val()); });
-          notificacoesArray.reverse();
-          document.querySelector('.notification-bell').classList.add('has-news');
-        }
-        renderListaNotificacoes();
-      });
-    }
-
-    window.abrirModalNotificacoes = function() {
-      document.getElementById('modal-notificacoes').style.display = 'flex';
-      document.querySelector('.notification-bell').classList.remove('has-news');
-    };
-
-    window.fecharModalNotificacoes = function(e) {
-      if (e) e.stopPropagation();
-      document.getElementById('modal-notificacoes').style.display = 'none';
-    };
-
-    function renderListaNotificacoes() {
-      const container = document.getElementById('lista-notificacoes-content');
-      if(notificacoesArray.length === 0) {
-        container.innerHTML = `<p style="color:#666; font-size:12px; text-align:center; padding: 20px;">Nenhum aviso no momento.</p>`;
-        return;
-      }
-      container.innerHTML = notificacoesArray.map(n => {
-        const date = new Date(n.data).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-        return `
-          <div class="notif-item">
-            <div class="notif-icon"><i class="fa-solid fa-bullhorn"></i></div>
-            <div>
-              <div class="notif-text"><strong>Equipe Meow:</strong> ${n.texto}</div>
-              <div class="notif-time">${date}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    /* ================= PARCEIROS (PÚBLICO) ================= */
-    window.adicionarParceiro = function() {
-      if(!isAdmin) return;
-      const nome = document.getElementById('nome-parceiro').value.trim();
-      const link = document.getElementById('link-parceiro').value.trim();
-      if(nome && link) {
-        db.ref('parceiros').push({ nome, link });
-        showToast("Parceiro adicionado!");
-        document.getElementById('nome-parceiro').value = '';
-        document.getElementById('link-parceiro').value = '';
-      }
-    };
-
-    db.ref('parceiros').on('value', snap => {
-      let html = '';
-      if(snap.exists()){
-        snap.forEach(child => {
-          html += `
-            <a href="${child.val().link}" target="_blank" class="card-obra" style="padding: 22px; text-align: center; justify-content: center; align-items: center;">
-              <i class="fa-solid fa-handshake" style="font-size: 32px; margin-bottom: 10px; color: var(--primary);"></i>
-              <div style="font-weight: 800; font-size: 13px;">${child.val().nome}</div>
-            </a>`;
-        });
-      } else { 
-        html = '<div class="empty-library"><i class="fa-solid fa-handshake-angle"></i><p>Nenhum parceiro cadastrado ainda.</p></div>'; 
-      }
-      document.getElementById('lista-parceiros').innerHTML = html;
-    });
-    
-    // Execução Inicial
-    verificarOnboarding();
-    renderBiblioteca();
-    renderHistorico();
-
+    // Modal Notifications
+    window.abrirModalNotificacoes = function() { document.getElementById('modal-notificacoes').style.display = 'flex'; };
+    window.fecharModalNotificacoes = function(e) { if (e) e.stopPropagation(); document.getElementById('modal-notificacoes').style.display = 'none'; };
   </script>
 </body>
 </html>
