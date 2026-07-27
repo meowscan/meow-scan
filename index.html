@@ -183,7 +183,7 @@
     .chapter-row { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 7px 9px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; color: #ddd; border: 1px solid rgba(255,255,255,0.02); }
     .chapter-row i { color: var(--primary); font-size: 11px; margin-right: 5px; }
 
-    /* ================= BARRA DE BUSCA E FILTROS ================= */
+    /* ================= BARRA DE BUSCA E FILTROS TIPO BATOTO ================= */
     .search-container { position: sticky; top: 65px; background: var(--bg-color); z-index: 90; padding: 10px 0 15px 0; margin-bottom: 10px; }
     .search-bar { width: 100%; padding: 15px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(26,22,37,0.9); backdrop-filter: blur(10px); color: var(--text-color); font-family: var(--font-family); font-size: 14px; outline: none; transition: 0.3s; box-shadow: inset 0 2px 6px rgba(0,0,0,0.3); }
     .search-bar:focus { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 15px rgba(157,78,221,0.25); }
@@ -277,7 +277,7 @@
 </head>
 <body>
 
-  <div id="pwa-install-blocker" class="modal-overlay" style="display: none; z-index: 99999; background: var(--bg-color); flex-direction: column; text-align: center;">
+  <div id="pwa-install-blocker" class="modal-overlay" style="z-index: 99999; background: var(--bg-color); flex-direction: column; text-align: center;">
     <i class="fa-solid fa-mobile-screen-button" style="font-size: 60px; color: var(--primary); margin-bottom: 20px;"></i>
     <h2 style="color: #fff; margin-bottom: 10px;">Instale o Aplicativo!</h2>
     <p style="color: #ccc; font-size: 14px; line-height: 1.5; max-width: 80%;">
@@ -564,26 +564,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    /* ================= REGISTRO AUTOMÁTICO DE SERVICE WORKER (OFFLINE REAL) ================= */
-    if ('serviceWorker' in navigator) {
-      const swCode = `
-        self.addEventListener('install', e => {
-          self.skipWaiting();
-        });
-        self.addEventListener('activate', e => {
-          e.waitUntil(clients.claim());
-        });
-        self.addEventListener('fetch', e => {
-          e.respondWith(
-            fetch(e.request).catch(() => caches.match(e.request))
-          );
-        });
-      `;
-      const blob = new Blob([swCode], { type: 'text/javascript' });
-      const swUrl = URL.createObjectURL(blob);
-      navigator.serviceWorker.register(swUrl).catch(() => {});
-    }
-
     /* ================= VERIFICAÇÃO PWA (BLOQUEIO WEB) ================= */
     function checkAppInstall() {
       const isApp = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -715,7 +695,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* ================= FIREBASE INICIALIZAÇÃO & CACHE LOCAL ================= */
+    /* ================= FIREBASE INICIALIZAÇÃO ================= */
     const firebaseConfig = {
       apiKey: "AIzaSyC6UGnek_Fomnt7IJUvTj1nTbMQsp5O75M",
       authDomain: "meow-scan-ffff0.firebaseapp.com",
@@ -730,7 +710,7 @@
     const db = firebase.database();
     const auth = firebase.auth();
 
-    let todasObras = JSON.parse(localStorage.getItem('meowCachedObras')) || [];
+    let todasObras = [];
     let currentUser = null;
     let isAdmin = false;
     const ADMIN_UID = "KYdtUPR3XhV0NGkv8XDmzn1stqB3"; 
@@ -739,21 +719,9 @@
     let selectedStatus = ['Todos'];
     let selectedHospedagem = ['Todos'];
 
-    // Processa dados iniciais em cache para funcionamento imediato offline
-    if (todasObras.length > 0) {
-      document.getElementById('banner-destaque').classList.add('loaded');
-      document.getElementById('banner-destaque').classList.remove('skeleton');
-      carregarFiltrosHospedagem();
-      renderObras(); 
-      iniciarDestaqueRotativo(); 
-    }
-
     db.ref('obras').on('value', snap => {
-      if(snap.exists()){ 
-        todasObras = [];
-        snap.forEach(child => { todasObras.push({ id: child.key, ...child.val() }); }); 
-        localStorage.setItem('meowCachedObras', JSON.stringify(todasObras));
-      }
+      todasObras = [];
+      if(snap.exists()){ snap.forEach(child => { todasObras.push({ id: child.key, ...child.val() }); }); }
       
       document.getElementById('banner-destaque').classList.add('loaded');
       document.getElementById('banner-destaque').classList.remove('skeleton');
@@ -1193,7 +1161,7 @@
       }).join('');
     }
 
-    /* ================= PARCEIROS COM CACHE ================= */
+    /* ================= PARCEIROS ================= */
     window.adicionarParceiro = function() {
       if(!isAdmin) return;
       const nome = document.getElementById('nome-parceiro').value.trim();
@@ -1206,40 +1174,38 @@
       }
     };
 
-    const parceirosSalvos = JSON.parse(localStorage.getItem('meowCachedParceiros')) || null;
-    if (parceirosSalvos) {
-      renderizarParceiros(parceirosSalvos);
-    }
-
     db.ref('parceiros').on('value', snap => {
-      let lista = [];
-      if(snap.exists()){
-        snap.forEach(child => { lista.push(child.val()); });
-        localStorage.setItem('meowCachedParceiros', JSON.stringify(lista));
-      }
-      renderizarParceiros(lista);
-    });
-
-    function renderizarParceiros(lista) {
       let html = '';
-      if(lista.length > 0){
-        lista.forEach(p => {
+      if(snap.exists()){
+        snap.forEach(child => {
           html += `
-            <a href="${p.link}" target="_blank" class="card-obra" style="padding: 22px; text-align: center; justify-content: center; align-items: center;">
+            <a href="${child.val().link}" target="_blank" class="card-obra" style="padding: 22px; text-align: center; justify-content: center; align-items: center;">
               <i class="fa-solid fa-handshake" style="font-size: 32px; margin-bottom: 10px; color: var(--primary);"></i>
-              <div style="font-weight: 800; font-size: 13px;">${p.nome}</div>
+              <div style="font-weight: 800; font-size: 13px;">${child.val().nome}</div>
             </a>`;
         });
       } else { 
         html = '<div class="empty-library"><i class="fa-solid fa-handshake-angle"></i><p>Nenhum parceiro cadastrado ainda.</p></div>'; 
       }
       document.getElementById('lista-parceiros').innerHTML = html;
-    }
+    });
     
     verificarOnboarding();
     renderBiblioteca();
     renderHistorico();
 
+    /* ================= REGISTRO DO SERVICE WORKER (ADICIONADO AQUI) ================= */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((registration) => {
+            console.log('Service Worker registrado com sucesso:', registration.scope);
+          })
+          .catch((error) => {
+            console.error('Falha ao registrar o Service Worker:', error);
+          });
+      });
+    }
   </script>
 </body>
 </html>
