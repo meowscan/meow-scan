@@ -277,6 +277,22 @@
 </head>
 <body>
 
+  <div id="pwa-install-blocker" class="modal-overlay" style="z-index: 99999; background: var(--bg-color); flex-direction: column; text-align: center;">
+    <i class="fa-solid fa-mobile-screen-button" style="font-size: 60px; color: var(--primary); margin-bottom: 20px;"></i>
+    <h2 style="color: #fff; margin-bottom: 10px;">Instale o Aplicativo!</h2>
+    <p style="color: #ccc; font-size: 14px; line-height: 1.5; max-width: 80%;">
+      Você não vai conseguir entrar no site por aqui. O acesso só é permitido pelo aplicativo.<br><br>
+      <strong>Como baixar:</strong> Clique nos três pontinhos (<strong>⋮</strong>) no canto superior do seu navegador e vá na opção <strong>"Instalar aplicativo"</strong> ou <strong>"Adicionar à tela inicial"</strong>. 
+      <br><br><span style="color: #ff477e; font-size: 12px; font-weight: bold;">Atenção: A pessoa tem que escolher INSTALAR, porque atalho simples não funciona!</span>
+    </p>
+  </div>
+
+  <div id="loading-overlay" class="modal-overlay" style="z-index: 99998; background: var(--bg-color); flex-direction: column; text-align: center;">
+    <i class="fa-solid fa-spinner fa-spin" style="font-size: 50px; color: var(--primary); margin-bottom: 20px;"></i>
+    <h2 style="color: #fff; margin-bottom: 10px;">Carregando as Obras...</h2>
+    <p id="loading-time-text" style="color: #ccc; font-size: 14px;">Tempo estimado: calculando...</p>
+  </div>
+
   <div id="offline-banner">
     <i class="fa-solid fa-wifi-slash"></i> Você está offline. Lendo da sua Biblioteca Offline.
   </div>
@@ -553,6 +569,32 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
+    /* ================= VERIFICAÇÃO PWA (BLOQUEIO WEB) ================= */
+    function checkAppInstall() {
+      // Checa se está no modo Standalone (App) ou navegador normal
+      const isApp = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (!isApp) {
+        document.getElementById('pwa-install-blocker').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Impede de rolar a página de trás
+      }
+    }
+    checkAppInstall();
+
+    /* ================= TEMPO DE CARREGAMENTO ESTIMADO ================= */
+    let tempoEstimado = 60; // Começa em 60 segundos (1 minuto) para dar tempo de sobra
+    document.getElementById('loading-overlay').style.display = 'flex';
+    
+    let loadingInterval = setInterval(() => {
+      tempoEstimado--;
+      const text = document.getElementById('loading-time-text');
+      if (text && tempoEstimado > 0) {
+        let minutos = Math.floor(tempoEstimado / 60);
+        let segundos = tempoEstimado % 60;
+        let minText = minutos > 0 ? `${minutos} minuto(s) e ` : '';
+        text.innerText = `Faltam cerca de ${minText}${segundos} segundos para carregar... aguarde!`;
+      }
+    }, 1000);
+
     /* ================= DETECTOR OFFLINE ================= */
     window.addEventListener('offline', () => {
       document.getElementById('offline-banner').style.display = 'block';
@@ -700,6 +742,10 @@
     let selectedHospedagem = ['Todos'];
 
     db.ref('obras').on('value', snap => {
+      // Quando os dados carregarem, sumimos com a tela de carregamento e o timer
+      document.getElementById('loading-overlay').style.display = 'none';
+      clearInterval(loadingInterval);
+      
       todasObras = [];
       if(snap.exists()){ snap.forEach(child => { todasObras.push({ id: child.key, ...child.val() }); }); }
       
